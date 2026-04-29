@@ -1,0 +1,2634 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Т-Банк Перевод</title>
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 16px;
+            -webkit-text-size-adjust: 100%;
+            -moz-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+        }
+
+        body {
+            background: radial-gradient(800px circle at 20% 20%, rgba(255, 221, 0, 0.12), transparent 55%),
+                linear-gradient(160deg, #0d0d0d 0%, #111 100%);
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+        }
+
+        .input-panel {
+            width: 320px;
+            background: #1a1a1a;
+            border-radius: 20px;
+            padding: 20px;
+            color: #fff;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            border: 1px solid #2a2a2a;
+            flex-shrink: 0;
+            margin-top: 10px;
+            max-height: 95vh;
+            overflow-y: auto;
+            margin-right: 50px;
+            margin-top: 30px;
+        }
+
+        .panel-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 18px;
+        }
+
+        .input-group {
+            margin-bottom: 14px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group textarea {
+            background: #252525;
+            border: 1px solid #333;
+            border-radius: 10px;
+            padding: 10px 12px;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+            font-family: 'Inter', sans-serif;
+            line-height: 1.5;
+            resize: none;
+            min-height: 80px;
+            width: 100%;
+            transition: border-color 0.3s;
+        }
+
+        .input-group textarea:focus {
+            border-color: rgba(255, 221, 0, 0.5);
+        }
+
+        .input-group label {
+            font-size: 11px;
+            color: #888;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-group input[type="text"] {
+            background: #252525;
+            border: 1px solid #333;
+            border-radius: 10px;
+            padding: 10px 12px;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+            font-family: 'Inter', sans-serif;
+            transition: border-color 0.2s;
+        }
+
+        .input-group input[type="text"]:focus {
+            border-color: #ffdd00;
+        }
+
+        .checkbox-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .checkbox-row input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: #ffdd00;
+            cursor: pointer;
+        }
+
+        .checkbox-row label {
+            font-size: 13px;
+            color: #ccc;
+            cursor: pointer;
+            margin: 0;
+        }
+
+        .time-input-wrap {
+            display: none;
+        }
+
+        .time-input-wrap.visible {
+            display: flex;
+        }
+
+        .time-input-wrap input {
+            background: #252525;
+            border: 1px solid #333;
+            border-radius: 10px;
+            padding: 8px 12px;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+            width: 90px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .time-input-wrap input:focus {
+            border-color: #ffdd00;
+        }
+
+        .bank-select-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            max-height: 280px;
+            overflow-y: auto;
+        }
+
+        .bank-select-wrap::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .bank-select-wrap::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+
+        .bank-select-wrap::-webkit-scrollbar-thumb {
+            background: #444;
+            border-radius: 2px;
+        }
+
+        .bank-option {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 10px;
+            background: #252525;
+            border: 1px solid #333;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.15s;
+            user-select: none;
+        }
+
+        .bank-option:hover {
+            background: #2e2e2e;
+        }
+
+        .bank-option.added {
+            border-color: #ffdd00;
+            background: rgba(255, 221, 0, 0.07);
+        }
+
+        .bank-option-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #ddd;
+        }
+
+        .bank-option input[type="radio"] {
+            accent-color: #ffdd00;
+            cursor: pointer;
+            width: 14px;
+            height: 14px;
+            flex-shrink: 0;
+        }
+
+        .section-label {
+            font-size: 11px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            margin-top: 4px;
+        }
+
+        .battery-mode-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .bmode-btn {
+            flex: 1;
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid #333;
+            background: #252525;
+            color: #aaa;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.15s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .bmode-btn.active {
+            border-color: #ffdd00;
+            color: #ffdd00;
+            background: rgba(255, 221, 0, 0.08);
+        }
+
+        input[type="range"] {
+            accent-color: #ffdd00;
+            width: 100%;
+        }
+
+        .phone-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding-top: 30px;
+        }
+
+        .phone-container {
+            width: 375px;
+            height: 812px;
+            background: #1c1c1e;
+            padding: 11px;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.7), inset 0 0 0 1px #333;
+            flex-shrink: 0;
+        }
+
+        .phone-screen {
+            width: 100%;
+            height: 100%;
+            background: #000;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .status-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 44px;
+            background: #000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 1000;
+            border-radius: 40px 40px 0 0;
+        }
+
+        .status-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-right {
+            display: flex;
+            align-items: center;
+        }
+
+        .rec-image {
+            width: 170px;
+            margin-left: 25px;
+        }
+
+        .svyaz {
+            width: 60px;
+            margin-bottom: 1px;
+        }
+
+        #batteryContainer {
+            display: flex;
+            align-items: center;
+            margin-right: 5px;
+            margin-bottom: 2px;
+        }
+
+        .battery-detailed {
+            display: flex;
+            align-items: center;
+            gap: 1px;
+        }
+
+        .battery-body-2 {
+            position: relative;
+            width: 24px;
+            height: 13px;
+            border-radius: 4px;
+            overflow: hidden;
+            background: #818181;
+        }
+
+        .battery-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 87%;
+            background: #fff;
+            transition: width 0.3s;
+            z-index: 1;
+        }
+
+        .battery-text {
+            position: absolute;
+            top: 45%;
+            left: 50%;
+            transform: translate(-50%, -45%);
+            font-size: 11.5px;
+            font-weight: 800;
+            color: #000;
+            z-index: 2;
+            pointer-events: none;
+            padding-top: 1px;
+        }
+
+        .screen-1 {
+            position: absolute;
+            top: 44px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #000;
+            color: #fff;
+        }
+
+        .s1-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 20px 10px;
+        }
+
+        .s1-cancel {
+            color: #607ccf;
+            font-size: 15px;
+        }
+
+        .s1-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .s1-spacer {
+            width: 60px;
+        }
+
+        .phone-input-row {
+            display: flex;
+            align-items: center;
+            margin: 12px 16px 0;
+            gap: 10px;
+        }
+
+        .flag-code {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border-right: 1px solid #333;
+            padding-right: 12px;
+            background: #1c1c1e;
+            border-radius: 14px;
+            padding: 12px 16px;
+        }
+
+        .flag-emoji {
+            font-size: 20px;
+        }
+
+        .code-text {
+            font-size: 16px;
+            color: #fff;
+            font-weight: 500;
+        }
+
+        .phone-number-display {
+            flex: 1;
+            font-size: 16px;
+            color: #fff;
+            background: #1c1c1e;
+            border-radius: 14px;
+            padding: 13px 16px;
+        }
+
+        .scan-row {
+            margin: 10px 16px;
+            background: #213250;
+            border-radius: 12px;
+            padding: 13px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .scan-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 15px;
+            color: #e6f5ff;
+        }
+
+        .scan-arrow {
+            color: #8E8E93;
+            font-size: 18px;
+        }
+
+        .contact-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 20px;
+            opacity: 0;
+            transform: translateY(8px);
+            transition: opacity 0.3s, transform 0.3s;
+        }
+
+        .contact-row.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .contact-row.highlight {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .contact-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: #3a3a3c;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: #aaa;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .contact-name {
+            font-size: 16px;
+            color: #fff;
+        }
+
+        .contact-phone {
+            font-size: 13px;
+            color: #8E8E93;
+        }
+
+        .ios-keyboard {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #252525;
+            padding: 8px 3px 0 3px;
+            padding-top: 50px;
+            padding-bottom: 70px;
+        }
+
+        .ios-kb-rows {
+            display: flex;
+            flex-direction: column;
+            gap: 11px;
+        }
+
+        .ios-kb-row {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .ios-key {
+            height: 40px;
+            min-width: 20px;
+            flex: 1;
+            max-width: 34px;
+            background: #5e5e5e;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: 300;
+            color: #fff;
+            cursor: pointer;
+            user-select: none;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .ios-key-shift {
+            background: #3c3c3c;
+            color: #fff;
+            font-size: 18px;
+            max-width: 44px;
+            flex: 1.3;
+        }
+
+        .ios-key-func {
+            background: #3c3c3c;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 500;
+            max-width: 48px;
+            flex: 1.4;
+        }
+
+        .ios-key-space {
+            background: #5d5d5d;
+            font-size: 16px;
+            font-weight: 400;
+            max-width: 9999px;
+            flex: 5;
+        }
+
+        .ios-key-enter {
+            background: #3c3c3c;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 500;
+            max-width: 90px;
+            flex: 2.4;
+        }
+
+        .ios-kb-row-bottom .ios-key,
+        .ios-kb-row-bottom .ios-key-func,
+        .ios-kb-row-bottom .ios-key-space,
+        .ios-kb-row-bottom .ios-key-enter {
+            height: 44px;
+        }
+
+        .keyboard-bottomRow {
+            position: absolute;
+            display: flex;
+            justify-content: space-between;
+            width: 87%;
+            margin-top: 20px;
+            margin-left: 20px;
+        }
+
+        .screen-2 {
+            position: absolute;
+            top: 44px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #000;
+            color: #fff;
+            transform: translateX(100%);
+            z-index: 50;
+            overflow: hidden;
+        }
+
+        .screen-2.show {
+            transform: translateX(0);
+        }
+
+        .s2-header {
+            display: flex;
+            align-items: center;
+            padding: 14px 20px 10px;
+            gap: 12px;
+        }
+
+        .s2-back {
+            color: #4280fb;
+            font-size: 26px;
+            font-weight: 300;
+            line-height: 1;
+            margin-top: -2px;
+        }
+
+        .s2-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+            margin-left: 55px;
+            padding-bottom: 10px;
+        }
+
+        .balance-card {
+            margin: 0 16px 14px;
+            background: #1c1c1e;
+            border-radius: 18px;
+            padding: 16px 20px 20px;
+            margin-bottom: 8px;
+        }
+
+        .balance-label {
+            font-size: 13px;
+            color: #8E8E93;
+            margin-bottom: 6px;
+        }
+
+        .balance-amount {
+            font-size: 32px;
+            font-weight: 500;
+            color: #fff;
+            letter-spacing: -0.5px;
+        }
+
+        .balance-dots {
+            display: flex;
+            gap: 5px;
+            margin-top: 0;
+            margin-left: 155px;
+            margin-bottom: 30px;
+        }
+
+        .bdot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #555;
+        }
+
+        .bdot.active {
+            background: #548aec;
+        }
+
+        .s2-phone-row {
+            margin: 0 16px 14px;
+            background: #1c1c1e;
+            border-radius: 14px;
+            padding: 14px 16px;
+        }
+
+        .s2-phone-label {
+            font-size: 12px;
+            color: #8E8E93;
+            margin-bottom: 4px;
+        }
+
+        .s2-phone-val {
+            font-size: 16px;
+            color: #fff;
+        }
+
+        .banks-scroll {
+            display: flex;
+            gap: 10px;
+            padding: 0 16px 14px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .banks-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .bank-card {
+            flex-shrink: 0;
+            width: 105px;
+            height: 100px;
+            border-radius: 16px;
+            padding: 4px 10px 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            border: 2px solid transparent;
+            transition: border 0.2s;
+        }
+
+        .bank-card.active-bank {
+            border-color: #ffdd00;
+        }
+
+        .bank-card-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .bank-card-name {
+            font-size: 12px;
+            font-weight: 500;
+            color: #fff;
+            line-height: 1.3;
+            margin-bottom: 3px;
+        }
+
+        .bank-card-person {
+            font-size: 11px;
+            color: #fff;
+            line-height: 1.3;
+        }
+
+        .bank-sber {
+            background: #123b18;
+        }
+
+        .bank-vtb {
+            background: #001433;
+        }
+
+        .bank-gazprom {
+            background: #132336;
+        }
+
+        .bank-alfa {
+            background: #2e0000;
+        }
+
+        .bank-psb {
+            background: #001a33;
+        }
+
+        .bank-rshb {
+            background: #0a2200;
+        }
+
+        .bank-tbank {
+            background: #2e2a00;
+        }
+
+        .bank-sovkom {
+            background: #1a0033;
+        }
+
+        .bank-raiff {
+            background: #1a1500;
+        }
+
+        .bank-spb {
+            background: #001433;
+        }
+
+        .bank-uralsib {
+            background: #180a24;
+        }
+
+        .bank-mts {
+            background: #2e0000;
+        }
+
+        .bank-pochta {
+            background: #001f00;
+        }
+
+        .bank-otp {
+            background: #273601;
+        }
+
+        .bank-ozon {
+            background: #001940;
+        }
+
+        .bank-wb {
+            background: #2e0033;
+        }
+
+        .bank-icon {
+            width: 35px;
+            margin-bottom: 20px;
+            border-radius: 100%;
+        }
+
+        .s2-info-row {
+            margin: 0 16px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .s2-limit {
+            width: 100%;
+            font-size: 16px;
+            color: #8E8E93;
+            background: transparent;
+            border: none;
+            outline: none;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            transition: font-size 0.2s, color 0.2s;
+        }
+
+        .s2-limit.has-value {
+            font-size: 25px;
+            color: #fff;
+            font-weight: 400;
+        }
+
+        .s2-limit::placeholder {
+            color: #8E8E93;
+            font-size: 16px;
+        }
+
+        .s2-amount-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.08);
+            margin: 0 10px;
+        }
+
+        .s2-commission-row {
+            padding: 8px 10px 14px;
+            min-height: 36px;
+            position: relative;
+        }
+
+        .s2-commission-text {
+            font-size: 13px;
+            color: white;
+            margin-bottom: 30px;
+            font-weight: 300;
+        }
+
+        .commission-spinner {
+            width: 22px;
+            height: 22px;
+            border: 2.5px solid rgba(255, 221, 0, 0.2);
+            border-top-color: #ffdd00;
+            border-radius: 50%;
+            animation: cspin 0.7s linear infinite;
+            flex-shrink: 0;
+        }
+
+        .commission-spinner-wrap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .commission-spinner-wrap.visible {
+            display: flex;
+        }
+
+        @keyframes cspin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .s2-msg-row {
+            margin: 0 16px 16px;
+            background: #1c1c1e;
+            border-radius: 14px;
+            padding: 14px 16px;
+        }
+
+        .s2-msg-placeholder {
+            font-size: 15px;
+            color: #555;
+        }
+
+        .s2-transfer-btn {
+            margin: 0 16px;
+            background: #ffdd00;
+            border-radius: 16px;
+            padding: 16px;
+            text-align: center;
+            font-size: 15px;
+            font-weight: 400;
+            color: #000;
+            cursor: pointer;
+        }
+
+        .s2-sbp-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+        .sbp-text {
+            font-size: 12px;
+            color: #8E8E93;
+        }
+
+        .controls {
+            display: flex;
+            gap: 12px;
+            margin-top: 6px;
+        }
+
+        .controls button {
+            padding: 13px 28px;
+            font-size: 15px;
+            font-weight: 600;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-animate {
+            background: #007AFF;
+            color: #fff;
+        }
+
+        .btn-download {
+            background: #34C759;
+            color: #fff;
+        }
+
+        .controls button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .controls button:active {
+            transform: translateY(0);
+        }
+
+        .screen-amount {
+            position: absolute;
+            top: 44px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 100;
+            pointer-events: none;
+            opacity: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .screen-amount.active {
+            pointer-events: all;
+            opacity: 1;
+        }
+
+        .sa-overlay {
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            z-index: 2;
+            flex: 1;
+        }
+
+        .sa-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 20px 10px;
+        }
+
+        .sa-close {
+            color: #4280fb;
+            font-size: 15px;
+        }
+
+        .sa-title-block {
+            text-align: center;
+        }
+
+        .sa-title {
+            font-size: 13px;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .sa-subtitle {
+            font-size: 12px;
+            color: #8E8E93;
+        }
+
+        .sa-done {
+            color: #4280fb;
+            font-size: 15px;
+        }
+
+        .sa-amount-wrap {
+            position: absolute;
+            left: 0;
+            right: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            z-index: 10;
+            background-color: #2d2c2d;
+            padding: 10px 0;
+            opacity: 0;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .sa-amount-display {
+            font-size: 25px;
+            font-weight: 300;
+            color: #fff;
+            letter-spacing: -1px;
+            min-width: 40px;
+            text-align: right;
+        }
+
+        .sa-cursor {
+            width: 2px;
+            height: 42px;
+            background: #4280fb;
+            border-radius: 1px;
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0;
+            }
+        }
+
+        .sa-rub {
+            font-size: 25px;
+            color: #8E8E93;
+            font-weight: 300;
+        }
+
+        .sa-keyboard {
+            background-color: #1c1c1e;
+            padding: 20px 8px 8px 8px;
+            border-radius: 16px 16px 0 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            padding-bottom: 50px;
+            transform: translateY(100%);
+            transition: transform 0.32s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        .sa-keyboard.kb-visible {
+            transform: translateY(0);
+            transition: transform 0.32s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        .sa-keyboard.kb-hidden {
+            transform: translateY(100%);
+            transition: transform 0.26s cubic-bezier(0.4, 0, 1, 1);
+        }
+
+        .sa-kb-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 5px;
+            margin-bottom: 8px;
+        }
+
+        .sa-kb-key {
+            background-color: #636366;
+            border: none;
+            border-radius: 5px;
+            padding: 0 8px;
+            color: white;
+            font-size: 24px;
+            font-weight: 400;
+            text-align: center;
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+            min-height: 46px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: background-color 0.08s;
+        }
+
+        .sa-kb-key.pressed {
+            background-color: #9a9a9e !important;
+            transform: scale(0.94);
+        }
+
+        .sa-kb-key:active {
+            background-color: #8e8e93;
+        }
+
+        .sa-kb-key-dark {
+            background-color: transparent;
+        }
+
+        .sa-kb-key-dark:active {
+            background-color: #636366;
+        }
+
+        .sa-kb-key-num {
+            font-size: 24px;
+            font-weight: 400;
+            line-height: 1;
+            margin-bottom: 2px;
+        }
+
+        .sa-kb-key-letters {
+            font-size: 10px;
+            font-weight: 400;
+            color: white;
+            opacity: 0.8;
+            line-height: 1.1;
+            letter-spacing: 0.5px;
+            text-align: center;
+        }
+
+        .sa-kb-backspace {
+            font-size: 20px;
+            font-weight: 300;
+        }
+
+        .sa-home-bar {
+            width: 134px;
+            height: 5px;
+            background-color: white;
+            border-radius: 2.5px;
+            margin: 12px auto 8px auto;
+            opacity: 0.8;
+        }
+
+        .loader-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+        }
+
+        .loader-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .loader-box {
+            width: 45px;
+            height: 45px;
+            background: #2c2c2e;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loader-spinner {
+            width: 25px;
+            height: 25px;
+            border: 3px solid rgba(255, 221, 0, 0.2);
+            border-top-color: #ffdd00;
+            border-radius: 50%;
+            animation: spin 1.4s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .error-popup-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 300;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s;
+        }
+
+        .error-popup-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .error-popup {
+            width: 270px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(45px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .error-popup-body {
+            padding: 20px 16px 4px;
+            text-align: center;
+        }
+
+        .error-popup-text {
+            font-size: 14px;
+            color: #fff;
+            line-height: 1.5;
+            font-weight: 400;
+        }
+
+        .error-popup-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.15);
+            margin-top: 16px;
+        }
+
+        .error-popup-btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            text-align: center;
+            font-size: 17px;
+            color: #4280fb;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-weight: 400;
+        }
+
+        .push-notification {
+            position: absolute;
+            top: 50px;
+            left: 12px;
+            right: 12px;
+            border-radius: 14px;
+            padding: 10px 14px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            z-index: 400;
+            transform: translateY(-120px);
+            opacity: 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(45px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .push-notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .push-icon {
+            width: 36px;
+            height: 36px;
+            background: #ffdd00;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 20px;
+            font-weight: 800;
+            color: #000;
+        }
+
+        .push-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .push-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2px;
+        }
+
+        .push-app-name {
+            font-size: 12px;
+            font-weight: 600;
+            color: #aaa;
+        }
+
+        .push-time {
+            font-size: 11px;
+            color: #666;
+        }
+
+        .push-text {
+            font-size: 13px;
+            color: #ddd;
+            line-height: 1.4;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+        .phone-screen,
+        .phone-screen * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+            line-height: 1.2;
+        }
+
+        .s1-title {
+            font-size: 16px !important;
+            line-height: 1.2 !important;
+        }
+
+        .contact-name {
+            font-size: 16px !important;
+            line-height: 1.2 !important;
+        }
+
+        .balance-amount {
+            font-size: 32px !important;
+            line-height: 1.1 !important;
+        }
+
+        @media screen and (max-width: 480px) {
+            body {
+                zoom: 1;
+                -webkit-text-size-adjust: none;
+                -moz-text-size-adjust: none;
+                text-size-adjust: none;
+            }
+        }
+
+        .input-group textarea::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .input-group textarea::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .input-group textarea::-webkit-scrollbar-thumb {
+            background: #444;
+            border-radius: 2px;
+        }
+
+        .input-group textarea::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        .input-panel::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .input-panel::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .input-panel::-webkit-scrollbar-thumb {
+            background: #444;
+            border-radius: 2px;
+        }
+
+        .input-panel::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="input-panel">
+        <div class="panel-title">Данные для перевода</div>
+
+        <div class="input-group">
+            <div class="checkbox-row">
+                <input type="checkbox" id="customTimeCheck">
+                <label for="customTimeCheck">Своё время</label>
+            </div>
+            <div class="time-input-wrap" id="timeInputWrap">
+                <input type="text" id="customTimeInput" maxlength="5" placeholder="12:00">
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label>Номер телефона</label>
+            <input type="text" id="phoneInput" placeholder="+7 999 000 00 00">
+        </div>
+
+        <div class="input-group">
+            <label>Получатель (Фамилия И.О.)</label>
+            <input type="text" id="recipientName" placeholder="Имя Ф.">
+        </div>
+
+        <div class="input-group">
+            <label>Сумма перевода</label>
+            <input type="text" id="transferAmount" placeholder="200 000">
+        </div>
+
+        <div class="input-group">
+            <label>Текст ошибки</label>
+            <textarea
+                id="errorText">Операция отклонена. Получатель находится в базе Банка России по переводам без добровольного согласия (161-ФЗ). Подробнее в чате</textarea>
+        </div>
+
+        <div class="input-group">
+            <label>Текст уведомления</label>
+            <textarea
+                id="notifText">Отказ Переводы, счет RUB. Получатель находится в базе ЦБ РФ по переводам...</textarea>
+        </div>
+
+        <div class="input-group">
+            <label>Баланс счёта</label>
+            <input type="text" id="balanceAmount" value="22 771 392">
+        </div>
+
+        <div class="input-group">
+            <label>Банки — нажми чтоб добавить</label>
+            <div class="bank-select-wrap" id="bankSelectWrap"></div>
+        </div>
+
+        <div class="section-label">Тип батареи</div>
+        <div class="battery-mode-row">
+            <button class="bmode-btn active" id="bmodeSimple" onclick="setBatteryMode('simple')">Без цифр</button>
+            <button class="bmode-btn" id="bmodeDetailed" onclick="setBatteryMode('detailed')">С процентом</button>
+        </div>
+        <div class="input-group">
+            <label>Заряд батареи</label>
+            <input type="range" min="0" max="100" value="20" id="batterySlider">
+        </div>
+    </div>
+
+    <div class="phone-wrap">
+        <div class="phone-container">
+            <div class="phone-screen" id="phoneScreen">
+
+                <div class="status-bar">
+                    <div class="status-left">
+                        <span id="statusTime" style="font-size:15px;font-weight:600;color:#fff;"></span>
+                    </div>
+                    <img src="./source/Image__11_-removebg-preview.png" alt="" class="rec-image">
+                    <div class="status-right">
+                        <img src="./source/svyz.png" alt="" class="svyaz">
+                        <div id="batteryContainer"></div>
+                    </div>
+                </div>
+
+                <div class="screen-1" id="screen1">
+                    <div class="s1-header">
+                        <span class="s1-cancel">Отменить</span>
+                        <span class="s1-title">Кому перевести</span>
+                        <span class="s1-spacer"></span>
+                    </div>
+
+                    <div class="phone-input-row">
+                        <div class="flag-code">
+                            <img style="width: 20px;" class="flag-icon" src="./source/rus-removebg-preview.png" alt="">
+                            <span class="code-text">+7</span>
+                        </div>
+                        <!-- ПРАВКА 3: Показываем номер с инпута сразу -->
+                        <div class="phone-number-display" id="phoneDisplay">+7 000 000 00 00</div>
+                    </div>
+
+                    <div class="scan-row">
+                        <div class="scan-left">
+                            <img style="width: 20px;" src="./source/copyNumber.png" alt="">
+                            <span style="font-size: 14px;">Сканировать номер телефона</span>
+                        </div>
+                        <span class="scan-arrow">›</span>
+                    </div>
+
+                    <div class="contact-row" id="contactRow">
+                        <div class="contact-avatar" id="contactAvatar">ВГ</div>
+                        <div class="contact-info">
+                            <span class="contact-name" id="contactName">Владимир Г.</span>
+                            <span class="contact-phone" id="contactPhone">+7 981 027-76-34</span>
+                        </div>
+                    </div>
+
+                    <div class="ios-keyboard" id="iosKeyboard">
+                        <div class="ios-kb-rows">
+                            <div class="ios-kb-row">
+                                <div class="ios-key">й</div>
+                                <div class="ios-key">ц</div>
+                                <div class="ios-key">у</div>
+                                <div class="ios-key">к</div>
+                                <div class="ios-key">е</div>
+                                <div class="ios-key">н</div>
+                                <div class="ios-key">г</div>
+                                <div class="ios-key">ш</div>
+                                <div class="ios-key">щ</div>
+                                <div class="ios-key">з</div>
+                                <div class="ios-key">х</div>
+                            </div>
+                            <div class="ios-kb-row">
+                                <div class="ios-key">ф</div>
+                                <div class="ios-key">ы</div>
+                                <div class="ios-key">в</div>
+                                <div class="ios-key">а</div>
+                                <div class="ios-key">п</div>
+                                <div class="ios-key">р</div>
+                                <div class="ios-key">о</div>
+                                <div class="ios-key">л</div>
+                                <div class="ios-key">д</div>
+                                <div class="ios-key">ж</div>
+                                <div class="ios-key">э</div>
+                            </div>
+                            <div class="ios-kb-row">
+                                <div class="ios-key ios-key-shift">⇧</div>
+                                <div class="ios-key">я</div>
+                                <div class="ios-key">ч</div>
+                                <div class="ios-key">с</div>
+                                <div class="ios-key">м</div>
+                                <div class="ios-key">и</div>
+                                <div class="ios-key">т</div>
+                                <div class="ios-key">ь</div>
+                                <div class="ios-key">б</div>
+                                <div class="ios-key">ю</div>
+                                <div class="ios-key ios-key-shift">⌫</div>
+                            </div>
+                            <div class="ios-kb-row ios-kb-row-bottom">
+                                <div class="ios-key ios-key-func">123</div>
+                                <div class="ios-key ios-key-func">
+                                    <img style="width: 30px;" src="./source/keyboard-smail.png" alt="">
+                                </div>
+                                <div class="ios-key ios-key-space">Пробел</div>
+                                <div class="ios-key ios-key-enter">Ввод</div>
+                            </div>
+                        </div>
+                        <div class="keyboard-bottomRow">
+                            <img style="width: 35px;" src="./source/langicon.png" alt="">
+                            <img style="width: 40px; height: 35px;" src="./source/microicon.png" alt="">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="screen-2" id="screen2">
+                    <div class="s2-header">
+                        <span class="s2-back">‹</span>
+                        <span class="s2-title">Перевод по телефону</span>
+                    </div>
+
+                    <div class="balance-card">
+                        <div class="balance-label">с Black</div>
+                        <div class="balance-amount" id="s2BalanceAmount">5 080,56 ₽</div>
+                    </div>
+
+                    <div class="balance-dots">
+                        <div class="bdot active"></div>
+                        <div class="bdot"></div>
+                        <div class="bdot"></div>
+                    </div>
+
+                    <div class="s2-phone-row">
+                        <div class="s2-phone-label">Номер телефона</div>
+                        <div class="s2-phone-val" id="s2PhoneVal"></div>
+                    </div>
+
+                    <div class="banks-scroll" id="banksScroll"></div>
+
+                    <div style="margin: 0 16px 0;">
+                        <div
+                            style="display:flex; align-items:center; justify-content:space-between; padding: 10px 10px;">
+                            <input type="text" class="s2-limit" id="s2LimitInput"
+                                placeholder="Сумма от 10 ₽ до 1 000 000 ₽" readonly>
+                            <img style="width:25px; flex-shrink:0; margin-left:8px;" src="./source/calc.png" alt="">
+                        </div>
+                        <div class="s2-amount-divider"></div>
+                        <div class="s2-commission-row">
+                            <span class="s2-commission-text" id="commissionText">Размер комиссии будет уточнен после
+                                ввода реквизитов платежа</span>
+                            <div class="commission-spinner-wrap" id="commissionSpinnerWrap">
+                                <div class="commission-spinner" id="commissionSpinner"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="s2-msg-row">
+                        <div class="s2-msg-placeholder">Сообщение получателю</div>
+                    </div>
+
+                    <div class="s2-transfer-btn" id="s2TransferBtn">Перевести</div>
+
+                    <div class="s2-sbp-row">
+                        <img style="width: 20px;" src="./source/sbp.png" alt="">
+                        <span class="sbp-text">Через Систему быстрых платежей</span>
+                    </div>
+
+                    <div class="loader-overlay" id="loaderOverlay">
+                        <div class="loader-box">
+                            <div class="loader-spinner"></div>
+                        </div>
+                    </div>
+
+                    <div class="error-popup-overlay" id="errorPopupOverlay">
+                        <div class="error-popup">
+                            <div class="error-popup-body">
+                                <div class="error-popup-text" id="errorPopupText">
+                                    Операция отклонена. Получатель находится в базе Банка России по переводам без
+                                    добровольного согласия (161-ФЗ). Подробнее в чате
+                                </div>
+                            </div>
+                            <div class="error-popup-divider"></div>
+                            <button class="error-popup-btn">OK</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="screen-amount" id="screenAmount">
+                    <div class="sa-overlay" id="saOverlay">
+                        <div class="sa-header">
+                            <span class="sa-close">Закрыть</span>
+                            <div class="sa-title-block">
+                                <div class="sa-title">Black</div>
+                                <div class="sa-subtitle" id="saBalanceSubtitle">5 080,56 ₽</div>
+                            </div>
+                            <span class="sa-done">Сохранить</span>
+                        </div>
+                    </div>
+
+                    <div class="sa-amount-wrap" id="saAmountWrap">
+                        <div class="sa-amount-display" id="saAmountDisplay">0</div>
+                        <div class="sa-cursor" id="saCursor"></div>
+                        <div class="sa-rub">₽</div>
+                    </div>
+
+                    <div class="sa-keyboard" id="saKeyboard">
+                        <div class="sa-kb-grid">
+                            <div class="sa-kb-key" data-val="1"><span class="sa-kb-key-num">1</span><span
+                                    class="sa-kb-key-letters"></span></div>
+                            <div class="sa-kb-key" data-val="2"><span class="sa-kb-key-num">2</span><span
+                                    class="sa-kb-key-letters">А Б В Г</span></div>
+                            <div class="sa-kb-key" data-val="3"><span class="sa-kb-key-num">3</span><span
+                                    class="sa-kb-key-letters">Д Е Ж З</span></div>
+                            <div class="sa-kb-key" data-val="4"><span class="sa-kb-key-num">4</span><span
+                                    class="sa-kb-key-letters">И Й К Л</span></div>
+                            <div class="sa-kb-key" data-val="5"><span class="sa-kb-key-num">5</span><span
+                                    class="sa-kb-key-letters">М Н О П</span></div>
+                            <div class="sa-kb-key" data-val="6"><span class="sa-kb-key-num">6</span><span
+                                    class="sa-kb-key-letters">Р С Т У</span></div>
+                            <div class="sa-kb-key" data-val="7"><span class="sa-kb-key-num">7</span><span
+                                    class="sa-kb-key-letters">Ф Х Ц Ч</span></div>
+                            <div class="sa-kb-key" data-val="8"><span class="sa-kb-key-num">8</span><span
+                                    class="sa-kb-key-letters">Ш Щ Ъ Ы</span></div>
+                            <div class="sa-kb-key" data-val="9"><span class="sa-kb-key-num">9</span><span
+                                    class="sa-kb-key-letters">Ь Э Ю Я</span></div>
+                            <div class="sa-kb-key sa-kb-key-dark" data-val=","><span class="sa-kb-key-num">,</span><span
+                                    class="sa-kb-key-letters"></span></div>
+                            <div class="sa-kb-key" data-val="0"><span class="sa-kb-key-num">0</span><span
+                                    class="sa-kb-key-letters"></span></div>
+                            <div class="sa-kb-key sa-kb-key-dark" data-val="backspace"><span
+                                    class="sa-kb-backspace">⌫</span><span class="sa-kb-key-letters"></span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="push-notification" id="pushNotification">
+                    <img style="width: 50px;" src="./source/message.png" alt="">
+                    <div class="push-content">
+                        <div class="push-header">
+                            <span class="push-app-name">T-Bank</span>
+                            <span class="push-time">сейчас</span>
+                        </div>
+                        <div class="push-text" id="pushText">Отказ Переводы, счет RUB. Получатель находится в базе ЦБ РФ
+                            по переводам...</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn-animate" onclick="startAnimation()">▶ Произвести</button>
+            <button class="btn-download" onclick="downloadVideo()">⬇ Скачать</button>
+        </div>
+    </div>
+
+    <!-- ШАБЛОНЫ БАНКОВ -->
+    <template id="tpl-sber">
+        <div class="bank-card bank-sber">
+            <img style="width: 35px; margin-top: 0px; border-radius: 50%; margin-bottom: 17px;" class="bank-icon"
+                src="./source/sber.png" alt="">
+            <div class="bank-card-name">Сбербанк</div>
+            <div class="bank-card-person">{{name}}</div>
+        </div>
+    </template>
+
+    <template id="tpl-other">
+        <div class="bank-card" style="background:#1a191d;">
+            <img style="width: 37px; margin-bottom: 5px;" src="./source/Anotherbank.png" alt="">
+            <div style="margin-bottom: 5px; color: #e9e7eb" class="bank-card-name">Другой</div>
+            <div style="color: #e9e7eb" class="bank-card-name">банк</div>
+        </div>
+    </template>
+
+    <template id="tpl-vtb">
+        <div class="bank-card bank-vtb">
+            <img class="bank-icon" src="./source/vtb.png" alt="">
+            <div class="bank-card-name">ВТБ</div>
+            <div class="bank-card-person">{{name}}</div>
+        </div>
+    </template>
+
+    <template id="tpl-gazprom">
+        <div class="bank-card bank-gazprom">
+            <img style="width: 45px; margin-bottom: 10px;" src="./source/gazprom.png" alt="">
+            <div class="bank-card-name">Газпромбанк</div>
+            <div class="bank-card-person">{{name}}</div>
+        </div>
+    </template>
+
+    <template id="tpl-alfa">
+        <div class="bank-card bank-alfa">
+            <img class="bank-icon" src="./source/alfa.png" alt="">
+            <div class="bank-card-name">Альфа-Банк</div>
+            <div class="bank-card-person">{{name}}</div>
+        </div>
+    </template>
+
+    <template id="tpl-psb">
+        <div class="bank-card bank-psb">
+            <img style="width: 30px; border-radius: 100%; margin-top: 5px; margin-bottom: 20px; margin-left: 3px;"
+                src="./source/psb.png" alt="">
+            <div class="bank-card-name">ПСБ</div>
+            <div class="bank-card-person">{{name}}</div>
+        </div>
+    </template>
+
+    <template id="tpl-rshb">
+        <div class="bank-card bank-rshb">
+            <img style="width: 35px; margin-bottom: 17px;" src="./source/rshvbbb.png" alt="">
+            <div class="bank-card-name">РСХБ</div>
+            <div class="bank-card-person">{{name}}</div>
+        </div>
+    </template>
+
+    <template id="tpl-tbank">
+        <div class="bank-card bank-tbank">
+            <img style="width: 25px; margin-left: 2.5px; margin-top: 5px; margin-bottom: 20px;" src="./source/tbank.png"
+                alt="">
+            <div class="bank-card-name">Т-Банк</div>
+            <div class="bank-card-person">{{name}}</div>
+        </div>
+    </template>
+
+    <template id="tpl-sovkom">
+        <div class="bank-card bank-sovkom">
+            <img style="width: 35px; margin-bottom: 19px; margin-top: 3px;" src="./source/sovcom.png" alt="">
+            <div class="bank-card-name">Совкомбанк</div>
+            <div class="bank-card-person">{{name}}</div>
+        </div>
+    </template>
+
+    <template id="tpl-raiff">
+        <div class="bank-card bank-raiff">
+            <img style="border-radius: 100%; width: 27px; margin-left: 5px; margin-top: 5px; margin-bottom: 18px;"
+                src="./source/raif.png" alt="">
+            <div class="bank-card-name">Райффайзенбанк</div>
+            <div class="bank-card-person">{{name}}</div>
+        </div>
+    </template>
+
+    <template id="tpl-spb">
+        <div class="bank-card bank-spb">
+            <div class="bank-card-icon">🏙</div>
+            <div class="bank-card-name">Банк СПБ</div>
+            <div class="bank-card-person">{{name}}</div>
+        </div>
+    </template>
+
+    <template id="tpl-uralsib">
+        <div class="bank-card bank-uralsib">
+            <img style="border-radius: 100%; width: 30px; margin-top: 4px;" class="bank-icon" src="./source/ural.png"
+                alt="">
+            <div class="bank-card-name">Уралсиб</div>
+            <div class="bank-card-person">{{name}}</div>
+        </div>
+    </template>
+
+    <template id="tpl-mts">
+        <div class="bank-card bank-mts">
+            <img src="./source/mts.png" style="width: 30px; margin-left: 7px; margin-top: 5px; margin-bottom: 20px;"
+                alt="">
+            <div class="bank-card-name">МТС Банк</div>
+            <div class="bank-card-person">{{name}}</div>
+        </div>
+    </template>
+
+    <template id="tpl-pochta">
+        <div class="bank-card bank-pochta">
+            <div class="bank-card-icon">✉️</div>
+            <div class="bank-card-name">Почта Банк</div>
+            <div class="bank-card-person">{{name}}</div>
+        </div>
+    </template>
+
+    <template id="tpl-otp">
+        <div class="bank-card bank-otp">
+            <img style="width: 25px; margin-top: 9px;" class="bank-icon" src="./source/otpO.png" alt="">
+            <div class="bank-card-name">ОТП Банк</div>
+            <div class="bank-card-person">{{name}}</div>
+        </div>
+    </template>
+
+    <template id="tpl-yandex">
+        <div class="bank-card bank-ozon">
+            <img style="width: 30px; margin-top: 5px; margin-left: 5px; margin-bottom: 20px;" src="./source/ozon.png"
+                alt="">
+            <div class="bank-card-name">Озон Банк</div>
+            <div class="bank-card-person">{{name}}</div>
+        </div>
+    </template>
+
+    <template id="tpl-wb">
+        <div class="bank-card bank-wb">
+            <img style="position: absolute; width: 50px; margin-bottom: 10px; top: -5px; left: 7px;"
+                src="./source/wb.png" alt="">
+            <div style="margin-top: 53px;" class="bank-card-name">WB Банк</div>
+            <div class="bank-card-person">{{name}}</div>
+        </div>
+    </template>
+
+    <script>
+        /* ══ УТИЛИТЫ ══ */
+        function tween(duration, onProgress, easing) {
+            easing = easing || easeOutCubic;
+            return new Promise(resolve => {
+                const start = performance.now();
+                function tick(now) {
+                    const p = Math.min((now - start) / duration, 1);
+                    onProgress(easing(p), p);
+                    if (p < 1) requestAnimationFrame(tick);
+                    else resolve();
+                }
+                requestAnimationFrame(tick);
+            });
+        }
+        function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+        function easeInOutCubic(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
+        function wait(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+        /* ══ ДАННЫЕ БАНКОВ ══ */
+        const BANKS = [
+            { key: 'sber', name: 'Сбербанк', emoji: '🟢', cls: 'bank-sber', tpl: 'tpl-sber' },
+            { key: 'vtb', name: 'ВТБ', emoji: '🏦', cls: 'bank-vtb', tpl: 'tpl-vtb' },
+            { key: 'gazprom', name: 'Газпромбанк', emoji: '🔵', cls: 'bank-gazprom', tpl: 'tpl-gazprom' },
+            { key: 'alfa', name: 'Альфа-Банк', emoji: '🔴', cls: 'bank-alfa', tpl: 'tpl-alfa' },
+            { key: 'psb', name: 'Промсвязьбанк', emoji: '🟠', cls: 'bank-psb', tpl: 'tpl-psb' },
+            { key: 'rshb', name: 'Россельхозбанк', emoji: '🌾', cls: 'bank-rshb', tpl: 'tpl-rshb' },
+            { key: 'tbank', name: 'Т-Банк', emoji: '💛', cls: 'bank-tbank', tpl: 'tpl-tbank' },
+            { key: 'sovkom', name: 'Совкомбанк', emoji: '🟣', cls: 'bank-sovkom', tpl: 'tpl-sovkom' },
+            { key: 'raiff', name: 'Райффайзенбанк', emoji: '🟡', cls: 'bank-raiff', tpl: 'tpl-raiff' },
+            { key: 'uralsib', name: 'Уралсиб', emoji: '⚡', cls: 'bank-uralsib', tpl: 'tpl-uralsib' },
+            { key: 'mts', name: 'МТС Банк', emoji: '📱', cls: 'bank-mts', tpl: 'tpl-mts' },
+            { key: 'otp', name: 'ОТП Банк', emoji: '🔷', cls: 'bank-otp', tpl: 'tpl-otp' },
+            { key: 'yandex', name: 'Озон Банк', emoji: '🔶', cls: 'bank-yandex', tpl: 'tpl-yandex' },
+            { key: 'wb', name: 'WB Банк', emoji: '🛍', cls: 'bank-wb', tpl: 'tpl-wb' },
+        ];
+
+        const addedBanks = new Set();
+        let activeBank = null;
+        let batteryMode = 'simple';
+        let currentStep = 'idle';
+
+        /* ══ СПИСОК БАНКОВ В ПАНЕЛИ ══ */
+        function buildBankList() {
+            const wrap = document.getElementById('bankSelectWrap');
+            wrap.innerHTML = '';
+            BANKS.forEach(b => {
+                const row = document.createElement('div');
+                row.className = 'bank-option';
+                row.dataset.bank = b.key;
+                row.innerHTML = `
+                    <div class="bank-option-left">
+                        <span style="font-size:15px;">${b.emoji}</span>
+                        <span>${b.name}</span>
+                    </div>
+                    <input type="radio" name="activeBank" class="bank-radio"
+                           data-bank="${b.key}" title="Сделать активным"
+                           style="accent-color:#ffdd00;cursor:pointer;width:14px;height:14px;flex-shrink:0;">
+                `;
+
+                row.addEventListener('click', function (e) {
+                    if (e.target.classList.contains('bank-radio')) return;
+                    if (addedBanks.has(b.key)) {
+                        addedBanks.delete(b.key);
+                        row.classList.remove('added');
+                        if (activeBank === b.key) { activeBank = null; row.querySelector('.bank-radio').checked = false; }
+                    } else {
+                        addedBanks.add(b.key);
+                        row.classList.add('added');
+                    }
+                    renderBanksOnScreen();
+                });
+
+                row.querySelector('.bank-radio').addEventListener('change', function () {
+                    if (!addedBanks.has(b.key)) { this.checked = false; return; }
+                    activeBank = b.key;
+                    renderBanksOnScreen();
+                });
+
+                wrap.appendChild(row);
+            });
+        }
+
+        /* ══ ПРАВКА 1: Полное имя из инпута в карточках банков ══ */
+        function renderBanksOnScreen() {
+            const container = document.getElementById('banksScroll');
+            container.innerHTML = '';
+
+            // ПРАВКА 1: используем полное значение из инпута, не только первое слово
+            const recipient = document.getElementById('recipientName').value || 'Получатель';
+            const displayName = recipient.trim() || 'Получатель';
+
+            // "Другой банк" — всегда первым
+            const otherTpl = document.getElementById('tpl-other');
+            container.appendChild(otherTpl.content.cloneNode(true));
+
+            addedBanks.forEach(key => {
+                const b = BANKS.find(x => x.key === key);
+                if (!b) return;
+
+                const tplEl = document.getElementById(b.tpl);
+                let root;
+
+                if (tplEl) {
+                    const clone = tplEl.content.cloneNode(true);
+                    // ПРАВКА 1: заменяем {{name}} на полное имя
+                    clone.querySelectorAll('*').forEach(el => {
+                        if (el.childElementCount === 0 && el.textContent.includes('{{name}}')) {
+                            el.textContent = el.textContent.replace(/\{\{name\}\}/g, displayName);
+                        }
+                    });
+                    container.appendChild(clone);
+                    root = container.lastElementChild;
+                } else {
+                    root = document.createElement('div');
+                    root.className = `bank-card ${b.cls}`;
+                    root.innerHTML = `
+                        <div class="bank-card-icon">${b.emoji}</div>
+                        <div class="bank-card-name">${b.name}</div>
+                        <div class="bank-card-person">${displayName}</div>
+                    `;
+                    container.appendChild(root);
+                }
+
+                root.dataset.activeTarget = (activeBank === key) ? 'true' : '';
+                root.style.opacity = '0';
+                root.style.transform = 'translateX(-20px)';
+                root.style.transition = 'none';
+            });
+        }
+
+        /* ══ ПРАВКА 2: Плавная анимация карточек ══ */
+        async function animateBankCards() {
+            const container = document.getElementById('banksScroll');
+            const cards = Array.from(container.querySelectorAll('.bank-card'));
+            if (cards.length === 0) return;
+
+            const other = cards[0];
+            const rest = cards.slice(1);
+
+            // Если нет остальных карточек — просто показываем "Другой банк" и выходим
+            if (rest.length === 0) return;
+
+            // Скрываем все банковские карточки до начала анимации
+            rest.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateX(-20px)';
+                card.style.transition = 'none';
+            });
+
+            // FLIP: перемещаем "Другой банк" в конец
+            const rectBefore = other.getBoundingClientRect();
+            container.appendChild(other);
+            const rectAfter = other.getBoundingClientRect();
+            const deltaX = rectBefore.left - rectAfter.left;
+
+            other.style.transition = 'none';
+            other.style.transform = `translateX(${deltaX}px)`;
+
+            await wait(30);
+
+            // "Другой банк" плавно едет вправо на своё место (700ms — замедленно)
+            other.style.transition = 'transform 0.7s cubic-bezier(0.25,0.1,0.25,1)';
+            other.style.transform = 'translateX(0)';
+
+            // Начинаем показывать карточки чуть раньше, пока "Другой банк" ещё едет
+            await wait(100);
+
+            // Карточки появляются плавно, одна за другой
+            for (let i = 0; i < rest.length; i++) {
+                rest[i].style.transition = 'opacity 0.5s ease, transform 0.5s cubic-bezier(0.25,0.1,0.25,1)';
+                rest[i].style.opacity = '1';
+                rest[i].style.transform = 'translateX(0)';
+                await wait(80);
+            }
+
+            // ── АНИМАЦИЯ ВЫБОРА БАНКА ──
+            if (!activeBank) return;
+
+            const allCards = Array.from(container.querySelectorAll('.bank-card'));
+            const targetCard = allCards.find(c => c.dataset.activeTarget === 'true');
+            if (!targetCard) return;
+
+            const firstCard = allCards[0];
+
+            // Подсвечиваем первый банк
+            firstCard.style.transition = 'border-color 0.3s ease, box-shadow 0.3s ease';
+            firstCard.style.borderColor = '#ffdd00';
+            firstCard.style.boxShadow = '0 0 0 2px rgba(255,221,0,0.3)';
+
+            if (targetCard === firstCard) return;
+
+            await wait(1000);
+
+            // Скроллим к целевому если не виден
+            const containerRect = container.getBoundingClientRect();
+            const targetRect = targetCard.getBoundingClientRect();
+            const isVisible = targetRect.left >= containerRect.left && targetRect.right <= containerRect.right;
+
+            if (!isVisible) {
+                const startScroll = container.scrollLeft;
+                const targetScroll = container.scrollLeft + (targetRect.left - containerRect.left) - 16;
+                await tween(700, p => {
+                    container.scrollLeft = startScroll + (targetScroll - startScroll) * p;
+                }, easeInOutCubic);
+                await wait(200);
+            }
+
+            firstCard.style.transition = 'border-color 0.25s ease, box-shadow 0.25s ease';
+            firstCard.style.borderColor = 'transparent';
+            firstCard.style.boxShadow = 'none';
+
+            await wait(150);
+
+            targetCard.style.transition = 'border-color 0.3s ease, box-shadow 0.3s ease';
+            targetCard.style.borderColor = '#ffdd00';
+            targetCard.style.boxShadow = '0 0 0 2px rgba(255,221,0,0.3)';
+        }
+
+        /* ══ ВРЕМЯ ══ */
+        function getCurrentTime() {
+            const now = new Date();
+            return String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+        }
+        function updateStatusTime() {
+            if (!document.getElementById('customTimeCheck').checked) {
+                document.getElementById('statusTime').textContent = getCurrentTime();
+            }
+        }
+        document.getElementById('customTimeCheck').addEventListener('change', function () {
+            document.getElementById('timeInputWrap').classList.toggle('visible', this.checked);
+            if (!this.checked) updateStatusTime();
+        });
+        document.getElementById('customTimeInput').addEventListener('input', function () {
+            let v = this.value.replace(/\D/g, '').substring(0, 4);
+            if (v.length > 2) v = v.slice(0, 2) + ':' + v.slice(2);
+            this.value = v;
+            document.getElementById('statusTime').textContent = v || getCurrentTime();
+        });
+
+        /* ══ ТЕЛЕФОН ══ */
+        function formatPhone(raw) {
+            const digits = raw.replace(/\D/g, '');
+            const local = digits.startsWith('7') ? digits.slice(1) : digits.startsWith('8') ? digits.slice(1) : digits;
+            let r = '';
+            for (let i = 0; i < local.length && i < 10; i++) {
+                if (i === 0) r += local[i];
+                else if (i === 3) r += ' ' + local[i];
+                else if (i === 6) r += '-' + local[i];
+                else if (i === 8) r += '-' + local[i];
+                else r += local[i];
+            }
+            return r;
+        }
+
+        document.getElementById('phoneInput').addEventListener('input', (e) => {
+            const input = e.target;
+
+            const formatted = formatPhoneInput(input.value);
+
+            input.value = formatted;
+
+            renderContactRow();
+            updateS2Phone();
+
+            document.getElementById('phoneDisplay').textContent =
+                formatted || '+7 000 000 00 00';
+        });
+        document.getElementById('recipientName').addEventListener('input', () => {
+            renderContactRow();
+            renderBanksOnScreen();
+            updateContactAvatar();
+        });
+
+        function renderContactRow() {
+            const phone = document.getElementById('phoneInput').value;
+            const name = document.getElementById('recipientName').value || 'Получатель';
+            const fmt = formatPhone(phone);
+            document.getElementById('contactName').textContent = name;
+            document.getElementById('contactPhone').textContent = fmt ? `+7 ${fmt}` : '';
+            updateContactAvatar();
+        }
+        function updateContactAvatar() {
+            const name = document.getElementById('recipientName').value || '';
+            const parts = name.trim().split(/\s+/);
+            let initials = '';
+            if (parts[0]) initials += parts[0][0].toUpperCase();
+            if (parts[1]) initials += parts[1][0].toUpperCase();
+            document.getElementById('contactAvatar').textContent = initials || '?';
+        }
+        function updateS2Phone() {
+            const fmt = formatPhone(document.getElementById('phoneInput').value);
+            document.getElementById('s2PhoneVal').textContent = fmt ? `+7 ${fmt}` : '';
+        }
+
+        function formatAmount(raw) {
+            const clean = String(raw).replace(/[^\d.,]/g, '').replace(',', '.');
+            const hasDec = clean.includes('.');
+            const num = parseFloat(clean);
+            if (isNaN(num)) return raw;
+            const fixed = hasDec ? num.toFixed(2) : String(Math.round(num));
+            const parts = fixed.split('.');
+            const intFmt = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, '\u00a0');
+            return hasDec && parts[1] ? `${intFmt},${parts[1]}` : intFmt;
+        }
+
+        /* ══ БАТАРЕЯ ══ */
+        function setBatteryMode(mode) {
+            batteryMode = mode;
+            document.getElementById('bmodeSimple').classList.toggle('active', mode === 'simple');
+            document.getElementById('bmodeDetailed').classList.toggle('active', mode === 'detailed');
+            renderBattery();
+        }
+        function renderBattery() {
+            const container = document.getElementById('batteryContainer');
+            const level = parseInt(document.getElementById('batterySlider').value);
+            const color = level < 20 ? '#ff3b30' : '#fff';
+            if (batteryMode === 'simple') {
+                container.innerHTML = `
+                    <svg width="25" height="14" viewBox="0 0 100 50">
+                        <rect x="1" y="1" width="88" height="48" rx="10" fill="none" stroke="#818181" stroke-width="3"/>
+                        <rect x="90" y="16" width="7" height="18" rx="3" fill="#818181"/>
+                        <clipPath id="bclip"><rect x="4" y="4" width="82" height="42" rx="8"/></clipPath>
+                        <rect x="4" y="4" width="${(level / 100) * 82}" height="42" rx="8" fill="${color}" clip-path="url(#bclip)"/>
+                    </svg>`;
+            } else {
+                container.innerHTML = `
+                    <div class="battery-detailed">
+                        <div class="battery-body-2">
+                            <div class="battery-fill" style="width:${level}%;background:${color};"></div>
+                            <span class="battery-text" style="color:${level < 20 ? '#fff' : '#000'}">${level}</span>
+                        </div>
+                        <div class="battery-cap"></div>
+                    </div>`;
+            }
+        }
+        document.getElementById('batterySlider').addEventListener('input', renderBattery);
+
+        /* ══ АНИМАЦИИ ══ */
+        function animateKeyboardHide() {
+            const kb = document.getElementById('iosKeyboard');
+            const h = kb.offsetHeight;
+            return tween(380, p => { kb.style.transform = `translateY(${p * (h + 20)}px)`; }, easeOutCubic);
+        }
+        function slideInScreen2() {
+            const s2 = document.getElementById('screen2');
+            s2.style.transform = 'translateX(100%)';
+            s2.classList.add('show');
+            return tween(300, p => { s2.style.transform = `translateX(${(1 - p) * 100}%)`; }, easeOutCubic);
+        }
+
+        async function showAmountScreen(rawAmount) {
+            const screen = document.getElementById('screenAmount');
+            const overlay = document.getElementById('saOverlay');
+            const keyboard = document.getElementById('saKeyboard');
+            const amountWrap = document.getElementById('saAmountWrap');
+            const amountDisplay = document.getElementById('saAmountDisplay');
+            const saBalance = document.getElementById('saBalanceSubtitle');
+
+            saBalance.textContent = formatAmount(rawAmount) + ' ₽';
+            amountDisplay.textContent = '0';
+
+            overlay.style.transition = 'none';
+            overlay.style.transform = 'translateY(-100%)';
+            keyboard.style.transition = 'none';
+            keyboard.style.transform = 'translateY(100%)';
+            amountWrap.style.transition = 'none';
+            amountWrap.style.opacity = '0';
+            amountWrap.style.top = '50%';
+            amountWrap.style.transform = 'translateY(-50%)';
+
+            screen.classList.add('active');
+            await wait(30);
+
+            const dur = 320;
+            overlay.style.transition = `transform ${dur}ms cubic-bezier(0.25,0.1,0.25,1)`;
+            keyboard.style.transition = `transform ${dur}ms cubic-bezier(0.25,0.1,0.25,1)`;
+            amountWrap.style.transition = `opacity ${dur}ms ease, top ${dur}ms cubic-bezier(0.25,0.1,0.25,1), transform ${dur}ms cubic-bezier(0.25,0.1,0.25,1)`;
+
+            overlay.style.transform = 'translateY(0)';
+            keyboard.style.transform = 'translateY(0)';
+            amountWrap.style.opacity = '1';
+            amountWrap.style.top = '50px';
+            amountWrap.style.transform = 'translateY(0)';
+
+            await wait(dur + 50);
+        }
+
+        async function animateTypingAmount(rawAmount) {
+            const display = document.getElementById('saAmountDisplay');
+            const clean = String(rawAmount).replace(/[^\d]/g, '');
+            const digits = clean.split('');
+
+            for (let i = 0; i < digits.length; i++) {
+                const d = digits[i];
+                const keyEl = document.querySelector(`.sa-kb-key[data-val="${d}"]`);
+                if (keyEl) {
+                    keyEl.classList.add('pressed');
+                    await wait(80);
+                    keyEl.classList.remove('pressed');
+                }
+
+                const typed = clean.slice(0, i + 1);
+                const num = parseInt(typed, 10);
+                display.textContent = num.toLocaleString('ru-RU');
+                await wait(110 + Math.random() * 60);
+            }
+
+            const decimalMatch = String(rawAmount).match(/[.,](\d{1,2})/);
+            if (decimalMatch) {
+                const cents = decimalMatch[1];
+                const commaKey = document.querySelector('.sa-kb-key[data-val=","]');
+                if (commaKey) {
+                    commaKey.classList.add('pressed');
+                    await wait(80);
+                    commaKey.classList.remove('pressed');
+                }
+                display.textContent = display.textContent + ',';
+                await wait(120);
+
+                for (const c of cents.split('')) {
+                    const keyEl = document.querySelector(`.sa-kb-key[data-val="${c}"]`);
+                    if (keyEl) {
+                        keyEl.classList.add('pressed');
+                        await wait(80);
+                        keyEl.classList.remove('pressed');
+                    }
+                    display.textContent = display.textContent + c;
+                    await wait(110);
+                }
+            }
+        }
+
+        async function hideAmountScreen(rawAmount) {
+            const screen = document.getElementById('screenAmount');
+            const overlay = document.getElementById('saOverlay');
+            const keyboard = document.getElementById('saKeyboard');
+            const amountWrap = document.getElementById('saAmountWrap');
+
+            const dur = 260;
+            overlay.style.transition = `transform ${dur}ms cubic-bezier(0.4,0,1,1)`;
+            keyboard.style.transition = `transform ${dur}ms cubic-bezier(0.4,0,1,1)`;
+            amountWrap.style.transition = `opacity ${dur}ms ease, transform ${dur}ms cubic-bezier(0.4,0,1,1)`;
+            overlay.style.transform = 'translateY(-100%)';
+            keyboard.style.transform = 'translateY(100%)';
+            amountWrap.style.opacity = '0';
+            amountWrap.style.transform = 'translateY(20px)';
+
+            await wait(dur + 30);
+            screen.classList.remove('active');
+
+            amountWrap.style.transition = 'none';
+            amountWrap.style.opacity = '1';
+            amountWrap.style.transform = 'none';
+
+            const display = document.getElementById('saAmountDisplay');
+            const s2limit = document.getElementById('s2LimitInput');
+            const formattedVal = display.textContent + ' ₽';
+            s2limit.value = formattedVal;
+            s2limit.classList.add('has-value');
+
+            const transferBtn = document.getElementById('s2TransferBtn');
+            transferBtn.textContent = 'Перевести ' + formattedVal;
+
+            const commText = document.getElementById('commissionText');
+            const spinnerWrap = document.getElementById('commissionSpinnerWrap');
+            commText.style.visibility = 'hidden';
+            spinnerWrap.classList.add('visible');
+
+            await wait(600);
+
+            spinnerWrap.classList.remove('visible');
+            commText.textContent = 'Комиссия не взимается банком';
+            commText.style.visibility = 'visible';
+        }
+
+        async function showLoader() {
+            const loader = document.getElementById('loaderOverlay');
+            loader.classList.add('active');
+            await wait(2000);
+            loader.classList.remove('active');
+        }
+
+        async function showErrorPopup() {
+            const errorText = document.getElementById('errorText').value;
+            document.getElementById('errorPopupText').textContent = errorText;
+
+            const overlay = document.getElementById('errorPopupOverlay');
+            overlay.style.transition = 'none';
+            overlay.style.opacity = '0';
+            overlay.classList.add('active');
+            overlay.getBoundingClientRect();
+
+            await wait(30);
+
+            overlay.style.transition = 'opacity 0.4s ease';
+            overlay.style.opacity = '1';
+
+            await wait(400);
+        }
+
+        async function showPushNotification() {
+            const notifText = document.getElementById('notifText').value;
+            document.getElementById('pushText').textContent = notifText;
+
+            const push = document.getElementById('pushNotification');
+            push.classList.add('show');
+            await wait(3500);
+            push.classList.remove('show');
+        }
+
+        /* ══ ГЛАВНАЯ АНИМАЦИЯ ══ */
+        async function startAnimation() {
+            document.getElementById('s2TransferBtn').textContent = 'Перевести';
+
+            if (currentStep === 'running') return;
+            currentStep = 'running';
+
+            const rawPhone = document.getElementById('phoneInput').value;
+            const recipient = document.getElementById('recipientName').value || 'Владимиров В.';
+            const rawAmount = document.getElementById('transferAmount').value || '5080.56';
+
+            if (!rawPhone) { alert('Введите номер телефона'); currentStep = 'idle'; return; }
+
+            const balanceRaw = document.getElementById('balanceAmount').value || '22 771 392';
+            document.getElementById('s2BalanceAmount').textContent = balanceRaw + ' ₽';
+            updateS2Phone();
+
+            // Сбросы
+            document.getElementById('screenAmount').classList.remove('active');
+            document.getElementById('errorPopupOverlay').classList.remove('active');
+            document.getElementById('loaderOverlay').classList.remove('active');
+            document.getElementById('pushNotification').classList.remove('show');
+
+            const saKb = document.getElementById('saKeyboard');
+            saKb.classList.remove('kb-visible', 'kb-hidden');
+            saKb.style.transform = 'translateY(100%)';
+
+            const s2 = document.getElementById('screen2');
+            s2.style.transform = 'translateX(100%)';
+            s2.classList.remove('show');
+
+            const kb = document.getElementById('iosKeyboard');
+            kb.style.transform = 'translateY(0)';
+
+            const contactRow = document.getElementById('contactRow');
+            contactRow.classList.remove('visible', 'highlight');
+
+            const s2limit = document.getElementById('s2LimitInput');
+            if (s2limit) s2limit.value = '';
+
+            // ПРАВКА 3: Устанавливаем номер с инпута сразу, до всех задержек
+            const formatted = formatPhone(rawPhone);
+            document.getElementById('phoneDisplay').textContent = formatted ? `+7 ${formatted}` : '+7 000 000 00 00';
+
+            // Контакт появляется
+            document.getElementById('contactName').textContent = recipient;
+            document.getElementById('contactPhone').textContent = `+7 ${formatted}`;
+            updateContactAvatar();
+            await wait(300);
+            contactRow.classList.add('visible');
+            await wait(600);
+
+            // Подсветка
+            contactRow.classList.add('highlight');
+            await wait(200);
+            contactRow.classList.remove('highlight');
+            await wait(200);
+
+            // Клавиатура уходит
+            await animateKeyboardHide();
+
+            // Экран 2 въезжает
+            await wait(60);
+            renderBanksOnScreen();
+            await slideInScreen2();
+            await animateBankCards();
+            await wait(1500);
+
+            // Экран суммы
+            await showAmountScreen(rawAmount);
+            await wait(500);
+            await animateTypingAmount(rawAmount);
+            await wait(800);
+            await hideAmountScreen(rawAmount);
+
+            // Загрузчик
+            await wait(1000);
+            await showLoader();
+
+            // Попап ошибки
+            await showErrorPopup();
+
+            // Уведомление
+            await wait(3000);
+            showPushNotification();
+
+            currentStep = 'idle';
+        }
+
+        /* ══ ЗАПИСЬ ВИДЕО ══ */
+        async function downloadVideo() {
+            const btn = document.querySelector('.btn-download');
+
+            try {
+                const phoneScreen = document.querySelector('.phone-screen');
+                if (!phoneScreen) throw new Error('Элемент .phone-screen не найден');
+
+                const stream = await navigator.mediaDevices.getDisplayMedia({
+                    video: {
+                        frameRate: 60,
+                        width: { ideal: 1920 },
+                        height: { ideal: 1080 },
+                        displaySurface: 'browser'
+                    },
+                    audio: false,
+                    preferCurrentTab: true
+                });
+
+                if ('CropTarget' in window) {
+                    try {
+                        const cropTarget = await CropTarget.fromElement(phoneScreen);
+                        const [videoTrack] = stream.getVideoTracks();
+                        await videoTrack.cropTo(cropTarget);
+                    } catch (cropError) {
+                        console.warn('CropTarget не сработал:', cropError);
+                    }
+                }
+
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+
+                oscillator.type = 'sine';
+                oscillator.frequency.value = 440;
+                gainNode.gain.value = 0.0001;
+                oscillator.connect(gainNode);
+
+                const audioDestination = audioCtx.createMediaStreamDestination();
+                gainNode.connect(audioDestination);
+                oscillator.start();
+
+                const audioTrack = audioDestination.stream.getAudioTracks()[0];
+                const combinedStream = new MediaStream([
+                    ...stream.getVideoTracks(),
+                    audioTrack
+                ]);
+
+                const supportedTypes = [
+                    'video/webm;codecs=vp9,opus',
+                    'video/webm;codecs=vp8,opus',
+                    'video/webm'
+                ];
+                const selectedType = supportedTypes.find(t => MediaRecorder.isTypeSupported(t));
+                if (!selectedType) throw new Error('Нет поддерживаемого формата записи');
+
+                const mr = new MediaRecorder(combinedStream, {
+                    mimeType: selectedType,
+                    videoBitsPerSecond: 20_000_000
+                });
+
+                const chunks = [];
+                mr.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
+
+                mr.onstop = () => {
+                    oscillator.stop();
+                    audioCtx.close();
+                    stream.getTracks().forEach(t => t.stop());
+
+                    if (chunks.length === 0) {
+                        alert('Ошибка: не удалось записать видео');
+                        btn.textContent = '⬇ Скачать';
+                        btn.disabled = false;
+                        return;
+                    }
+
+                    const blob = new Blob(chunks, { type: selectedType });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `tbank-transfer-${Date.now()}.webm`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    setTimeout(() => URL.revokeObjectURL(url), 1000);
+
+                    btn.textContent = '⬇ Скачать';
+                    btn.disabled = false;
+                };
+
+                mr.onerror = (error) => {
+                    console.error('Ошибка записи:', error);
+                    oscillator.stop();
+                    audioCtx.close();
+                    stream.getTracks().forEach(t => t.stop());
+                    btn.textContent = '⬇ Скачать';
+                    btn.disabled = false;
+                };
+
+                btn.textContent = '● Запись...';
+                btn.disabled = true;
+
+                mr.start();
+                await wait(500);
+                await startAnimation();
+                await wait(1000);
+                mr.stop();
+
+            } catch (e) {
+                console.error('Ошибка:', e);
+                btn.textContent = '⬇ Скачать';
+                btn.disabled = false;
+                if (e.name === 'NotAllowedError') {
+                    alert('Разрешите захват экрана в диалоге браузера');
+                } else {
+                    alert('Ошибка: ' + e.message);
+                }
+            }
+        }
+
+        /* ══ ИНИЦИАЛИЗАЦИЯ ══ */
+        document.getElementById('balanceAmount').addEventListener('input', function () {
+            document.getElementById('s2BalanceAmount').textContent = this.value + ' ₽';
+        });
+
+        buildBankList();
+        renderBattery();
+        renderContactRow();
+        updateStatusTime();
+        setInterval(updateStatusTime, 10000);
+
+        // ПРАВКА 3: При загрузке страницы сразу показываем номер из инпута (если введён)
+        (function initPhoneDisplay() {
+            const fmt = formatPhone(document.getElementById('phoneInput').value);
+            if (fmt) document.getElementById('phoneDisplay').textContent = `+7 ${fmt}`;
+        })();
+
+
+
+        function formatPhoneInput(value) {
+            let digits = value.replace(/\D/g, '');
+
+            // убираем лишние 8/7 в начале
+            if (digits.startsWith('8')) {
+                digits = '7' + digits.slice(1);
+            }
+
+            if (digits.startsWith('7')) {
+                digits = digits.slice(1);
+            }
+
+            let result = '+7 ';
+
+            if (digits.length > 0) result += digits.substring(0, 3);
+            if (digits.length >= 3) result += ' ' + digits.substring(3, 6);
+            if (digits.length >= 6) result += ' ' + digits.substring(6, 8);
+            if (digits.length >= 8) result += ' ' + digits.substring(8, 10);
+
+            return result.trim();
+        }
+    </script>
+</body>
+
+</html>
