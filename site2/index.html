@@ -1412,6 +1412,249 @@
         .input-panel::-webkit-scrollbar-thumb:hover {
             background: #555;
         }
+
+        /* ═══════════════════════════════════════════
+           ШАБЛОНЫ — СТИЛИ
+        ═══════════════════════════════════════════ */
+
+        .templates-block {
+            background: #202020;
+            border: 1px solid #2e2e2e;
+            border-radius: 14px;
+            padding: 14px;
+            margin-bottom: 14px;
+        }
+
+        .templates-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .templates-title {
+            font-size: 11px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .templates-tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 10px;
+        }
+
+        .tpl-tab {
+            flex: 1;
+            padding: 6px;
+            border-radius: 7px;
+            border: 1px solid #333;
+            background: #252525;
+            color: #aaa;
+            font-size: 11px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.15s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .tpl-tab.active {
+            border-color: #ffdd00;
+            color: #ffdd00;
+            background: rgba(255, 221, 0, 0.08);
+        }
+
+        .tpl-list {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .tpl-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            padding: 9px 10px;
+            background: #252525;
+            border: 1px solid #333;
+            border-radius: 9px;
+            cursor: pointer;
+            transition: all 0.15s;
+            position: relative;
+        }
+
+        .tpl-item:hover {
+            background: #2a2a2a;
+            border-color: rgba(255, 221, 0, 0.3);
+        }
+
+        .tpl-item-text {
+            font-size: 12px;
+            color: #ccc;
+            line-height: 1.4;
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+        .tpl-item-del {
+            font-size: 14px;
+            color: #555;
+            cursor: pointer;
+            flex-shrink: 0;
+            padding: 0 2px;
+            line-height: 1;
+            transition: color 0.15s;
+            background: none;
+            border: none;
+        }
+
+        .tpl-item-del:hover {
+            color: #ff453a;
+        }
+
+        .tpl-add-row {
+            display: flex;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .tpl-add-input {
+            flex: 1;
+            background: #252525;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 7px 10px;
+            color: #fff;
+            font-size: 12px;
+            outline: none;
+            font-family: 'Inter', sans-serif;
+            min-height: 60px;
+            resize: none;
+            line-height: 1.4;
+        }
+
+        .tpl-add-input:focus {
+            border-color: rgba(255, 221, 0, 0.5);
+        }
+
+        .tpl-save-btn {
+            align-self: flex-end;
+            padding: 7px 12px;
+            background: rgba(255, 221, 0, 0.15);
+            border: 1px solid rgba(255, 221, 0, 0.3);
+            border-radius: 8px;
+            color: #ffdd00;
+            font-size: 12px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.15s;
+            white-space: nowrap;
+        }
+
+        .tpl-save-btn:hover {
+            background: rgba(255, 221, 0, 0.25);
+        }
+
+        /* Переключатель уведомлений */
+        .notif-toggle-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 4px 0 10px;
+        }
+
+        .notif-toggle-label {
+            font-size: 11px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 40px;
+            height: 22px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+            position: absolute;
+        }
+
+        .toggle-track {
+            position: absolute;
+            inset: 0;
+            background: #333;
+            border-radius: 11px;
+            transition: background 0.2s;
+        }
+
+        .toggle-thumb {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 16px;
+            height: 16px;
+            background: #888;
+            border-radius: 50%;
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        .toggle-switch input:checked+.toggle-track {
+            background: rgba(255, 221, 0, 0.25);
+            border: 1px solid rgba(255, 221, 0, 0.5);
+        }
+
+        .toggle-switch input:checked+.toggle-track+.toggle-thumb {
+            transform: translateX(18px);
+            background: #ffdd00;
+        }
+
+        .notif-fields {
+            transition: opacity 0.25s, max-height 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+            max-height: 600px;
+            overflow: hidden;
+        }
+
+        .notif-fields.hidden {
+            opacity: 0.35;
+            pointer-events: none;
+        }
+
+        .notif-fields.collapsed {
+            max-height: 0;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .tpl-toggle-btn {
+            width: 100%;
+            padding: 7px 0;
+            background: transparent;
+            border: 1px dashed #333;
+            border-radius: 8px;
+            color: #666;
+            font-size: 11px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.15s;
+            margin-top: 4px;
+            letter-spacing: 0.3px;
+        }
+
+        .tpl-toggle-btn:hover {
+            border-color: rgba(255, 221, 0, 0.3);
+            color: #aaa;
+        }
     </style>
 </head>
 
@@ -1445,16 +1688,61 @@
             <input type="text" id="transferAmount" placeholder="200 000">
         </div>
 
-        <div class="input-group">
-            <label>Текст ошибки</label>
-            <textarea
-                id="errorText">Операция отклонена. Получатель находится в базе Банка России по переводам без добровольного согласия (161-ФЗ). Подробнее в чате</textarea>
+        <!-- ШАБЛОНЫ ОШИБКИ -->
+        <div class="templates-block" id="errorTemplatesBlock">
+            <div class="input-group" style="margin-bottom:6px;">
+                <label>Текст ошибки</label>
+                <textarea
+                    id="errorText">Операция отклонена. Получатель находится в базе Банка России по переводам без добровольного согласия (161-ФЗ). Подробнее в чате</textarea>
+            </div>
+            <button class="tpl-toggle-btn" id="errorTplToggle" onclick="toggleErrorTemplates()">▾ Показать
+                шаблоны</button>
+            <div class="notif-fields collapsed" id="errorFields">
+                <div style="height:8px;"></div>
+                <div class="templates-tabs">
+                    <button class="tpl-tab active" onclick="switchTplTab('error','preset')">Готовые</button>
+                    <button class="tpl-tab" onclick="switchTplTab('error','custom')">Мои</button>
+                </div>
+                <div class="tpl-list" id="errorPresetList"></div>
+                <div class="tpl-list" id="errorCustomList" style="display:none;"></div>
+                <div class="tpl-add-row" id="errorAddRow" style="display:none;">
+                    <textarea class="tpl-add-input" id="errorAddInput" placeholder="Введите текст ошибки..."></textarea>
+                    <button class="tpl-save-btn" onclick="saveCustomTemplate('error')">Сохранить</button>
+                </div>
+            </div>
         </div>
 
-        <div class="input-group">
-            <label>Текст уведомления</label>
-            <textarea
-                id="notifText">Отказ Переводы, счет RUB. Получатель находится в базе ЦБ РФ по переводам...</textarea>
+        <!-- УВЕДОМЛЕНИЕ -->
+        <div class="templates-block" id="notifTemplatesBlock">
+            <div class="notif-toggle-row">
+                <span class="notif-toggle-label">Уведомление</span>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="notifEnabled" checked onchange="toggleNotif()">
+                    <div class="toggle-track"></div>
+                    <div class="toggle-thumb"></div>
+                </label>
+            </div>
+            <div class="input-group" style="margin-bottom:6px;">
+                <label>Текст уведомления</label>
+                <textarea
+                    id="notifText">Отказ Переводы, счет RUB. Получатель находится в базе ЦБ РФ по переводам...</textarea>
+            </div>
+            <button class="tpl-toggle-btn" id="notifTplToggle" onclick="toggleNotifTemplates()">▾ Показать
+                шаблоны</button>
+            <div class="notif-fields collapsed" id="notifFields">
+                <div style="height:8px;"></div>
+                <div class="templates-tabs">
+                    <button class="tpl-tab active" onclick="switchTplTab('notif','preset')">Готовые</button>
+                    <button class="tpl-tab" onclick="switchTplTab('notif','custom')">Мои</button>
+                </div>
+                <div class="tpl-list" id="notifPresetList"></div>
+                <div class="tpl-list" id="notifCustomList" style="display:none;"></div>
+                <div class="tpl-add-row" id="notifAddRow" style="display:none;">
+                    <textarea class="tpl-add-input" id="notifAddInput"
+                        placeholder="Введите текст уведомления..."></textarea>
+                    <button class="tpl-save-btn" onclick="saveCustomTemplate('notif')">Сохранить</button>
+                </div>
+            </div>
         </div>
 
         <div class="input-group">
@@ -1505,7 +1793,6 @@
                             <img style="width: 20px;" class="flag-icon" src="./source/rus-removebg-preview.png" alt="">
                             <span class="code-text">+7</span>
                         </div>
-                        <!-- ПРАВКА 3: Показываем номер с инпута сразу -->
                         <div class="phone-number-display" id="phoneDisplay">+7 000 000 00 00</div>
                     </div>
 
@@ -1910,6 +2197,159 @@
         let batteryMode = 'simple';
         let currentStep = 'idle';
 
+        /* ══════════════════════════════════════════
+           СИСТЕМА ШАБЛОНОВ
+        ══════════════════════════════════════════ */
+
+        const PRESET_ERROR_TEMPLATES = [
+            'Для перевода денежных средств необходимо подтверждение получателя! Запросите встречный перевод в размере 1001 ₽',
+            'Для получения средств необходимо оплатить налог - 15 000 ₽! Обратитесь к получателю!',
+            'Для получения средств необходимо оплатить лиц. сбор - 10 000 ₽! Обратитесь к получателю!',
+            'Для перевода денежных средств необходимо оплатить 115-ФЗ! Запросите оплату 18 000 ₽',
+            'Для получения средств необходимо оплатить Таможенную пошлину - 24 990 ₽! Обратитесь к получателю!',
+            'Для получения средств необходимо открыть платёжный шлюз! Запросите оплату 16 279 ₽',
+            'Операция отклонена банком получателя',
+            'Перевод невозможен',
+        ];
+
+        const PRESET_NOTIF_TEMPLATES = [
+            // 'Отказ Переводы, счет RUB. Получатель находится в базе ЦБ РФ по переводам...',
+            // 'Отказ перевода. Подозрительная активность. Обратитесь в поддержку.',
+            // 'Перевод заблокирован службой безопасности Т-Банка.',
+            // 'Ошибка транзакции. Недостаточно средств на счёте.',
+        ];
+
+        /* Активный таб для каждого блока */
+        const tplTabState = { error: 'preset', notif: 'preset' };
+
+        function switchTplTab(type, tab) {
+            tplTabState[type] = tab;
+            const block = type === 'error' ? document.getElementById('errorFields') : document.getElementById('notifFields');
+            const tabs = block.querySelectorAll('.tpl-tab');
+            tabs.forEach((t, i) => {
+                t.classList.toggle('active', (i === 0 && tab === 'preset') || (i === 1 && tab === 'custom'));
+            });
+            const presetList = document.getElementById(type + 'PresetList');
+            const customList = document.getElementById(type + 'CustomList');
+            const addRow = document.getElementById(type + 'AddRow');
+            if (tab === 'preset') {
+                presetList.style.display = 'flex';
+                customList.style.display = 'none';
+                addRow.style.display = 'none';
+            } else {
+                presetList.style.display = 'none';
+                customList.style.display = 'flex';
+                addRow.style.display = 'flex';
+                renderCustomList(type);
+            }
+        }
+
+        function applyTemplate(type, text) {
+            if (type === 'error') {
+                document.getElementById('errorText').value = text;
+            } else {
+                document.getElementById('notifText').value = text;
+            }
+            /* Визуальный флеш — подсветка textarea */
+            const ta = document.getElementById(type === 'error' ? 'errorText' : 'notifText');
+            ta.style.transition = 'border-color 0.1s';
+            ta.style.borderColor = '#ffdd00';
+            setTimeout(() => { ta.style.borderColor = ''; }, 600);
+        }
+
+        function buildPresetList(type) {
+            const list = document.getElementById(type + 'PresetList');
+            const presets = type === 'error' ? PRESET_ERROR_TEMPLATES : PRESET_NOTIF_TEMPLATES;
+            list.innerHTML = '';
+            presets.forEach(text => {
+                const item = document.createElement('div');
+                item.className = 'tpl-item';
+                item.innerHTML = `<span class="tpl-item-text">${text}</span>`;
+                item.addEventListener('click', () => applyTemplate(type, text));
+                list.appendChild(item);
+            });
+        }
+
+        function getCustomTemplates(type) {
+            try {
+                return JSON.parse(localStorage.getItem('tpl_custom_' + type) || '[]');
+            } catch { return []; }
+        }
+
+        function setCustomTemplates(type, arr) {
+            localStorage.setItem('tpl_custom_' + type, JSON.stringify(arr));
+        }
+
+        function saveCustomTemplate(type) {
+            const input = document.getElementById(type + 'AddInput');
+            const text = input.value.trim();
+            if (!text) return;
+            const arr = getCustomTemplates(type);
+            arr.unshift(text);
+            setCustomTemplates(type, arr);
+            input.value = '';
+            renderCustomList(type);
+        }
+
+        function deleteCustomTemplate(type, index) {
+            const arr = getCustomTemplates(type);
+            arr.splice(index, 1);
+            setCustomTemplates(type, arr);
+            renderCustomList(type);
+        }
+
+        function renderCustomList(type) {
+            const list = document.getElementById(type + 'CustomList');
+            const arr = getCustomTemplates(type);
+            list.innerHTML = '';
+            if (arr.length === 0) {
+                list.innerHTML = '<div style="font-size:12px;color:#555;padding:6px 4px;">Нет сохранённых шаблонов</div>';
+                return;
+            }
+            arr.forEach((text, i) => {
+                const item = document.createElement('div');
+                item.className = 'tpl-item';
+                item.innerHTML = `<span class="tpl-item-text">${text}</span><button class="tpl-item-del" title="Удалить">✕</button>`;
+                item.querySelector('span').addEventListener('click', () => applyTemplate(type, text));
+                item.querySelector('button').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    deleteCustomTemplate(type, i);
+                });
+                list.appendChild(item);
+            });
+        }
+
+        /* ══ ПЕРЕКЛЮЧАТЕЛЬ УВЕДОМЛЕНИЙ ══ */
+        function toggleNotif() {
+            const enabled = document.getElementById('notifEnabled').checked;
+            const fields = document.getElementById('notifFields');
+            const btn = document.getElementById('notifTplToggle');
+            if (!enabled) {
+                fields.classList.add('collapsed');
+                if (btn) btn.style.opacity = '0.35';
+                if (btn) btn.style.pointerEvents = 'none';
+            } else {
+                if (btn) btn.style.opacity = '';
+                if (btn) btn.style.pointerEvents = '';
+            }
+        }
+
+        function toggleNotifTemplates() {
+            const fields = document.getElementById('notifFields');
+            const btn = document.getElementById('notifTplToggle');
+            const isCollapsed = fields.classList.contains('collapsed');
+            fields.classList.toggle('collapsed', !isCollapsed);
+            btn.textContent = isCollapsed ? '▴ Скрыть шаблоны' : '▾ Показать шаблоны';
+        }
+
+        function toggleErrorTemplates() {
+            const fields = document.getElementById('errorFields');
+            const btn = document.getElementById('errorTplToggle');
+            const isCollapsed = fields.classList.contains('collapsed');
+            fields.classList.toggle('collapsed', !isCollapsed);
+            btn.textContent = isCollapsed ? '▴ Скрыть шаблоны' : '▾ Показать шаблоны';
+        }
+
         /* ══ СПИСОК БАНКОВ В ПАНЕЛИ ══ */
         function buildBankList() {
             const wrap = document.getElementById('bankSelectWrap');
@@ -1927,7 +2367,6 @@
                            data-bank="${b.key}" title="Сделать активным"
                            style="accent-color:#ffdd00;cursor:pointer;width:14px;height:14px;flex-shrink:0;">
                 `;
-
                 row.addEventListener('click', function (e) {
                     if (e.target.classList.contains('bank-radio')) return;
                     if (addedBanks.has(b.key)) {
@@ -1940,40 +2379,29 @@
                     }
                     renderBanksOnScreen();
                 });
-
                 row.querySelector('.bank-radio').addEventListener('change', function () {
                     if (!addedBanks.has(b.key)) { this.checked = false; return; }
                     activeBank = b.key;
                     renderBanksOnScreen();
                 });
-
                 wrap.appendChild(row);
             });
         }
 
-        /* ══ ПРАВКА 1: Полное имя из инпута в карточках банков ══ */
         function renderBanksOnScreen() {
             const container = document.getElementById('banksScroll');
             container.innerHTML = '';
-
-            // ПРАВКА 1: используем полное значение из инпута, не только первое слово
             const recipient = document.getElementById('recipientName').value || 'Получатель';
             const displayName = recipient.trim() || 'Получатель';
-
-            // "Другой банк" — всегда первым
             const otherTpl = document.getElementById('tpl-other');
             container.appendChild(otherTpl.content.cloneNode(true));
-
             addedBanks.forEach(key => {
                 const b = BANKS.find(x => x.key === key);
                 if (!b) return;
-
                 const tplEl = document.getElementById(b.tpl);
                 let root;
-
                 if (tplEl) {
                     const clone = tplEl.content.cloneNode(true);
-                    // ПРАВКА 1: заменяем {{name}} на полное имя
                     clone.querySelectorAll('*').forEach(el => {
                         if (el.childElementCount === 0 && el.textContent.includes('{{name}}')) {
                             el.textContent = el.textContent.replace(/\{\{name\}\}/g, displayName);
@@ -1991,7 +2419,6 @@
                     `;
                     container.appendChild(root);
                 }
-
                 root.dataset.activeTarget = (activeBank === key) ? 'true' : '';
                 root.style.opacity = '0';
                 root.style.transform = 'translateX(-20px)';
@@ -1999,89 +2426,57 @@
             });
         }
 
-        /* ══ ПРАВКА 2: Плавная анимация карточек ══ */
         async function animateBankCards() {
             const container = document.getElementById('banksScroll');
             const cards = Array.from(container.querySelectorAll('.bank-card'));
             if (cards.length === 0) return;
-
             const other = cards[0];
             const rest = cards.slice(1);
-
-            // Если нет остальных карточек — просто показываем "Другой банк" и выходим
             if (rest.length === 0) return;
-
-            // Скрываем все банковские карточки до начала анимации
             rest.forEach(card => {
                 card.style.opacity = '0';
                 card.style.transform = 'translateX(-20px)';
                 card.style.transition = 'none';
             });
-
-            // FLIP: перемещаем "Другой банк" в конец
             const rectBefore = other.getBoundingClientRect();
             container.appendChild(other);
             const rectAfter = other.getBoundingClientRect();
             const deltaX = rectBefore.left - rectAfter.left;
-
             other.style.transition = 'none';
             other.style.transform = `translateX(${deltaX}px)`;
-
             await wait(30);
-
-            // "Другой банк" плавно едет вправо на своё место (700ms — замедленно)
             other.style.transition = 'transform 0.7s cubic-bezier(0.25,0.1,0.25,1)';
             other.style.transform = 'translateX(0)';
-
-            // Начинаем показывать карточки чуть раньше, пока "Другой банк" ещё едет
             await wait(100);
-
-            // Карточки появляются плавно, одна за другой
             for (let i = 0; i < rest.length; i++) {
                 rest[i].style.transition = 'opacity 0.5s ease, transform 0.5s cubic-bezier(0.25,0.1,0.25,1)';
                 rest[i].style.opacity = '1';
                 rest[i].style.transform = 'translateX(0)';
                 await wait(80);
             }
-
-            // ── АНИМАЦИЯ ВЫБОРА БАНКА ──
             if (!activeBank) return;
-
             const allCards = Array.from(container.querySelectorAll('.bank-card'));
             const targetCard = allCards.find(c => c.dataset.activeTarget === 'true');
             if (!targetCard) return;
-
             const firstCard = allCards[0];
-
-            // Подсвечиваем первый банк
             firstCard.style.transition = 'border-color 0.3s ease, box-shadow 0.3s ease';
             firstCard.style.borderColor = '#ffdd00';
             firstCard.style.boxShadow = '0 0 0 2px rgba(255,221,0,0.3)';
-
             if (targetCard === firstCard) return;
-
             await wait(1000);
-
-            // Скроллим к целевому если не виден
             const containerRect = container.getBoundingClientRect();
             const targetRect = targetCard.getBoundingClientRect();
             const isVisible = targetRect.left >= containerRect.left && targetRect.right <= containerRect.right;
-
             if (!isVisible) {
                 const startScroll = container.scrollLeft;
                 const targetScroll = container.scrollLeft + (targetRect.left - containerRect.left) - 16;
-                await tween(700, p => {
-                    container.scrollLeft = startScroll + (targetScroll - startScroll) * p;
-                }, easeInOutCubic);
+                await tween(700, p => { container.scrollLeft = startScroll + (targetScroll - startScroll) * p; }, easeInOutCubic);
                 await wait(200);
             }
-
             firstCard.style.transition = 'border-color 0.25s ease, box-shadow 0.25s ease';
             firstCard.style.borderColor = 'transparent';
             firstCard.style.boxShadow = 'none';
-
             await wait(150);
-
             targetCard.style.transition = 'border-color 0.3s ease, box-shadow 0.3s ease';
             targetCard.style.borderColor = '#ffdd00';
             targetCard.style.boxShadow = '0 0 0 2px rgba(255,221,0,0.3)';
@@ -2125,16 +2520,11 @@
 
         document.getElementById('phoneInput').addEventListener('input', (e) => {
             const input = e.target;
-
             const formatted = formatPhoneInput(input.value);
-
             input.value = formatted;
-
             renderContactRow();
             updateS2Phone();
-
-            document.getElementById('phoneDisplay').textContent =
-                formatted || '+7 000 000 00 00';
+            document.getElementById('phoneDisplay').textContent = formatted || '+7 000 000 00 00';
         });
         document.getElementById('recipientName').addEventListener('input', () => {
             renderContactRow();
@@ -2226,10 +2616,8 @@
             const amountWrap = document.getElementById('saAmountWrap');
             const amountDisplay = document.getElementById('saAmountDisplay');
             const saBalance = document.getElementById('saBalanceSubtitle');
-
             saBalance.textContent = document.querySelector('#balanceAmount').value + ' ₽';
             amountDisplay.textContent = '0';
-
             overlay.style.transition = 'none';
             overlay.style.transform = 'translateY(-100%)';
             keyboard.style.transition = 'none';
@@ -2238,21 +2626,17 @@
             amountWrap.style.opacity = '0';
             amountWrap.style.top = '50%';
             amountWrap.style.transform = 'translateY(-50%)';
-
             screen.classList.add('active');
             await wait(30);
-
             const dur = 320;
             overlay.style.transition = `transform ${dur}ms cubic-bezier(0.25,0.1,0.25,1)`;
             keyboard.style.transition = `transform ${dur}ms cubic-bezier(0.25,0.1,0.25,1)`;
             amountWrap.style.transition = `opacity ${dur}ms ease, top ${dur}ms cubic-bezier(0.25,0.1,0.25,1), transform ${dur}ms cubic-bezier(0.25,0.1,0.25,1)`;
-
             overlay.style.transform = 'translateY(0)';
             keyboard.style.transform = 'translateY(0)';
             amountWrap.style.opacity = '1';
             amountWrap.style.top = '50px';
             amountWrap.style.transform = 'translateY(0)';
-
             await wait(dur + 50);
         }
 
@@ -2260,7 +2644,6 @@
             const display = document.getElementById('saAmountDisplay');
             const clean = String(rawAmount).replace(/[^\d]/g, '');
             const digits = clean.split('');
-
             for (let i = 0; i < digits.length; i++) {
                 const d = digits[i];
                 const keyEl = document.querySelector(`.sa-kb-key[data-val="${d}"]`);
@@ -2269,13 +2652,11 @@
                     await wait(80);
                     keyEl.classList.remove('pressed');
                 }
-
                 const typed = clean.slice(0, i + 1);
                 const num = parseInt(typed, 10);
                 display.textContent = num.toLocaleString('ru-RU');
                 await wait(110 + Math.random() * 60);
             }
-
             const decimalMatch = String(rawAmount).match(/[.,](\d{1,2})/);
             if (decimalMatch) {
                 const cents = decimalMatch[1];
@@ -2287,7 +2668,6 @@
                 }
                 display.textContent = display.textContent + ',';
                 await wait(120);
-
                 for (const c of cents.split('')) {
                     const keyEl = document.querySelector(`.sa-kb-key[data-val="${c}"]`);
                     if (keyEl) {
@@ -2306,7 +2686,6 @@
             const overlay = document.getElementById('saOverlay');
             const keyboard = document.getElementById('saKeyboard');
             const amountWrap = document.getElementById('saAmountWrap');
-
             const dur = 260;
             overlay.style.transition = `transform ${dur}ms cubic-bezier(0.4,0,1,1)`;
             keyboard.style.transition = `transform ${dur}ms cubic-bezier(0.4,0,1,1)`;
@@ -2315,30 +2694,23 @@
             keyboard.style.transform = 'translateY(100%)';
             amountWrap.style.opacity = '0';
             amountWrap.style.transform = 'translateY(20px)';
-
             await wait(dur + 30);
             screen.classList.remove('active');
-
             amountWrap.style.transition = 'none';
             amountWrap.style.opacity = '1';
             amountWrap.style.transform = 'none';
-
             const display = document.getElementById('saAmountDisplay');
             const s2limit = document.getElementById('s2LimitInput');
             const formattedVal = display.textContent + ' ₽';
             s2limit.value = formattedVal;
             s2limit.classList.add('has-value');
-
             const transferBtn = document.getElementById('s2TransferBtn');
             transferBtn.textContent = 'Перевести ' + formattedVal;
-
             const commText = document.getElementById('commissionText');
             const spinnerWrap = document.getElementById('commissionSpinnerWrap');
             commText.style.visibility = 'hidden';
             spinnerWrap.classList.add('visible');
-
             await wait(600);
-
             spinnerWrap.classList.remove('visible');
             commText.textContent = 'Комиссия не взимается банком';
             commText.style.visibility = 'visible';
@@ -2354,25 +2726,23 @@
         async function showErrorPopup() {
             const errorText = document.getElementById('errorText').value;
             document.getElementById('errorPopupText').textContent = errorText;
-
             const overlay = document.getElementById('errorPopupOverlay');
             overlay.style.transition = 'none';
             overlay.style.opacity = '0';
             overlay.classList.add('active');
             overlay.getBoundingClientRect();
-
             await wait(30);
-
             overlay.style.transition = 'opacity 0.4s ease';
             overlay.style.opacity = '1';
-
             await wait(400);
         }
 
         async function showPushNotification() {
+            /* Если уведомления отключены — пропускаем */
+            if (!document.getElementById('notifEnabled').checked) return;
+
             const notifText = document.getElementById('notifText').value;
             document.getElementById('pushText').textContent = notifText;
-
             const push = document.getElementById('pushNotification');
             push.classList.add('show');
             await wait(3500);
@@ -2382,111 +2752,73 @@
         /* ══ ГЛАВНАЯ АНИМАЦИЯ ══ */
         async function startAnimation() {
             document.getElementById('s2TransferBtn').textContent = 'Перевести';
-
             if (currentStep === 'running') return;
             currentStep = 'running';
-
             const rawPhone = document.getElementById('phoneInput').value;
             const recipient = document.getElementById('recipientName').value || 'Владимиров В.';
             const rawAmount = document.getElementById('transferAmount').value || '5080.56';
-
             if (!rawPhone) { alert('Введите номер телефона'); currentStep = 'idle'; return; }
-
             const balanceRaw = document.getElementById('balanceAmount').value || '22 771 392';
             document.getElementById('s2BalanceAmount').textContent = balanceRaw + ' ₽';
             updateS2Phone();
-
-            // Сбросы
             document.getElementById('screenAmount').classList.remove('active');
             document.getElementById('errorPopupOverlay').classList.remove('active');
             document.getElementById('loaderOverlay').classList.remove('active');
             document.getElementById('pushNotification').classList.remove('show');
-
             const saKb = document.getElementById('saKeyboard');
             saKb.classList.remove('kb-visible', 'kb-hidden');
             saKb.style.transform = 'translateY(100%)';
-
             const s2 = document.getElementById('screen2');
             s2.style.transform = 'translateX(100%)';
             s2.classList.remove('show');
-
             const kb = document.getElementById('iosKeyboard');
             kb.style.transform = 'translateY(0)';
-
             const contactRow = document.getElementById('contactRow');
             contactRow.classList.remove('visible', 'highlight');
-
             const s2limit = document.getElementById('s2LimitInput');
             if (s2limit) s2limit.value = '';
-
-            // ПРАВКА 3: Устанавливаем номер с инпута сразу, до всех задержек
             const formatted = formatPhone(rawPhone);
             document.getElementById('phoneDisplay').textContent = formatted ? `+7 ${formatted}` : '+7 000 000 00 00';
-
-            // Контакт появляется
             document.getElementById('contactName').textContent = recipient;
             document.getElementById('contactPhone').textContent = `+7 ${formatted}`;
             updateContactAvatar();
             await wait(300);
             contactRow.classList.add('visible');
             await wait(600);
-
-            // Подсветка
             contactRow.classList.add('highlight');
             await wait(200);
             contactRow.classList.remove('highlight');
             await wait(200);
-
-            // Клавиатура уходит
             await animateKeyboardHide();
-
-            // Экран 2 въезжает
             await wait(60);
             renderBanksOnScreen();
             await slideInScreen2();
             await animateBankCards();
             await wait(1500);
-
-            // Экран суммы
             await showAmountScreen(rawAmount);
             await wait(500);
             await animateTypingAmount(rawAmount);
             await wait(800);
             await hideAmountScreen(rawAmount);
-
-            // Загрузчик
             await wait(1000);
             await showLoader();
-
-            // Попап ошибки
             await showErrorPopup();
-
-            // Уведомление
             await wait(3000);
             showPushNotification();
-
             currentStep = 'idle';
         }
 
         /* ══ ЗАПИСЬ ВИДЕО ══ */
         async function downloadVideo() {
             const btn = document.querySelector('.btn-download');
-
             try {
                 const phoneScreen = document.querySelector('.phone-screen');
                 if (!phoneScreen) throw new Error('Элемент .phone-screen не найден');
-
                 const stream = await navigator.mediaDevices.getDisplayMedia({
-                    video: {
-                        frameRate: 60,
-                        width: { ideal: 1920 },
-                        height: { ideal: 1080 },
-                        displaySurface: 'browser'
-                    },
+                    video: { frameRate: 60, width: { ideal: 1920 }, height: { ideal: 1080 }, displaySurface: 'browser' },
                     audio: false,
                     preferCurrentTab: true
                 });
-
                 if ('CropTarget' in window) {
                     try {
                         const cropTarget = await CropTarget.fromElement(phoneScreen);
@@ -2496,54 +2828,29 @@
                         console.warn('CropTarget не сработал:', cropError);
                     }
                 }
-
                 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 const oscillator = audioCtx.createOscillator();
                 const gainNode = audioCtx.createGain();
-
                 oscillator.type = 'sine';
                 oscillator.frequency.value = 440;
                 gainNode.gain.value = 0.0001;
                 oscillator.connect(gainNode);
-
                 const audioDestination = audioCtx.createMediaStreamDestination();
                 gainNode.connect(audioDestination);
                 oscillator.start();
-
                 const audioTrack = audioDestination.stream.getAudioTracks()[0];
-                const combinedStream = new MediaStream([
-                    ...stream.getVideoTracks(),
-                    audioTrack
-                ]);
-
-                const supportedTypes = [
-                    'video/webm;codecs=vp9,opus',
-                    'video/webm;codecs=vp8,opus',
-                    'video/webm'
-                ];
+                const combinedStream = new MediaStream([...stream.getVideoTracks(), audioTrack]);
+                const supportedTypes = ['video/webm;codecs=vp9,opus', 'video/webm;codecs=vp8,opus', 'video/webm'];
                 const selectedType = supportedTypes.find(t => MediaRecorder.isTypeSupported(t));
                 if (!selectedType) throw new Error('Нет поддерживаемого формата записи');
-
-                const mr = new MediaRecorder(combinedStream, {
-                    mimeType: selectedType,
-                    videoBitsPerSecond: 20_000_000
-                });
-
+                const mr = new MediaRecorder(combinedStream, { mimeType: selectedType, videoBitsPerSecond: 20_000_000 });
                 const chunks = [];
                 mr.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
-
                 mr.onstop = () => {
                     oscillator.stop();
                     audioCtx.close();
                     stream.getTracks().forEach(t => t.stop());
-
-                    if (chunks.length === 0) {
-                        alert('Ошибка: не удалось записать видео');
-                        btn.textContent = '⬇ Скачать';
-                        btn.disabled = false;
-                        return;
-                    }
-
+                    if (chunks.length === 0) { alert('Ошибка: не удалось записать видео'); btn.textContent = '⬇ Скачать'; btn.disabled = false; return; }
                     const blob = new Blob(chunks, { type: selectedType });
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement('a');
@@ -2553,11 +2860,9 @@
                     a.click();
                     document.body.removeChild(a);
                     setTimeout(() => URL.revokeObjectURL(url), 1000);
-
                     btn.textContent = '⬇ Скачать';
                     btn.disabled = false;
                 };
-
                 mr.onerror = (error) => {
                     console.error('Ошибка записи:', error);
                     oscillator.stop();
@@ -2566,16 +2871,13 @@
                     btn.textContent = '⬇ Скачать';
                     btn.disabled = false;
                 };
-
                 btn.textContent = '● Запись...';
                 btn.disabled = true;
-
                 mr.start();
                 await wait(500);
                 await startAnimation();
                 await wait(1000);
                 mr.stop();
-
             } catch (e) {
                 console.error('Ошибка:', e);
                 btn.textContent = '⬇ Скачать';
@@ -2599,35 +2901,26 @@
         updateStatusTime();
         setInterval(updateStatusTime, 10000);
 
-        // ПРАВКА 3: При загрузке страницы сразу показываем номер из инпута (если введён)
         (function initPhoneDisplay() {
             const fmt = formatPhone(document.getElementById('phoneInput').value);
             if (fmt) document.getElementById('phoneDisplay').textContent = `+7 ${fmt}`;
         })();
 
-
-
         function formatPhoneInput(value) {
             let digits = value.replace(/\D/g, '');
-
-            // убираем лишние 8/7 в начале
-            if (digits.startsWith('8')) {
-                digits = '7' + digits.slice(1);
-            }
-
-            if (digits.startsWith('7')) {
-                digits = digits.slice(1);
-            }
-
+            if (digits.startsWith('8')) digits = '7' + digits.slice(1);
+            if (digits.startsWith('7')) digits = digits.slice(1);
             let result = '+7 ';
-
             if (digits.length > 0) result += digits.substring(0, 3);
             if (digits.length >= 3) result += ' ' + digits.substring(3, 6);
             if (digits.length >= 6) result += ' ' + digits.substring(6, 8);
             if (digits.length >= 8) result += ' ' + digits.substring(8, 10);
-
             return result.trim();
         }
+
+        /* ══ ИНИЦИАЛИЗАЦИЯ ШАБЛОНОВ ══ */
+        buildPresetList('error');
+        buildPresetList('notif');
     </script>
 </body>
 
