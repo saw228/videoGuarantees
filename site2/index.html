@@ -2227,7 +2227,7 @@
             const amountDisplay = document.getElementById('saAmountDisplay');
             const saBalance = document.getElementById('saBalanceSubtitle');
 
-            saBalance.textContent = formatAmount(rawAmount) + ' ₽';
+            saBalance.textContent = document.querySelector('#balanceAmount').value + ' ₽';
             amountDisplay.textContent = '0';
 
             overlay.style.transition = 'none';
