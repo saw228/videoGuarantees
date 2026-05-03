@@ -24,9 +24,89 @@
             text-size-adjust: 100%;
         }
 
+        /* ═══════════════════════════════════════════
+           ТЕМА — CSS ПЕРЕМЕННЫЕ
+        ═══════════════════════════════════════════ */
+
+        :root {
+            --bg-body-from: rgba(255, 221, 0, 0.12);
+            --bg-body-gradient: linear-gradient(160deg, #0d0d0d 0%, #111 100%);
+            --panel-bg: #1a1a1a;
+            --panel-border: #2a2a2a;
+            --panel-title: #fff;
+            --input-bg: #252525;
+            --input-border: #333;
+            --input-color: #fff;
+            --label-color: #888;
+            --checkbox-label: #ccc;
+            --section-label: #888;
+            --bmode-btn-bg: #252525;
+            --bmode-btn-border: #333;
+            --bmode-btn-color: #aaa;
+            --bank-option-bg: #252525;
+            --bank-option-border: #333;
+            --bank-option-color: #ddd;
+            --bank-option-hover: #2e2e2e;
+            --tpl-block-bg: #202020;
+            --tpl-block-border: #2e2e2e;
+            --tpl-tab-bg: #252525;
+            --tpl-tab-border: #333;
+            --tpl-tab-color: #aaa;
+            --tpl-item-bg: #252525;
+            --tpl-item-border: #333;
+            --tpl-item-hover: #2a2a2a;
+            --tpl-item-color: #ccc;
+            --tpl-del-color: #555;
+            --tpl-add-bg: #252525;
+            --tpl-add-border: #333;
+            --tpl-toggle-border: #333;
+            --tpl-toggle-color: #666;
+            --notif-label: #888;
+            --toggle-track-bg: #333;
+            --toggle-thumb-bg: #888;
+        }
+
+        html.theme-light {
+            --bg-body-from: rgba(255, 200, 0, 0.08);
+            --bg-body-gradient: linear-gradient(160deg, #f0f0f0 0%, #e8e8e8 100%);
+            --panel-bg: #ffffff;
+            --panel-border: #d0d0d0;
+            --panel-title: #111;
+            --input-bg: #f5f5f5;
+            --input-border: #c8c8c8;
+            --input-color: #111;
+            --label-color: #666;
+            --checkbox-label: #333;
+            --section-label: #666;
+            --bmode-btn-bg: #f5f5f5;
+            --bmode-btn-border: #c8c8c8;
+            --bmode-btn-color: #555;
+            --bank-option-bg: #f5f5f5;
+            --bank-option-border: #c8c8c8;
+            --bank-option-color: #222;
+            --bank-option-hover: #ebebeb;
+            --tpl-block-bg: #f9f9f9;
+            --tpl-block-border: #d8d8d8;
+            --tpl-tab-bg: #f5f5f5;
+            --tpl-tab-border: #c8c8c8;
+            --tpl-tab-color: #555;
+            --tpl-item-bg: #f5f5f5;
+            --tpl-item-border: #c8c8c8;
+            --tpl-item-hover: #ebebeb;
+            --tpl-item-color: #333;
+            --tpl-del-color: #bbb;
+            --tpl-add-bg: #f5f5f5;
+            --tpl-add-border: #c8c8c8;
+            --tpl-toggle-border: #c8c8c8;
+            --tpl-toggle-color: #aaa;
+            --notif-label: #666;
+            --toggle-track-bg: #d0d0d0;
+            --toggle-thumb-bg: #aaa;
+        }
+
         body {
-            background: radial-gradient(800px circle at 20% 20%, rgba(255, 221, 0, 0.12), transparent 55%),
-                linear-gradient(160deg, #0d0d0d 0%, #111 100%);
+            background: radial-gradient(800px circle at 20% 20%, var(--bg-body-from), transparent 55%),
+                var(--bg-body-gradient);
             display: flex;
             align-items: flex-start;
             justify-content: center;
@@ -34,28 +114,31 @@
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             text-rendering: optimizeLegibility;
+            transition: background 0.3s;
         }
 
         .input-panel {
             width: 320px;
-            background: #1a1a1a;
+            background: var(--panel-bg);
             border-radius: 20px;
             padding: 20px;
-            color: #fff;
+            color: var(--panel-title);
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-            border: 1px solid #2a2a2a;
+            border: 1px solid var(--panel-border);
             flex-shrink: 0;
             margin-top: 10px;
             max-height: 95vh;
             overflow-y: auto;
             margin-right: 50px;
             margin-top: 30px;
+            transition: background 0.3s, border-color 0.3s, color 0.3s;
         }
 
         .panel-title {
             font-size: 16px;
             font-weight: 600;
             margin-bottom: 18px;
+            color: var(--panel-title);
         }
 
         .input-group {
@@ -65,11 +148,11 @@
         }
 
         .input-group textarea {
-            background: #252525;
-            border: 1px solid #333;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
             border-radius: 10px;
             padding: 10px 12px;
-            color: #fff;
+            color: var(--input-color);
             font-size: 14px;
             outline: none;
             font-family: 'Inter', sans-serif;
@@ -77,7 +160,7 @@
             resize: none;
             min-height: 80px;
             width: 100%;
-            transition: border-color 0.3s;
+            transition: border-color 0.3s, background 0.3s, color 0.3s;
         }
 
         .input-group textarea:focus {
@@ -86,22 +169,22 @@
 
         .input-group label {
             font-size: 11px;
-            color: #888;
+            color: var(--label-color);
             margin-bottom: 6px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
         .input-group input[type="text"] {
-            background: #252525;
-            border: 1px solid #333;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
             border-radius: 10px;
             padding: 10px 12px;
-            color: #fff;
+            color: var(--input-color);
             font-size: 14px;
             outline: none;
             font-family: 'Inter', sans-serif;
-            transition: border-color 0.2s;
+            transition: border-color 0.2s, background 0.3s, color 0.3s;
         }
 
         .input-group input[type="text"]:focus {
@@ -124,7 +207,7 @@
 
         .checkbox-row label {
             font-size: 13px;
-            color: #ccc;
+            color: var(--checkbox-label);
             cursor: pointer;
             margin: 0;
         }
@@ -138,11 +221,11 @@
         }
 
         .time-input-wrap input {
-            background: #252525;
-            border: 1px solid #333;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
             border-radius: 10px;
             padding: 8px 12px;
-            color: #fff;
+            color: var(--input-color);
             font-size: 14px;
             outline: none;
             width: 90px;
@@ -161,35 +244,24 @@
             overflow-y: auto;
         }
 
-        .bank-select-wrap::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        .bank-select-wrap::-webkit-scrollbar-track {
-            background: #1a1a1a;
-        }
-
-        .bank-select-wrap::-webkit-scrollbar-thumb {
-            background: #444;
-            border-radius: 2px;
-        }
+        .bank-select-wrap::-webkit-scrollbar { width: 4px; }
+        .bank-select-wrap::-webkit-scrollbar-track { background: transparent; }
+        .bank-select-wrap::-webkit-scrollbar-thumb { background: #444; border-radius: 2px; }
 
         .bank-option {
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 8px 10px;
-            background: #252525;
-            border: 1px solid #333;
+            background: var(--bank-option-bg);
+            border: 1px solid var(--bank-option-border);
             border-radius: 10px;
             cursor: pointer;
             transition: all 0.15s;
             user-select: none;
         }
 
-        .bank-option:hover {
-            background: #2e2e2e;
-        }
+        .bank-option:hover { background: var(--bank-option-hover); }
 
         .bank-option.added {
             border-color: #ffdd00;
@@ -201,7 +273,7 @@
             align-items: center;
             gap: 8px;
             font-size: 13px;
-            color: #ddd;
+            color: var(--bank-option-color);
         }
 
         .bank-option input[type="radio"] {
@@ -214,7 +286,7 @@
 
         .section-label {
             font-size: 11px;
-            color: #888;
+            color: var(--section-label);
             text-transform: uppercase;
             letter-spacing: 0.5px;
             margin-bottom: 8px;
@@ -231,9 +303,9 @@
             flex: 1;
             padding: 8px;
             border-radius: 8px;
-            border: 1px solid #333;
-            background: #252525;
-            color: #aaa;
+            border: 1px solid var(--bmode-btn-border);
+            background: var(--bmode-btn-bg);
+            color: var(--bmode-btn-color);
             font-size: 12px;
             cursor: pointer;
             transition: all 0.15s;
@@ -246,10 +318,49 @@
             background: rgba(255, 221, 0, 0.08);
         }
 
-        input[type="range"] {
-            accent-color: #ffdd00;
-            width: 100%;
+        input[type="range"] { accent-color: #ffdd00; width: 100%; }
+
+        /* ═══════════════════════════════════════════
+           ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ
+        ═══════════════════════════════════════════ */
+
+        .theme-switcher {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 18px;
         }
+
+        .theme-btn {
+            flex: 1;
+            padding: 9px 6px;
+            border-radius: 10px;
+            border: 1px solid var(--bmode-btn-border);
+            background: var(--bmode-btn-bg);
+            color: var(--bmode-btn-color);
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .theme-btn.active {
+            border-color: #ffdd00;
+            color: #ffdd00;
+            background: rgba(255, 221, 0, 0.08);
+        }
+
+        .theme-btn svg {
+            flex-shrink: 0;
+        }
+
+        /* ═══════════════════════════════════════════
+           ОСТАЛЬНЫЕ СТИЛИ
+        ═══════════════════════════════════════════ */
 
         .phone-wrap {
             display: flex;
@@ -291,1167 +402,310 @@
             border-radius: 40px 40px 0 0;
         }
 
-        .status-left {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+        .status-left { display: flex; align-items: center; gap: 8px; }
+        .status-right { display: flex; align-items: center; }
+        .rec-image { width: 170px; margin-left: 25px; }
+        .svyaz { width: 60px; margin-bottom: 1px; }
 
-        .status-right {
-            display: flex;
-            align-items: center;
-        }
+        #batteryContainer { display: flex; align-items: center; margin-right: 5px; margin-bottom: 2px; }
 
-        .rec-image {
-            width: 170px;
-            margin-left: 25px;
-        }
+        .battery-detailed { display: flex; align-items: center; gap: 1px; }
+        .battery-body-2 { position: relative; width: 24px; height: 13px; border-radius: 4px; overflow: hidden; background: #818181; }
+        .battery-fill { position: absolute; top: 0; left: 0; height: 100%; width: 87%; background: #fff; transition: width 0.3s; z-index: 1; }
+        .battery-text { position: absolute; top: 45%; left: 50%; transform: translate(-50%, -45%); font-size: 11.5px; font-weight: 800; color: #000; z-index: 2; pointer-events: none; padding-top: 1px; }
 
-        .svyaz {
-            width: 60px;
-            margin-bottom: 1px;
-        }
+        .screen-1 { position: absolute; top: 44px; left: 0; right: 0; bottom: 0; background: #000; color: #fff; }
 
-        #batteryContainer {
-            display: flex;
-            align-items: center;
-            margin-right: 5px;
-            margin-bottom: 2px;
-        }
+        .s1-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px 10px; }
+        .s1-cancel { color: #607ccf; font-size: 15px; }
+        .s1-title { font-size: 16px; font-weight: 600; color: #fff; }
+        .s1-spacer { width: 60px; }
 
-        .battery-detailed {
-            display: flex;
-            align-items: center;
-            gap: 1px;
-        }
+        .phone-input-row { display: flex; align-items: center; margin: 12px 16px 0; gap: 10px; }
+        .flag-code { display: flex; align-items: center; gap: 6px; border-right: 1px solid #333; padding-right: 12px; background: #1c1c1e; border-radius: 14px; padding: 12px 16px; }
+        .flag-emoji { font-size: 20px; }
+        .code-text { font-size: 16px; color: #fff; font-weight: 500; }
+        .phone-number-display { flex: 1; font-size: 16px; color: #fff; background: #1c1c1e; border-radius: 14px; padding: 13px 16px; }
 
-        .battery-body-2 {
-            position: relative;
-            width: 24px;
-            height: 13px;
-            border-radius: 4px;
-            overflow: hidden;
-            background: #818181;
-        }
+        .scan-row { margin: 10px 16px; background: #213250; border-radius: 12px; padding: 13px 16px; display: flex; align-items: center; justify-content: space-between; }
+        .scan-left { display: flex; align-items: center; gap: 10px; font-size: 15px; color: #e6f5ff; }
+        .scan-arrow { color: #8E8E93; font-size: 18px; }
 
-        .battery-fill {
-            position: absolute;
-            top: 0;
-            left: 0;
-            height: 100%;
-            width: 87%;
-            background: #fff;
-            transition: width 0.3s;
-            z-index: 1;
-        }
+        .contact-row { display: flex; align-items: center; gap: 14px; padding: 14px 20px; opacity: 0; transform: translateY(8px); transition: opacity 0.3s, transform 0.3s; }
+        .contact-row.visible { opacity: 1; transform: translateY(0); }
+        .contact-row.highlight { background: rgba(255, 255, 255, 0.08); }
+        .contact-avatar { width: 42px; height: 42px; border-radius: 50%; background: #3a3a3c; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; color: #aaa; }
+        .contact-info { display: flex; flex-direction: column; gap: 3px; }
+        .contact-name { font-size: 16px; color: #fff; }
+        .contact-phone { font-size: 13px; color: #8E8E93; }
 
-        .battery-text {
-            position: absolute;
-            top: 45%;
-            left: 50%;
-            transform: translate(-50%, -45%);
-            font-size: 11.5px;
-            font-weight: 800;
-            color: #000;
-            z-index: 2;
-            pointer-events: none;
-            padding-top: 1px;
-        }
-
-        .screen-1 {
-            position: absolute;
-            top: 44px;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: #000;
-            color: #fff;
-        }
-
-        .s1-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 14px 20px 10px;
-        }
-
-        .s1-cancel {
-            color: #607ccf;
-            font-size: 15px;
-        }
-
-        .s1-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: #fff;
-        }
-
-        .s1-spacer {
-            width: 60px;
-        }
-
-        .phone-input-row {
-            display: flex;
-            align-items: center;
-            margin: 12px 16px 0;
-            gap: 10px;
-        }
-
-        .flag-code {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            border-right: 1px solid #333;
-            padding-right: 12px;
-            background: #1c1c1e;
-            border-radius: 14px;
-            padding: 12px 16px;
-        }
-
-        .flag-emoji {
-            font-size: 20px;
-        }
-
-        .code-text {
-            font-size: 16px;
-            color: #fff;
-            font-weight: 500;
-        }
-
-        .phone-number-display {
-            flex: 1;
-            font-size: 16px;
-            color: #fff;
-            background: #1c1c1e;
-            border-radius: 14px;
-            padding: 13px 16px;
-        }
-
-        .scan-row {
-            margin: 10px 16px;
-            background: #213250;
-            border-radius: 12px;
-            padding: 13px 16px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .scan-left {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 15px;
-            color: #e6f5ff;
-        }
-
-        .scan-arrow {
-            color: #8E8E93;
-            font-size: 18px;
-        }
-
-        .contact-row {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 14px 20px;
-            opacity: 0;
-            transform: translateY(8px);
-            transition: opacity 0.3s, transform 0.3s;
-        }
-
-        .contact-row.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .contact-row.highlight {
-            background: rgba(255, 255, 255, 0.08);
-        }
-
-        .contact-avatar {
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            background: #3a3a3c;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            font-weight: 600;
-            color: #aaa;
-        }
-
-        .contact-info {
-            display: flex;
-            flex-direction: column;
-            gap: 3px;
-        }
-
-        .contact-name {
-            font-size: 16px;
-            color: #fff;
-        }
-
-        .contact-phone {
-            font-size: 13px;
-            color: #8E8E93;
-        }
-
-        .ios-keyboard {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: #252525;
-            padding: 8px 3px 0 3px;
-            padding-top: 50px;
-            padding-bottom: 70px;
-        }
-
-        .ios-kb-rows {
-            display: flex;
-            flex-direction: column;
-            gap: 11px;
-        }
-
-        .ios-kb-row {
-            display: flex;
-            justify-content: center;
-            gap: 6px;
-        }
-
-        .ios-key {
-            height: 40px;
-            min-width: 20px;
-            flex: 1;
-            max-width: 34px;
-            background: #5e5e5e;
-            border-radius: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-            font-weight: 300;
-            color: #fff;
-            cursor: pointer;
-            user-select: none;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .ios-key-shift {
-            background: #3c3c3c;
-            color: #fff;
-            font-size: 18px;
-            max-width: 44px;
-            flex: 1.3;
-        }
-
-        .ios-key-func {
-            background: #3c3c3c;
-            color: #fff;
-            font-size: 15px;
-            font-weight: 500;
-            max-width: 48px;
-            flex: 1.4;
-        }
-
-        .ios-key-space {
-            background: #5d5d5d;
-            font-size: 16px;
-            font-weight: 400;
-            max-width: 9999px;
-            flex: 5;
-        }
-
-        .ios-key-enter {
-            background: #3c3c3c;
-            color: #fff;
-            font-size: 16px;
-            font-weight: 500;
-            max-width: 90px;
-            flex: 2.4;
-        }
-
+        .ios-keyboard { position: absolute; bottom: 0; left: 0; right: 0; background: #252525; padding: 8px 3px 0 3px; padding-top: 50px; padding-bottom: 70px; }
+        .ios-kb-rows { display: flex; flex-direction: column; gap: 11px; }
+        .ios-kb-row { display: flex; justify-content: center; gap: 6px; }
+        .ios-key { height: 40px; min-width: 20px; flex: 1; max-width: 34px; background: #5e5e5e; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 300; color: #fff; cursor: pointer; user-select: none; font-family: 'Inter', sans-serif; }
+        .ios-key-shift { background: #3c3c3c; color: #fff; font-size: 18px; max-width: 44px; flex: 1.3; }
+        .ios-key-func { background: #3c3c3c; color: #fff; font-size: 15px; font-weight: 500; max-width: 48px; flex: 1.4; }
+        .ios-key-space { background: #5d5d5d; font-size: 16px; font-weight: 400; max-width: 9999px; flex: 5; }
+        .ios-key-enter { background: #3c3c3c; color: #fff; font-size: 16px; font-weight: 500; max-width: 90px; flex: 2.4; }
         .ios-kb-row-bottom .ios-key,
         .ios-kb-row-bottom .ios-key-func,
         .ios-kb-row-bottom .ios-key-space,
-        .ios-kb-row-bottom .ios-key-enter {
-            height: 44px;
-        }
-
-        .keyboard-bottomRow {
-            position: absolute;
-            display: flex;
-            justify-content: space-between;
-            width: 87%;
-            margin-top: 20px;
-            margin-left: 20px;
-        }
-
-        .screen-2 {
-            position: absolute;
-            top: 44px;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: #000;
-            color: #fff;
-            transform: translateX(100%);
-            z-index: 50;
-            overflow: hidden;
-        }
-
-        .screen-2.show {
-            transform: translateX(0);
-        }
-
-        .s2-header {
-            display: flex;
-            align-items: center;
-            padding: 14px 20px 10px;
-            gap: 12px;
-        }
-
-        .s2-back {
-            color: #4280fb;
-            font-size: 26px;
-            font-weight: 300;
-            line-height: 1;
-            margin-top: -2px;
-        }
-
-        .s2-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: #fff;
-            margin-left: 55px;
-            padding-bottom: 10px;
-        }
-
-        .balance-card {
-            margin: 0 16px 14px;
-            background: #1c1c1e;
-            border-radius: 18px;
-            padding: 16px 20px 20px;
-            margin-bottom: 8px;
-        }
-
-        .balance-label {
-            font-size: 13px;
-            color: #8E8E93;
-            margin-bottom: 6px;
-        }
-
-        .balance-amount {
-            font-size: 32px;
-            font-weight: 500;
-            color: #fff;
-            letter-spacing: -0.5px;
-        }
-
-        .balance-dots {
-            display: flex;
-            gap: 5px;
-            margin-top: 0;
-            margin-left: 155px;
-            margin-bottom: 30px;
-        }
-
-        .bdot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: #555;
-        }
-
-        .bdot.active {
-            background: #548aec;
-        }
-
-        .s2-phone-row {
-            margin: 0 16px 14px;
-            background: #1c1c1e;
-            border-radius: 14px;
-            padding: 14px 16px;
-        }
-
-        .s2-phone-label {
-            font-size: 12px;
-            color: #8E8E93;
-            margin-bottom: 4px;
-        }
-
-        .s2-phone-val {
-            font-size: 16px;
-            color: #fff;
-        }
-
-        .banks-scroll {
-            display: flex;
-            gap: 10px;
-            padding: 0 16px 14px;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .banks-scroll::-webkit-scrollbar {
-            display: none;
-        }
-
-        .bank-card {
-            flex-shrink: 0;
-            width: 105px;
-            height: 100px;
-            border-radius: 16px;
-            padding: 4px 10px 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 0;
-            border: 2px solid transparent;
-            transition: border 0.2s;
-        }
-
-        .bank-card.active-bank {
-            border-color: #ffdd00;
-        }
-
-        .bank-card-icon {
-            width: 38px;
-            height: 38px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-        }
-
-        .bank-card-name {
-            font-size: 12px;
-            font-weight: 500;
-            color: #fff;
-            line-height: 1.3;
-            margin-bottom: 3px;
-        }
-
-        .bank-card-person {
-            font-size: 11px;
-            color: #fff;
-            line-height: 1.3;
-        }
-
-        .bank-sber {
-            background: #123b18;
-        }
-
-        .bank-vtb {
-            background: #001433;
-        }
-
-        .bank-gazprom {
-            background: #132336;
-        }
-
-        .bank-alfa {
-            background: #2e0000;
-        }
-
-        .bank-psb {
-            background: #001a33;
-        }
-
-        .bank-rshb {
-            background: #0a2200;
-        }
-
-        .bank-tbank {
-            background: #2e2a00;
-        }
-
-        .bank-sovkom {
-            background: #1a0033;
-        }
-
-        .bank-raiff {
-            background: #1a1500;
-        }
-
-        .bank-spb {
-            background: #001433;
-        }
-
-        .bank-uralsib {
-            background: #180a24;
-        }
-
-        .bank-mts {
-            background: #2e0000;
-        }
-
-        .bank-pochta {
-            background: #001f00;
-        }
-
-        .bank-otp {
-            background: #273601;
-        }
-
-        .bank-ozon {
-            background: #001940;
-        }
-
-        .bank-wb {
-            background: #2e0033;
-        }
-
-        .bank-icon {
-            width: 35px;
-            margin-bottom: 20px;
-            border-radius: 100%;
-        }
-
-        .s2-info-row {
-            margin: 0 16px 12px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .s2-limit {
-            width: 100%;
-            font-size: 16px;
-            color: #8E8E93;
-            background: transparent;
-            border: none;
-            outline: none;
-            padding: 0;
-            font-family: 'Inter', sans-serif;
-            transition: font-size 0.2s, color 0.2s;
-        }
-
-        .s2-limit.has-value {
-            font-size: 25px;
-            color: #fff;
-            font-weight: 400;
-        }
-
-        .s2-limit::placeholder {
-            color: #8E8E93;
-            font-size: 16px;
-        }
-
-        .s2-amount-divider {
-            height: 1px;
-            background: rgba(255, 255, 255, 0.08);
-            margin: 0 10px;
-        }
-
-        .s2-commission-row {
-            padding: 8px 10px 14px;
-            min-height: 36px;
-            position: relative;
-        }
-
-        .s2-commission-text {
-            font-size: 13px;
-            color: white;
-            margin-bottom: 30px;
-            font-weight: 300;
-        }
-
-        .commission-spinner {
-            width: 22px;
-            height: 22px;
-            border: 2.5px solid rgba(255, 221, 0, 0.2);
-            border-top-color: #ffdd00;
-            border-radius: 50%;
-            animation: cspin 0.7s linear infinite;
-            flex-shrink: 0;
-        }
-
-        .commission-spinner-wrap {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            display: none;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .commission-spinner-wrap.visible {
-            display: flex;
-        }
-
-        @keyframes cspin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        .s2-msg-row {
-            margin: 0 16px 16px;
-            background: #1c1c1e;
-            border-radius: 14px;
-            padding: 14px 16px;
-        }
-
-        .s2-msg-placeholder {
-            font-size: 15px;
-            color: #555;
-        }
-
-        .s2-transfer-btn {
-            margin: 0 16px;
-            background: #ffdd00;
-            border-radius: 16px;
-            padding: 16px;
-            text-align: center;
-            font-size: 15px;
-            font-weight: 400;
-            color: #000;
-            cursor: pointer;
-        }
-
-        .s2-sbp-row {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            margin-top: 10px;
-        }
-
-        .sbp-text {
-            font-size: 12px;
-            color: #8E8E93;
-        }
-
-        .controls {
-            display: flex;
-            gap: 12px;
-            margin-top: 6px;
-        }
-
-        .controls button {
-            padding: 13px 28px;
-            font-size: 15px;
-            font-weight: 600;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .btn-animate {
-            background: #007AFF;
-            color: #fff;
-        }
-
-        .btn-download {
-            background: #34C759;
-            color: #fff;
-        }
-
-        .controls button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-        }
-
-        .controls button:active {
-            transform: translateY(0);
-        }
-
-        .screen-amount {
-            position: absolute;
-            top: 44px;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: 100;
-            pointer-events: none;
-            opacity: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .screen-amount.active {
-            pointer-events: all;
-            opacity: 1;
-        }
-
-        .sa-overlay {
-            background: #000;
-            display: flex;
-            flex-direction: column;
-            z-index: 2;
-            flex: 1;
-        }
-
-        .sa-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 14px 20px 10px;
-        }
-
-        .sa-close {
-            color: #4280fb;
-            font-size: 15px;
-        }
-
-        .sa-title-block {
-            text-align: center;
-        }
-
-        .sa-title {
-            font-size: 13px;
-            color: #fff;
-            font-weight: 600;
-        }
-
-        .sa-subtitle {
-            font-size: 12px;
-            color: #8E8E93;
-        }
-
-        .sa-done {
-            color: #4280fb;
-            font-size: 15px;
-        }
-
-        .sa-amount-wrap {
-            position: absolute;
-            left: 0;
-            right: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            z-index: 10;
-            background-color: #2d2c2d;
-            padding: 10px 0;
-            opacity: 0;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
-        .sa-amount-display {
-            font-size: 25px;
-            font-weight: 300;
-            color: #fff;
-            letter-spacing: -1px;
-            min-width: 40px;
-            text-align: right;
-        }
-
-        .sa-cursor {
-            width: 2px;
-            height: 42px;
-            background: #4280fb;
-            border-radius: 1px;
-            animation: blink 1s step-end infinite;
-        }
-
-        @keyframes blink {
-
-            0%,
-            100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0;
-            }
-        }
-
-        .sa-rub {
-            font-size: 25px;
-            color: #8E8E93;
-            font-weight: 300;
-        }
-
-        .sa-keyboard {
-            background-color: #1c1c1e;
-            padding: 20px 8px 8px 8px;
-            border-radius: 16px 16px 0 0;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            padding-bottom: 50px;
-            transform: translateY(100%);
-            transition: transform 0.32s cubic-bezier(0.25, 0.1, 0.25, 1);
-        }
-
-        .sa-keyboard.kb-visible {
-            transform: translateY(0);
-            transition: transform 0.32s cubic-bezier(0.25, 0.1, 0.25, 1);
-        }
-
-        .sa-keyboard.kb-hidden {
-            transform: translateY(100%);
-            transition: transform 0.26s cubic-bezier(0.4, 0, 1, 1);
-        }
-
-        .sa-kb-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 5px;
-            margin-bottom: 8px;
-        }
-
-        .sa-kb-key {
-            background-color: #636366;
-            border: none;
-            border-radius: 5px;
-            padding: 0 8px;
-            color: white;
-            font-size: 24px;
-            font-weight: 400;
-            text-align: center;
-            cursor: pointer;
-            user-select: none;
-            position: relative;
-            min-height: 46px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            transition: background-color 0.08s;
-        }
-
-        .sa-kb-key.pressed {
-            background-color: #9a9a9e !important;
-            transform: scale(0.94);
-        }
-
-        .sa-kb-key:active {
-            background-color: #8e8e93;
-        }
-
-        .sa-kb-key-dark {
-            background-color: transparent;
-        }
-
-        .sa-kb-key-dark:active {
-            background-color: #636366;
-        }
-
-        .sa-kb-key-num {
-            font-size: 24px;
-            font-weight: 400;
-            line-height: 1;
-            margin-bottom: 2px;
-        }
-
-        .sa-kb-key-letters {
-            font-size: 10px;
-            font-weight: 400;
-            color: white;
-            opacity: 0.8;
-            line-height: 1.1;
-            letter-spacing: 0.5px;
-            text-align: center;
-        }
-
-        .sa-kb-backspace {
-            font-size: 20px;
-            font-weight: 300;
-        }
-
-        .sa-home-bar {
-            width: 134px;
-            height: 5px;
-            background-color: white;
-            border-radius: 2.5px;
-            margin: 12px auto 8px auto;
-            opacity: 0.8;
-        }
-
-        .loader-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.6);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 200;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.2s;
-        }
-
-        .loader-overlay.active {
-            opacity: 1;
-            pointer-events: all;
-        }
-
-        .loader-box {
-            width: 45px;
-            height: 45px;
-            background: #2c2c2e;
-            border-radius: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .loader-spinner {
-            width: 25px;
-            height: 25px;
-            border: 3px solid rgba(255, 221, 0, 0.2);
-            border-top-color: #ffdd00;
-            border-radius: 50%;
-            animation: spin 1.4s linear infinite;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        .error-popup-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 300;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.25s;
-        }
-
-        .error-popup-overlay.active {
-            opacity: 1;
-            pointer-events: all;
-        }
-
-        .error-popup {
-            width: 270px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(45px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: 14px;
-            overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-        }
-
-        .error-popup-body {
-            padding: 20px 16px 4px;
-            text-align: center;
-        }
-
-        .error-popup-text {
-            font-size: 14px;
-            color: #fff;
-            line-height: 1.5;
-            font-weight: 400;
-        }
-
-        .error-popup-divider {
-            height: 1px;
-            background: rgba(255, 255, 255, 0.15);
-            margin-top: 16px;
-        }
-
-        .error-popup-btn {
-            display: block;
-            width: 100%;
-            padding: 14px;
-            text-align: center;
-            font-size: 17px;
-            color: #4280fb;
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            font-family: 'Inter', sans-serif;
-            font-weight: 400;
-        }
-
-        .push-notification {
-            position: absolute;
-            top: 50px;
-            left: 12px;
-            right: 12px;
-            border-radius: 14px;
-            padding: 10px 14px;
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            z-index: 400;
-            transform: translateY(-120px);
-            opacity: 0;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(45px);
-            -webkit-backdrop-filter: blur(20px);
-        }
-
-        .push-notification.show {
-            transform: translateY(0);
-            opacity: 1;
-        }
-
-        .push-icon {
-            width: 36px;
-            height: 36px;
-            background: #ffdd00;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            font-size: 20px;
-            font-weight: 800;
-            color: #000;
-        }
-
-        .push-content {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .push-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 2px;
-        }
-
-        .push-app-name {
-            font-size: 12px;
-            font-weight: 600;
-            color: #aaa;
-        }
-
-        .push-time {
-            font-size: 11px;
-            color: #666;
-        }
-
-        .push-text {
-            font-size: 13px;
-            color: #ddd;
-            line-height: 1.4;
-            overflow: hidden;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-        }
-
-        .phone-screen,
-        .phone-screen * {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
-            line-height: 1.2;
-        }
-
-        .s1-title {
-            font-size: 16px !important;
-            line-height: 1.2 !important;
-        }
-
-        .contact-name {
-            font-size: 16px !important;
-            line-height: 1.2 !important;
-        }
-
-        .balance-amount {
-            font-size: 32px !important;
-            line-height: 1.1 !important;
-        }
+        .ios-kb-row-bottom .ios-key-enter { height: 44px; }
+        .keyboard-bottomRow { position: absolute; display: flex; justify-content: space-between; width: 87%; margin-top: 20px; margin-left: 20px; }
+
+        .screen-2 { position: absolute; top: 44px; left: 0; right: 0; bottom: 0; background: #000; color: #fff; transform: translateX(100%); z-index: 50; overflow: hidden; }
+        .screen-2.show { transform: translateX(0); }
+
+        .s2-header { display: flex; align-items: center; padding: 14px 20px 10px; gap: 12px; }
+        .s2-back { color: #4280fb; font-size: 26px; font-weight: 300; line-height: 1; margin-top: -2px; }
+        .s2-title { font-size: 16px; font-weight: 600; color: #fff; margin-left: 55px; padding-bottom: 10px; }
+
+        .balance-card { margin: 0 16px 14px; background: #1c1c1e; border-radius: 18px; padding: 16px 20px 20px; margin-bottom: 8px; }
+        .balance-label { font-size: 13px; color: #8E8E93; margin-bottom: 6px; }
+        .balance-amount { font-size: 32px; font-weight: 500; color: #fff; letter-spacing: -0.5px; }
+        .balance-dots { display: flex; gap: 5px; margin-top: 0; margin-left: 155px; margin-bottom: 30px; }
+        .bdot { width: 6px; height: 6px; border-radius: 50%; background: #555; }
+        .bdot.active { background: #548aec; }
+
+        .s2-phone-row { margin: 0 16px 14px; background: #1c1c1e; border-radius: 14px; padding: 14px 16px; }
+        .s2-phone-label { font-size: 12px; color: #8E8E93; margin-bottom: 4px; }
+        .s2-phone-val { font-size: 16px; color: #fff; }
+
+        .banks-scroll { display: flex; gap: 10px; padding: 0 16px 14px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .banks-scroll::-webkit-scrollbar { display: none; }
+
+        .bank-card { flex-shrink: 0; width: 105px; height: 100px; border-radius: 16px; padding: 4px 10px 10px; display: flex; flex-direction: column; gap: 0; border: 2px solid transparent; transition: border 0.2s; }
+        .bank-card.active-bank { border-color: #ffdd00; }
+        .bank-card-icon { width: 38px; height: 38px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+        .bank-card-name { font-size: 12px; font-weight: 500; color: #fff; line-height: 1.3; margin-bottom: 3px; }
+        .bank-card-person { font-size: 11px; color: #fff; line-height: 1.3; }
+
+        .bank-sber { background: #123b18; }
+        .bank-vtb { background: #001433; }
+        .bank-gazprom { background: #132336; }
+        .bank-alfa { background: #2e0000; }
+        .bank-psb { background: #001a33; }
+        .bank-rshb { background: #0a2200; }
+        .bank-tbank { background: #2e2a00; }
+        .bank-sovkom { background: #1a0033; }
+        .bank-raiff { background: #1a1500; }
+        .bank-spb { background: #001433; }
+        .bank-uralsib { background: #180a24; }
+        .bank-mts { background: #2e0000; }
+        .bank-pochta { background: #001f00; }
+        .bank-otp { background: #273601; }
+        .bank-ozon { background: #001940; }
+        .bank-wb { background: #2e0033; }
+        .bank-yandex-bank { background: #1a0a00; }
+        .bank-icon { width: 35px; margin-bottom: 20px; border-radius: 100%; }
+
+        .s2-info-row { margin: 0 16px 12px; display: flex; align-items: center; justify-content: space-between; }
+        .s2-limit { width: 100%; font-size: 16px; color: #8E8E93; background: transparent; border: none; outline: none; padding: 0; font-family: 'Inter', sans-serif; transition: font-size 0.2s, color 0.2s; }
+        .s2-limit.has-value { font-size: 25px; color: #fff; font-weight: 400; }
+        .s2-limit::placeholder { color: #8E8E93; font-size: 16px; }
+        .s2-amount-divider { height: 1px; background: rgba(255, 255, 255, 0.08); margin: 0 10px; }
+        .s2-commission-row { padding: 8px 10px 14px; min-height: 36px; position: relative; }
+        .s2-commission-text { font-size: 13px; color: white; margin-bottom: 30px; font-weight: 300; }
+
+        .commission-spinner { width: 22px; height: 22px; border: 2.5px solid rgba(255, 221, 0, 0.2); border-top-color: #ffdd00; border-radius: 50%; animation: cspin 0.7s linear infinite; flex-shrink: 0; }
+        .commission-spinner-wrap { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: none; justify-content: center; align-items: center; }
+        .commission-spinner-wrap.visible { display: flex; }
+
+        @keyframes cspin { to { transform: rotate(360deg); } }
+
+        .s2-msg-row { margin: 0 16px 16px; background: #1c1c1e; border-radius: 14px; padding: 14px 16px; }
+        .s2-msg-placeholder { font-size: 15px; color: #555; }
+        .s2-transfer-btn { margin: 0 16px; background: #ffdd00; border-radius: 16px; padding: 16px; text-align: center; font-size: 15px; font-weight: 400; color: #000; cursor: pointer; }
+
+        .s2-sbp-row { display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 10px; }
+        .sbp-text { font-size: 12px; color: #8E8E93; }
+
+        .controls { display: flex; gap: 12px; margin-top: 6px; }
+        .controls button { padding: 13px 28px; font-size: 15px; font-weight: 600; border: none; border-radius: 12px; cursor: pointer; transition: all 0.2s; font-family: 'Inter', sans-serif; }
+        .btn-animate { background: #007AFF; color: #fff; }
+        .btn-download { background: #34C759; color: #fff; }
+        .controls button:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); }
+        .controls button:active { transform: translateY(0); }
+
+        .screen-amount { position: absolute; top: 44px; left: 0; right: 0; bottom: 0; z-index: 100; pointer-events: none; opacity: 0; display: flex; flex-direction: column; justify-content: space-between; }
+        .screen-amount.active { pointer-events: all; opacity: 1; }
+        .sa-overlay { background: #000; display: flex; flex-direction: column; z-index: 2; flex: 1; }
+        .sa-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px 10px; }
+        .sa-close { color: #4280fb; font-size: 15px; }
+        .sa-title-block { text-align: center; }
+        .sa-title { font-size: 13px; color: #fff; font-weight: 600; }
+        .sa-subtitle { font-size: 12px; color: #8E8E93; }
+        .sa-done { color: #4280fb; font-size: 15px; }
+
+        .sa-amount-wrap { position: absolute; left: 0; right: 0; display: flex; align-items: center; justify-content: center; gap: 8px; z-index: 10; background-color: #2d2c2d; padding: 10px 0; opacity: 0; top: 50%; transform: translateY(-50%); }
+        .sa-amount-display { font-size: 25px; font-weight: 300; color: #fff; letter-spacing: -1px; min-width: 40px; text-align: right; }
+        .sa-cursor { width: 2px; height: 42px; background: #4280fb; border-radius: 1px; animation: blink 1s step-end infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+        .sa-rub { font-size: 25px; color: #8E8E93; font-weight: 300; }
+
+        .sa-keyboard { background-color: #1c1c1e; padding: 20px 8px 8px 8px; border-radius: 16px 16px 0 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding-bottom: 50px; transform: translateY(100%); transition: transform 0.32s cubic-bezier(0.25, 0.1, 0.25, 1); }
+        .sa-keyboard.kb-visible { transform: translateY(0); transition: transform 0.32s cubic-bezier(0.25, 0.1, 0.25, 1); }
+        .sa-keyboard.kb-hidden { transform: translateY(100%); transition: transform 0.26s cubic-bezier(0.4, 0, 1, 1); }
+
+        .sa-kb-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; margin-bottom: 8px; }
+        .sa-kb-key { background-color: #636366; border: none; border-radius: 5px; padding: 0 8px; color: white; font-size: 24px; font-weight: 400; text-align: center; cursor: pointer; user-select: none; position: relative; min-height: 46px; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: background-color 0.08s; }
+        .sa-kb-key.pressed { background-color: #9a9a9e !important; transform: scale(0.94); }
+        .sa-kb-key:active { background-color: #8e8e93; }
+        .sa-kb-key-dark { background-color: transparent; }
+        .sa-kb-key-dark:active { background-color: #636366; }
+        .sa-kb-key-num { font-size: 24px; font-weight: 400; line-height: 1; margin-bottom: 2px; }
+        .sa-kb-key-letters { font-size: 10px; font-weight: 400; color: white; opacity: 0.8; line-height: 1.1; letter-spacing: 0.5px; text-align: center; }
+        .sa-kb-backspace { font-size: 20px; font-weight: 300; }
+        .sa-home-bar { width: 134px; height: 5px; background-color: white; border-radius: 2.5px; margin: 12px auto 8px auto; opacity: 0.8; }
+
+        .loader-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.6); display: flex; align-items: center; justify-content: center; z-index: 200; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+        .loader-overlay.active { opacity: 1; pointer-events: all; }
+        .loader-box { width: 45px; height: 45px; background: #2c2c2e; border-radius: 5px; display: flex; align-items: center; justify-content: center; }
+        .loader-spinner { width: 25px; height: 25px; border: 3px solid rgba(255, 221, 0, 0.2); border-top-color: #ffdd00; border-radius: 50%; animation: spin 1.4s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .error-popup-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); display: flex; align-items: center; justify-content: center; z-index: 300; opacity: 0; pointer-events: none; transition: opacity 0.25s; }
+        .error-popup-overlay.active { opacity: 1; pointer-events: all; }
+        .error-popup { width: 270px; background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(45px); -webkit-backdrop-filter: blur(20px); border-radius: 14px; overflow: hidden; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5); }
+        .error-popup-body { padding: 20px 16px 4px; text-align: center; }
+        .error-popup-text { font-size: 14px; color: #fff; line-height: 1.5; font-weight: 400; }
+        .error-popup-divider { height: 1px; background: rgba(255, 255, 255, 0.15); margin-top: 16px; }
+        .error-popup-btn { display: block; width: 100%; padding: 14px; text-align: center; font-size: 17px; color: #4280fb; background: transparent; border: none; cursor: pointer; font-family: 'Inter', sans-serif; font-weight: 400; }
+
+        .push-notification { position: absolute; top: 50px; left: 12px; right: 12px; border-radius: 14px; padding: 10px 14px; display: flex; align-items: flex-start; gap: 10px; z-index: 400; transform: translateY(-120px); opacity: 0; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s; background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(45px); -webkit-backdrop-filter: blur(20px); }
+        .push-notification.show { transform: translateY(0); opacity: 1; }
+        .push-icon { width: 36px; height: 36px; background: #ffdd00; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 20px; font-weight: 800; color: #000; }
+        .push-content { flex: 1; min-width: 0; }
+        .push-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2px; }
+        .push-app-name { font-size: 12px; font-weight: 600; color: #aaa; }
+        .push-time { font-size: 11px; color: #666; }
+        .push-text { font-size: 13px; color: #ddd; line-height: 1.4; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+
+        .phone-screen, .phone-screen * { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important; line-height: 1.2; }
+        .s1-title { font-size: 16px !important; line-height: 1.2 !important; }
+        .contact-name { font-size: 16px !important; line-height: 1.2 !important; }
+        .balance-amount { font-size: 32px !important; line-height: 1.1 !important; }
+
+        /* ═══════════════════════════════════════════
+           СВЕТЛАЯ ТЕМА ЭКРАНА ТЕЛЕФОНА
+        ═══════════════════════════════════════════ */
+
+        .phone-screen.light-screen { background: #f2f2f7; }
+
+        /* Статус бар */
+        .light-screen .status-bar { background: #f2f2f7; }
+        .light-screen #statusTime { color: #000 !important; }
+        .light-screen .svyaz { filter: invert(1); }
+        .light-screen .rec-image { filter: invert(1) brightness(0); }
+
+        /* Экран 1 — поиск получателя */
+        .light-screen .screen-1 { background: #f2f2f7; color: #000; }
+        .light-screen .s1-title { color: #000 !important; }
+        .light-screen .flag-code { background: #fff; }
+        .light-screen .code-text { color: #000 !important; }
+        .light-screen .phone-number-display { background: #fff; color: #000 !important; }
+        .light-screen .scan-row { background: #e8f0fe; }
+        .light-screen .scan-left { color: #1a3a6e !important; }
+        .light-screen .scan-arrow { color: #c7c7cc !important; }
+        .light-screen .contact-row.highlight { background: rgba(0,0,0,0.05); }
+        .light-screen .contact-avatar { background: #e5e5ea; color: #555 !important; }
+        .light-screen .contact-name { color: #000 !important; }
+        .light-screen .contact-phone { color: #6d6d72 !important; }
+
+        /* Клавиатура */
+        .light-screen .ios-keyboard { background: #d1d5db; }
+        .light-screen .ios-key { background: #fff; color: #000 !important; box-shadow: 0 1px 0 #8a8a8e; }
+        .light-screen .ios-key-shift { background: #aeb5be; color: #000 !important; box-shadow: 0 1px 0 #8a8a8e; }
+        .light-screen .ios-key-func { background: #aeb5be; color: #000 !important; box-shadow: 0 1px 0 #8a8a8e; }
+        .light-screen .ios-key-space { background: #fff; color: #000 !important; box-shadow: 0 1px 0 #8a8a8e; }
+        .light-screen .ios-key-enter { background: #aeb5be; color: #000 !important; box-shadow: 0 1px 0 #8a8a8e; }
+
+        /* Экран 2 — ввод суммы и банки */
+        .light-screen .screen-2 { background: #f2f2f7; color: #000; }
+        .light-screen .s2-back { color: #007aff !important; }
+        .light-screen .s2-title { color: #000 !important; }
+        .light-screen .balance-card { background: #4a4a4f; }
+        .light-screen .balance-label { color: rgba(255,255,255,0.65) !important; }
+        .light-screen .balance-amount { color: #fff !important; }
+        .light-screen .s2-phone-row { background: #fff; }
+        .light-screen .s2-phone-label { color: #8e8e93 !important; }
+        .light-screen .s2-phone-val { color: #000 !important; }
+        .light-screen .s2-limit { color: #8e8e93 !important; }
+        .light-screen .s2-limit.has-value { color: #000 !important; }
+        .light-screen .s2-limit::placeholder { color: #8e8e93 !important; }
+        .light-screen .s2-amount-divider { background: rgba(0,0,0,0.1); }
+        .light-screen .s2-commission-text { color: #3c3c43 !important; }
+        .light-screen .s2-msg-row { background: #fff; }
+        .light-screen .s2-msg-placeholder { color: #c7c7cc !important; }
+        .light-screen .sbp-text { color: #8e8e93 !important; }
+
+        /* Банковские карточки — цвета остаются тёмными как брендовые */
+        .light-screen .bdot { background: #c7c7cc; }
+        .light-screen .bdot.active { background: #548aec; }
+
+        /* Экран ввода суммы */
+        .light-screen .sa-overlay { background: #f2f2f7; }
+        .light-screen .sa-title { color: #000 !important; }
+        .light-screen .sa-subtitle { color: #8e8e93 !important; }
+        .light-screen .sa-amount-wrap { background-color: #f2f2f7; }
+        .light-screen .sa-amount-display { color: #000 !important; }
+        .light-screen .sa-rub { color: #8e8e93 !important; }
+        .light-screen .sa-keyboard { background-color: #d1d5db; }
+        .light-screen .sa-kb-key { background-color: #fff; color: #000 !important; box-shadow: 0 1px 0 #8a8a8e; }
+        .light-screen .sa-kb-key-dark { background-color: #aeb5be !important; box-shadow: 0 1px 0 #8a8a8e; }
+        .light-screen .sa-kb-key-dark .sa-kb-key-num { color: #000 !important; }
+        .light-screen .sa-kb-key-letters { color: #000 !important; opacity: 0.5; }
+        .light-screen .sa-kb-key.pressed { background-color: #e0e0e0 !important; }
+
+        /* Лоадер и попап */
+        .light-screen .loader-box { background: #fff; }
+        .light-screen .error-popup { background: rgba(255,255,255,0.85); }
+        .light-screen .error-popup-text { color: #000 !important; }
+        .light-screen .error-popup-divider { background: rgba(0,0,0,0.15); }
+        .light-screen .error-popup-btn { color: #007aff !important; }
+
+        /* Пуш-уведомление */
+        .light-screen .push-notification { background: rgba(255,255,255,0.8); box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+        .light-screen .push-app-name { color: #555 !important; }
+        .light-screen .push-text { color: #000 !important; }
+        .light-screen .push-time { color: #8e8e93 !important; }
 
         @media screen and (max-width: 480px) {
-            body {
-                zoom: 1;
-                -webkit-text-size-adjust: none;
-                -moz-text-size-adjust: none;
-                text-size-adjust: none;
-            }
+            body { zoom: 1; -webkit-text-size-adjust: none; -moz-text-size-adjust: none; text-size-adjust: none; }
         }
 
-        .input-group textarea::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        .input-group textarea::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        .input-group textarea::-webkit-scrollbar-thumb {
-            background: #444;
-            border-radius: 2px;
-        }
-
-        .input-group textarea::-webkit-scrollbar-thumb:hover {
-            background: #555;
-        }
-
-        .input-panel::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        .input-panel::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        .input-panel::-webkit-scrollbar-thumb {
-            background: #444;
-            border-radius: 2px;
-        }
-
-        .input-panel::-webkit-scrollbar-thumb:hover {
-            background: #555;
-        }
+        .input-group textarea::-webkit-scrollbar { width: 4px; }
+        .input-group textarea::-webkit-scrollbar-track { background: transparent; }
+        .input-group textarea::-webkit-scrollbar-thumb { background: #444; border-radius: 2px; }
+        .input-panel::-webkit-scrollbar { width: 4px; }
+        .input-panel::-webkit-scrollbar-track { background: transparent; }
+        .input-panel::-webkit-scrollbar-thumb { background: #444; border-radius: 2px; }
 
         /* ═══════════════════════════════════════════
            ШАБЛОНЫ — СТИЛИ
         ═══════════════════════════════════════════ */
 
         .templates-block {
-            background: #202020;
-            border: 1px solid #2e2e2e;
+            background: var(--tpl-block-bg);
+            border: 1px solid var(--tpl-block-border);
             border-radius: 14px;
             padding: 14px;
             margin-bottom: 14px;
+            transition: background 0.3s, border-color 0.3s;
         }
 
-        .templates-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 12px;
-        }
+        .templates-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+        .templates-title { font-size: 11px; color: var(--label-color); text-transform: uppercase; letter-spacing: 0.5px; }
 
-        .templates-title {
-            font-size: 11px;
-            color: #888;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .templates-tabs {
-            display: flex;
-            gap: 4px;
-            margin-bottom: 10px;
-        }
+        .templates-tabs { display: flex; gap: 4px; margin-bottom: 10px; }
 
         .tpl-tab {
             flex: 1;
             padding: 6px;
             border-radius: 7px;
-            border: 1px solid #333;
-            background: #252525;
-            color: #aaa;
+            border: 1px solid var(--tpl-tab-border);
+            background: var(--tpl-tab-bg);
+            color: var(--tpl-tab-color);
             font-size: 11px;
             cursor: pointer;
             text-align: center;
@@ -1459,202 +713,50 @@
             font-family: 'Inter', sans-serif;
         }
 
-        .tpl-tab.active {
-            border-color: #ffdd00;
-            color: #ffdd00;
-            background: rgba(255, 221, 0, 0.08);
-        }
+        .tpl-tab.active { border-color: #ffdd00; color: #ffdd00; background: rgba(255, 221, 0, 0.08); }
 
-        .tpl-list {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
+        .tpl-list { display: flex; flex-direction: column; gap: 5px; }
 
         .tpl-item {
             display: flex;
             align-items: flex-start;
             gap: 8px;
             padding: 9px 10px;
-            background: #252525;
-            border: 1px solid #333;
+            background: var(--tpl-item-bg);
+            border: 1px solid var(--tpl-item-border);
             border-radius: 9px;
             cursor: pointer;
             transition: all 0.15s;
             position: relative;
         }
 
-        .tpl-item:hover {
-            background: #2a2a2a;
-            border-color: rgba(255, 221, 0, 0.3);
-        }
+        .tpl-item:hover { background: var(--tpl-item-hover); border-color: rgba(255, 221, 0, 0.3); }
+        .tpl-item-text { font-size: 12px; color: var(--tpl-item-color); line-height: 1.4; flex: 1; min-width: 0; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+        .tpl-item-del { font-size: 14px; color: var(--tpl-del-color); cursor: pointer; flex-shrink: 0; padding: 0 2px; line-height: 1; transition: color 0.15s; background: none; border: none; }
+        .tpl-item-del:hover { color: #ff453a; }
 
-        .tpl-item-text {
-            font-size: 12px;
-            color: #ccc;
-            line-height: 1.4;
-            flex: 1;
-            min-width: 0;
-            overflow: hidden;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-        }
+        .tpl-add-row { display: flex; gap: 6px; margin-top: 8px; }
+        .tpl-add-input { flex: 1; background: var(--tpl-add-bg); border: 1px solid var(--tpl-add-border); border-radius: 8px; padding: 7px 10px; color: var(--input-color); font-size: 12px; outline: none; font-family: 'Inter', sans-serif; min-height: 60px; resize: none; line-height: 1.4; }
+        .tpl-add-input:focus { border-color: rgba(255, 221, 0, 0.5); }
+        .tpl-save-btn { align-self: flex-end; padding: 7px 12px; background: rgba(255, 221, 0, 0.15); border: 1px solid rgba(255, 221, 0, 0.3); border-radius: 8px; color: #ffdd00; font-size: 12px; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.15s; white-space: nowrap; }
+        .tpl-save-btn:hover { background: rgba(255, 221, 0, 0.25); }
 
-        .tpl-item-del {
-            font-size: 14px;
-            color: #555;
-            cursor: pointer;
-            flex-shrink: 0;
-            padding: 0 2px;
-            line-height: 1;
-            transition: color 0.15s;
-            background: none;
-            border: none;
-        }
+        .notif-toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 4px 0 10px; }
+        .notif-toggle-label { font-size: 11px; color: var(--notif-label); text-transform: uppercase; letter-spacing: 0.5px; }
 
-        .tpl-item-del:hover {
-            color: #ff453a;
-        }
+        .toggle-switch { position: relative; width: 40px; height: 22px; cursor: pointer; flex-shrink: 0; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; position: absolute; }
+        .toggle-track { position: absolute; inset: 0; background: var(--toggle-track-bg); border-radius: 11px; transition: background 0.2s; }
+        .toggle-thumb { position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; background: var(--toggle-thumb-bg); border-radius: 50%; transition: transform 0.2s, background 0.2s; }
+        .toggle-switch input:checked + .toggle-track { background: rgba(255, 221, 0, 0.25); border: 1px solid rgba(255, 221, 0, 0.5); }
+        .toggle-switch input:checked + .toggle-track + .toggle-thumb { transform: translateX(18px); background: #ffdd00; }
 
-        .tpl-add-row {
-            display: flex;
-            gap: 6px;
-            margin-top: 8px;
-        }
+        .notif-fields { transition: opacity 0.25s, max-height 0.4s cubic-bezier(0.25, 0.1, 0.25, 1); max-height: 600px; overflow: hidden; }
+        .notif-fields.hidden { opacity: 0.35; pointer-events: none; }
+        .notif-fields.collapsed { max-height: 0; opacity: 0; pointer-events: none; }
 
-        .tpl-add-input {
-            flex: 1;
-            background: #252525;
-            border: 1px solid #333;
-            border-radius: 8px;
-            padding: 7px 10px;
-            color: #fff;
-            font-size: 12px;
-            outline: none;
-            font-family: 'Inter', sans-serif;
-            min-height: 60px;
-            resize: none;
-            line-height: 1.4;
-        }
-
-        .tpl-add-input:focus {
-            border-color: rgba(255, 221, 0, 0.5);
-        }
-
-        .tpl-save-btn {
-            align-self: flex-end;
-            padding: 7px 12px;
-            background: rgba(255, 221, 0, 0.15);
-            border: 1px solid rgba(255, 221, 0, 0.3);
-            border-radius: 8px;
-            color: #ffdd00;
-            font-size: 12px;
-            cursor: pointer;
-            font-family: 'Inter', sans-serif;
-            transition: all 0.15s;
-            white-space: nowrap;
-        }
-
-        .tpl-save-btn:hover {
-            background: rgba(255, 221, 0, 0.25);
-        }
-
-        /* Переключатель уведомлений */
-        .notif-toggle-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 4px 0 10px;
-        }
-
-        .notif-toggle-label {
-            font-size: 11px;
-            color: #888;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .toggle-switch {
-            position: relative;
-            width: 40px;
-            height: 22px;
-            cursor: pointer;
-            flex-shrink: 0;
-        }
-
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-            position: absolute;
-        }
-
-        .toggle-track {
-            position: absolute;
-            inset: 0;
-            background: #333;
-            border-radius: 11px;
-            transition: background 0.2s;
-        }
-
-        .toggle-thumb {
-            position: absolute;
-            top: 3px;
-            left: 3px;
-            width: 16px;
-            height: 16px;
-            background: #888;
-            border-radius: 50%;
-            transition: transform 0.2s, background 0.2s;
-        }
-
-        .toggle-switch input:checked+.toggle-track {
-            background: rgba(255, 221, 0, 0.25);
-            border: 1px solid rgba(255, 221, 0, 0.5);
-        }
-
-        .toggle-switch input:checked+.toggle-track+.toggle-thumb {
-            transform: translateX(18px);
-            background: #ffdd00;
-        }
-
-        .notif-fields {
-            transition: opacity 0.25s, max-height 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
-            max-height: 600px;
-            overflow: hidden;
-        }
-
-        .notif-fields.hidden {
-            opacity: 0.35;
-            pointer-events: none;
-        }
-
-        .notif-fields.collapsed {
-            max-height: 0;
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .tpl-toggle-btn {
-            width: 100%;
-            padding: 7px 0;
-            background: transparent;
-            border: 1px dashed #333;
-            border-radius: 8px;
-            color: #666;
-            font-size: 11px;
-            cursor: pointer;
-            font-family: 'Inter', sans-serif;
-            transition: all 0.15s;
-            margin-top: 4px;
-            letter-spacing: 0.3px;
-        }
-
-        .tpl-toggle-btn:hover {
-            border-color: rgba(255, 221, 0, 0.3);
-            color: #aaa;
-        }
+        .tpl-toggle-btn { width: 100%; padding: 7px 0; background: transparent; border: 1px dashed var(--tpl-toggle-border); border-radius: 8px; color: var(--tpl-toggle-color); font-size: 11px; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.15s; margin-top: 4px; letter-spacing: 0.3px; }
+        .tpl-toggle-btn:hover { border-color: rgba(255, 221, 0, 0.3); color: #aaa; }
     </style>
 </head>
 
@@ -1662,6 +764,19 @@
 
     <div class="input-panel">
         <div class="panel-title">Данные для перевода</div>
+
+        <!-- ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ -->
+        <div class="section-label">Тема оформления</div>
+        <div class="theme-switcher">
+            <button class="theme-btn active" id="themeDark" onclick="setTheme('dark')">
+                <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor"><path d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278z"/></svg>
+                Тёмная
+            </button>
+            <button class="theme-btn" id="themeLight" disabled title="Скоро" style="opacity:0.35;cursor:not-allowed;pointer-events:none;">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707z"/></svg>
+                Светлая
+            </button>
+        </div>
 
         <div class="input-group">
             <div class="checkbox-row">
@@ -1675,7 +790,7 @@
 
         <div class="input-group">
             <label>Номер телефона</label>
-            <input type="text" id="phoneInput" placeholder="+7 999 000 00 00">
+            <input type="text" id="phoneInput" placeholder="999 000 00 00">
         </div>
 
         <div class="input-group">
@@ -1692,11 +807,9 @@
         <div class="templates-block" id="errorTemplatesBlock">
             <div class="input-group" style="margin-bottom:6px;">
                 <label>Текст ошибки</label>
-                <textarea
-                    id="errorText">Операция отклонена. Получатель находится в базе Банка России по переводам без добровольного согласия (161-ФЗ). Подробнее в чате</textarea>
+                <textarea id="errorText">Операция отклонена. Получатель находится в базе Банка России по переводам без добровольного согласия (161-ФЗ). Подробнее в чате</textarea>
             </div>
-            <button class="tpl-toggle-btn" id="errorTplToggle" onclick="toggleErrorTemplates()">▾ Показать
-                шаблоны</button>
+            <button class="tpl-toggle-btn" id="errorTplToggle" onclick="toggleErrorTemplates()">▾ Показать шаблоны</button>
             <div class="notif-fields collapsed" id="errorFields">
                 <div style="height:8px;"></div>
                 <div class="templates-tabs">
@@ -1724,11 +837,9 @@
             </div>
             <div class="input-group" style="margin-bottom:6px;">
                 <label>Текст уведомления</label>
-                <textarea
-                    id="notifText">Отказ Переводы, счет RUB. Получатель находится в базе ЦБ РФ по переводам...</textarea>
+                <textarea id="notifText">Отказ Переводы, счет RUB. Получатель находится в базе ЦБ РФ по переводам...</textarea>
             </div>
-            <button class="tpl-toggle-btn" id="notifTplToggle" onclick="toggleNotifTemplates()">▾ Показать
-                шаблоны</button>
+            <button class="tpl-toggle-btn" id="notifTplToggle" onclick="toggleNotifTemplates()">▾ Показать шаблоны</button>
             <div class="notif-fields collapsed" id="notifFields">
                 <div style="height:8px;"></div>
                 <div class="templates-tabs">
@@ -1738,8 +849,7 @@
                 <div class="tpl-list" id="notifPresetList"></div>
                 <div class="tpl-list" id="notifCustomList" style="display:none;"></div>
                 <div class="tpl-add-row" id="notifAddRow" style="display:none;">
-                    <textarea class="tpl-add-input" id="notifAddInput"
-                        placeholder="Введите текст уведомления..."></textarea>
+                    <textarea class="tpl-add-input" id="notifAddInput" placeholder="Введите текст уведомления..."></textarea>
                     <button class="tpl-save-btn" onclick="saveCustomTemplate('notif')">Сохранить</button>
                 </div>
             </div>
@@ -1793,7 +903,7 @@
                             <img style="width: 20px;" class="flag-icon" src="./source/rus-removebg-preview.png" alt="">
                             <span class="code-text">+7</span>
                         </div>
-                        <div class="phone-number-display" id="phoneDisplay">+7 000 000 00 00</div>
+                        <div class="phone-number-display" id="phoneDisplay">000 000 00 00</div>
                     </div>
 
                     <div class="scan-row">
@@ -1815,49 +925,17 @@
                     <div class="ios-keyboard" id="iosKeyboard">
                         <div class="ios-kb-rows">
                             <div class="ios-kb-row">
-                                <div class="ios-key">й</div>
-                                <div class="ios-key">ц</div>
-                                <div class="ios-key">у</div>
-                                <div class="ios-key">к</div>
-                                <div class="ios-key">е</div>
-                                <div class="ios-key">н</div>
-                                <div class="ios-key">г</div>
-                                <div class="ios-key">ш</div>
-                                <div class="ios-key">щ</div>
-                                <div class="ios-key">з</div>
-                                <div class="ios-key">х</div>
+                                <div class="ios-key">й</div><div class="ios-key">ц</div><div class="ios-key">у</div><div class="ios-key">к</div><div class="ios-key">е</div><div class="ios-key">н</div><div class="ios-key">г</div><div class="ios-key">ш</div><div class="ios-key">щ</div><div class="ios-key">з</div><div class="ios-key">х</div>
                             </div>
                             <div class="ios-kb-row">
-                                <div class="ios-key">ф</div>
-                                <div class="ios-key">ы</div>
-                                <div class="ios-key">в</div>
-                                <div class="ios-key">а</div>
-                                <div class="ios-key">п</div>
-                                <div class="ios-key">р</div>
-                                <div class="ios-key">о</div>
-                                <div class="ios-key">л</div>
-                                <div class="ios-key">д</div>
-                                <div class="ios-key">ж</div>
-                                <div class="ios-key">э</div>
+                                <div class="ios-key">ф</div><div class="ios-key">ы</div><div class="ios-key">в</div><div class="ios-key">а</div><div class="ios-key">п</div><div class="ios-key">р</div><div class="ios-key">о</div><div class="ios-key">л</div><div class="ios-key">д</div><div class="ios-key">ж</div><div class="ios-key">э</div>
                             </div>
                             <div class="ios-kb-row">
-                                <div class="ios-key ios-key-shift">⇧</div>
-                                <div class="ios-key">я</div>
-                                <div class="ios-key">ч</div>
-                                <div class="ios-key">с</div>
-                                <div class="ios-key">м</div>
-                                <div class="ios-key">и</div>
-                                <div class="ios-key">т</div>
-                                <div class="ios-key">ь</div>
-                                <div class="ios-key">б</div>
-                                <div class="ios-key">ю</div>
-                                <div class="ios-key ios-key-shift">⌫</div>
+                                <div class="ios-key ios-key-shift">⇧</div><div class="ios-key">я</div><div class="ios-key">ч</div><div class="ios-key">с</div><div class="ios-key">м</div><div class="ios-key">и</div><div class="ios-key">т</div><div class="ios-key">ь</div><div class="ios-key">б</div><div class="ios-key">ю</div><div class="ios-key ios-key-shift">⌫</div>
                             </div>
                             <div class="ios-kb-row ios-kb-row-bottom">
                                 <div class="ios-key ios-key-func">123</div>
-                                <div class="ios-key ios-key-func">
-                                    <img style="width: 30px;" src="./source/keyboard-smail.png" alt="">
-                                </div>
+                                <div class="ios-key ios-key-func"><img style="width: 30px;" src="./source/keyboard-smail.png" alt=""></div>
                                 <div class="ios-key ios-key-space">Пробел</div>
                                 <div class="ios-key ios-key-enter">Ввод</div>
                             </div>
@@ -1894,16 +972,13 @@
                     <div class="banks-scroll" id="banksScroll"></div>
 
                     <div style="margin: 0 16px 0;">
-                        <div
-                            style="display:flex; align-items:center; justify-content:space-between; padding: 10px 10px;">
-                            <input type="text" class="s2-limit" id="s2LimitInput"
-                                placeholder="Сумма от 10 ₽ до 1 000 000 ₽" readonly>
+                        <div style="display:flex; align-items:center; justify-content:space-between; padding: 10px 10px;">
+                            <input type="text" class="s2-limit" id="s2LimitInput" placeholder="Сумма от 10 ₽ до 1 000 000 ₽" readonly>
                             <img style="width:25px; flex-shrink:0; margin-left:8px;" src="./source/calc.png" alt="">
                         </div>
                         <div class="s2-amount-divider"></div>
                         <div class="s2-commission-row">
-                            <span class="s2-commission-text" id="commissionText">Размер комиссии будет уточнен после
-                                ввода реквизитов платежа</span>
+                            <span class="s2-commission-text" id="commissionText">Размер комиссии будет уточнен после ввода реквизитов платежа</span>
                             <div class="commission-spinner-wrap" id="commissionSpinnerWrap">
                                 <div class="commission-spinner" id="commissionSpinner"></div>
                             </div>
@@ -1922,18 +997,13 @@
                     </div>
 
                     <div class="loader-overlay" id="loaderOverlay">
-                        <div class="loader-box">
-                            <div class="loader-spinner"></div>
-                        </div>
+                        <div class="loader-box"><div class="loader-spinner"></div></div>
                     </div>
 
                     <div class="error-popup-overlay" id="errorPopupOverlay">
                         <div class="error-popup">
                             <div class="error-popup-body">
-                                <div class="error-popup-text" id="errorPopupText">
-                                    Операция отклонена. Получатель находится в базе Банка России по переводам без
-                                    добровольного согласия (161-ФЗ). Подробнее в чате
-                                </div>
+                                <div class="error-popup-text" id="errorPopupText">Операция отклонена. Получатель находится в базе Банка России по переводам без добровольного согласия (161-ФЗ). Подробнее в чате</div>
                             </div>
                             <div class="error-popup-divider"></div>
                             <button class="error-popup-btn">OK</button>
@@ -1961,30 +1031,18 @@
 
                     <div class="sa-keyboard" id="saKeyboard">
                         <div class="sa-kb-grid">
-                            <div class="sa-kb-key" data-val="1"><span class="sa-kb-key-num">1</span><span
-                                    class="sa-kb-key-letters"></span></div>
-                            <div class="sa-kb-key" data-val="2"><span class="sa-kb-key-num">2</span><span
-                                    class="sa-kb-key-letters">А Б В Г</span></div>
-                            <div class="sa-kb-key" data-val="3"><span class="sa-kb-key-num">3</span><span
-                                    class="sa-kb-key-letters">Д Е Ж З</span></div>
-                            <div class="sa-kb-key" data-val="4"><span class="sa-kb-key-num">4</span><span
-                                    class="sa-kb-key-letters">И Й К Л</span></div>
-                            <div class="sa-kb-key" data-val="5"><span class="sa-kb-key-num">5</span><span
-                                    class="sa-kb-key-letters">М Н О П</span></div>
-                            <div class="sa-kb-key" data-val="6"><span class="sa-kb-key-num">6</span><span
-                                    class="sa-kb-key-letters">Р С Т У</span></div>
-                            <div class="sa-kb-key" data-val="7"><span class="sa-kb-key-num">7</span><span
-                                    class="sa-kb-key-letters">Ф Х Ц Ч</span></div>
-                            <div class="sa-kb-key" data-val="8"><span class="sa-kb-key-num">8</span><span
-                                    class="sa-kb-key-letters">Ш Щ Ъ Ы</span></div>
-                            <div class="sa-kb-key" data-val="9"><span class="sa-kb-key-num">9</span><span
-                                    class="sa-kb-key-letters">Ь Э Ю Я</span></div>
-                            <div class="sa-kb-key sa-kb-key-dark" data-val=","><span class="sa-kb-key-num">,</span><span
-                                    class="sa-kb-key-letters"></span></div>
-                            <div class="sa-kb-key" data-val="0"><span class="sa-kb-key-num">0</span><span
-                                    class="sa-kb-key-letters"></span></div>
-                            <div class="sa-kb-key sa-kb-key-dark" data-val="backspace"><span
-                                    class="sa-kb-backspace">⌫</span><span class="sa-kb-key-letters"></span></div>
+                            <div class="sa-kb-key" data-val="1"><span class="sa-kb-key-num">1</span><span class="sa-kb-key-letters"></span></div>
+                            <div class="sa-kb-key" data-val="2"><span class="sa-kb-key-num">2</span><span class="sa-kb-key-letters">А Б В Г</span></div>
+                            <div class="sa-kb-key" data-val="3"><span class="sa-kb-key-num">3</span><span class="sa-kb-key-letters">Д Е Ж З</span></div>
+                            <div class="sa-kb-key" data-val="4"><span class="sa-kb-key-num">4</span><span class="sa-kb-key-letters">И Й К Л</span></div>
+                            <div class="sa-kb-key" data-val="5"><span class="sa-kb-key-num">5</span><span class="sa-kb-key-letters">М Н О П</span></div>
+                            <div class="sa-kb-key" data-val="6"><span class="sa-kb-key-num">6</span><span class="sa-kb-key-letters">Р С Т У</span></div>
+                            <div class="sa-kb-key" data-val="7"><span class="sa-kb-key-num">7</span><span class="sa-kb-key-letters">Ф Х Ц Ч</span></div>
+                            <div class="sa-kb-key" data-val="8"><span class="sa-kb-key-num">8</span><span class="sa-kb-key-letters">Ш Щ Ъ Ы</span></div>
+                            <div class="sa-kb-key" data-val="9"><span class="sa-kb-key-num">9</span><span class="sa-kb-key-letters">Ь Э Ю Я</span></div>
+                            <div class="sa-kb-key sa-kb-key-dark" data-val=","><span class="sa-kb-key-num">,</span><span class="sa-kb-key-letters"></span></div>
+                            <div class="sa-kb-key" data-val="0"><span class="sa-kb-key-num">0</span><span class="sa-kb-key-letters"></span></div>
+                            <div class="sa-kb-key sa-kb-key-dark" data-val="backspace"><span class="sa-kb-backspace">⌫</span><span class="sa-kb-key-letters"></span></div>
                         </div>
                     </div>
                 </div>
@@ -1996,8 +1054,7 @@
                             <span class="push-app-name">T-Bank</span>
                             <span class="push-time">сейчас</span>
                         </div>
-                        <div class="push-text" id="pushText">Отказ Переводы, счет RUB. Получатель находится в базе ЦБ РФ
-                            по переводам...</div>
+                        <div class="push-text" id="pushText">Отказ Переводы, счет RUB. Получатель находится в базе ЦБ РФ по переводам...</div>
                     </div>
                 </div>
 
@@ -2013,8 +1070,7 @@
     <!-- ШАБЛОНЫ БАНКОВ -->
     <template id="tpl-sber">
         <div class="bank-card bank-sber">
-            <img style="width: 35px; margin-top: 0px; border-radius: 50%; margin-bottom: 17px;" class="bank-icon"
-                src="./source/sber.png" alt="">
+            <img style="width: 35px; margin-top: 0px; border-radius: 50%; margin-bottom: 17px;" class="bank-icon" src="./source/sber.png" alt="">
             <div class="bank-card-name">Сбербанк</div>
             <div class="bank-card-person">{{name}}</div>
         </div>
@@ -2054,8 +1110,7 @@
 
     <template id="tpl-psb">
         <div class="bank-card bank-psb">
-            <img style="width: 30px; border-radius: 100%; margin-top: 5px; margin-bottom: 20px; margin-left: 3px;"
-                src="./source/psb.png" alt="">
+            <img style="width: 30px; border-radius: 100%; margin-top: 5px; margin-bottom: 20px; margin-left: 3px;" src="./source/psb.png" alt="">
             <div class="bank-card-name">ПСБ</div>
             <div class="bank-card-person">{{name}}</div>
         </div>
@@ -2071,8 +1126,7 @@
 
     <template id="tpl-tbank">
         <div class="bank-card bank-tbank">
-            <img style="width: 25px; margin-left: 2.5px; margin-top: 5px; margin-bottom: 20px;" src="./source/tbank.png"
-                alt="">
+            <img style="width: 25px; margin-left: 2.5px; margin-top: 5px; margin-bottom: 20px;" src="./source/tbank.png" alt="">
             <div class="bank-card-name">Т-Банк</div>
             <div class="bank-card-person">{{name}}</div>
         </div>
@@ -2088,8 +1142,7 @@
 
     <template id="tpl-raiff">
         <div class="bank-card bank-raiff">
-            <img style="border-radius: 100%; width: 27px; margin-left: 5px; margin-top: 5px; margin-bottom: 18px;"
-                src="./source/raif.png" alt="">
+            <img style="border-radius: 100%; width: 27px; margin-left: 5px; margin-top: 5px; margin-bottom: 18px;" src="./source/raif.png" alt="">
             <div class="bank-card-name">Райффайзенбанк</div>
             <div class="bank-card-person">{{name}}</div>
         </div>
@@ -2105,8 +1158,7 @@
 
     <template id="tpl-uralsib">
         <div class="bank-card bank-uralsib">
-            <img style="border-radius: 100%; width: 30px; margin-top: 4px;" class="bank-icon" src="./source/ural.png"
-                alt="">
+            <img style="border-radius: 100%; width: 30px; margin-top: 4px;" class="bank-icon" src="./source/ural.png" alt="">
             <div class="bank-card-name">Уралсиб</div>
             <div class="bank-card-person">{{name}}</div>
         </div>
@@ -2114,8 +1166,7 @@
 
     <template id="tpl-mts">
         <div class="bank-card bank-mts">
-            <img src="./source/mts.png" style="width: 30px; margin-left: 7px; margin-top: 5px; margin-bottom: 20px;"
-                alt="">
+            <img src="./source/mts.png" style="width: 30px; margin-left: 7px; margin-top: 5px; margin-bottom: 20px;" alt="">
             <div class="bank-card-name">МТС Банк</div>
             <div class="bank-card-person">{{name}}</div>
         </div>
@@ -2139,8 +1190,7 @@
 
     <template id="tpl-yandex">
         <div class="bank-card bank-ozon">
-            <img style="width: 30px; margin-top: 5px; margin-left: 5px; margin-bottom: 20px;" src="./source/ozon.png"
-                alt="">
+            <img style="width: 30px; margin-top: 5px; margin-left: 5px; margin-bottom: 20px;" src="./source/ozon.png" alt="">
             <div class="bank-card-name">Озон Банк</div>
             <div class="bank-card-person">{{name}}</div>
         </div>
@@ -2148,14 +1198,47 @@
 
     <template id="tpl-wb">
         <div class="bank-card bank-wb">
-            <img style="position: absolute; width: 50px; margin-bottom: 10px; top: -5px; left: 7px;"
-                src="./source/wb.png" alt="">
+            <img style="position: absolute; width: 50px; margin-bottom: 10px; top: -5px; left: 7px;" src="./source/wb.png" alt="">
             <div style="margin-top: 53px;" class="bank-card-name">WB Банк</div>
             <div class="bank-card-person">{{name}}</div>
         </div>
     </template>
 
+    <template id="tpl-yandex-bank">
+        <div class="bank-card bank-yandex-bank">
+            <img style="width: 40px; margin-top: 4px; margin-left: 2px; margin-bottom: 18px; border-radius: 8px;" src="./source/yandex.png" alt="">
+            <div class="bank-card-name">Яндекс Банк</div>
+            <div class="bank-card-person">{{name}}</div>
+        </div>
+    </template>
+
     <script>
+        /* ══ ТЕМА ══ */
+        function setTheme(theme) {
+            const html = document.documentElement;
+            const phoneScreen = document.getElementById('phoneScreen');
+            if (theme === 'light') {
+                html.classList.add('theme-light');
+                if (phoneScreen) phoneScreen.classList.add('light-screen');
+                document.getElementById('themeLight').classList.add('active');
+                document.getElementById('themeDark').classList.remove('active');
+            } else {
+                html.classList.remove('theme-light');
+                if (phoneScreen) phoneScreen.classList.remove('light-screen');
+                document.getElementById('themeDark').classList.add('active');
+                document.getElementById('themeLight').classList.remove('active');
+            }
+            try { localStorage.setItem('ui_theme', theme); } catch(e) {}
+        }
+
+        /* Восстановить тему при загрузке */
+        (function() {
+            try {
+                const saved = localStorage.getItem('ui_theme');
+                if (saved === 'light') setTheme('light');
+            } catch(e) {}
+        })();
+
         /* ══ УТИЛИТЫ ══ */
         function tween(duration, onProgress, easing) {
             easing = easing || easeOutCubic;
@@ -2190,6 +1273,7 @@
             { key: 'otp', name: 'ОТП Банк', emoji: '🔷', cls: 'bank-otp', tpl: 'tpl-otp' },
             { key: 'yandex', name: 'Озон Банк', emoji: '🔶', cls: 'bank-yandex', tpl: 'tpl-yandex' },
             { key: 'wb', name: 'WB Банк', emoji: '🛍', cls: 'bank-wb', tpl: 'tpl-wb' },
+            { key: 'yandex-bank', name: 'Яндекс Банк', emoji: '🔴', cls: 'bank-yandex-bank', tpl: 'tpl-yandex-bank' },
         ];
 
         const addedBanks = new Set();
@@ -2212,14 +1296,8 @@
             'Перевод невозможен',
         ];
 
-        const PRESET_NOTIF_TEMPLATES = [
-            // 'Отказ Переводы, счет RUB. Получатель находится в базе ЦБ РФ по переводам...',
-            // 'Отказ перевода. Подозрительная активность. Обратитесь в поддержку.',
-            // 'Перевод заблокирован службой безопасности Т-Банка.',
-            // 'Ошибка транзакции. Недостаточно средств на счёте.',
-        ];
+        const PRESET_NOTIF_TEMPLATES = [];
 
-        /* Активный таб для каждого блока */
         const tplTabState = { error: 'preset', notif: 'preset' };
 
         function switchTplTab(type, tab) {
@@ -2250,7 +1328,6 @@
             } else {
                 document.getElementById('notifText').value = text;
             }
-            /* Визуальный флеш — подсветка textarea */
             const ta = document.getElementById(type === 'error' ? 'errorText' : 'notifText');
             ta.style.transition = 'border-color 0.1s';
             ta.style.borderColor = '#ffdd00';
@@ -2271,9 +1348,7 @@
         }
 
         function getCustomTemplates(type) {
-            try {
-                return JSON.parse(localStorage.getItem('tpl_custom_' + type) || '[]');
-            } catch { return []; }
+            try { return JSON.parse(localStorage.getItem('tpl_custom_' + type) || '[]'); } catch { return []; }
         }
 
         function setCustomTemplates(type, arr) {
@@ -2363,9 +1438,7 @@
                         <span style="font-size:15px;">${b.emoji}</span>
                         <span>${b.name}</span>
                     </div>
-                    <input type="radio" name="activeBank" class="bank-radio"
-                           data-bank="${b.key}" title="Сделать активным"
-                           style="accent-color:#ffdd00;cursor:pointer;width:14px;height:14px;flex-shrink:0;">
+                    <input type="radio" name="activeBank" class="bank-radio" data-bank="${b.key}" title="Сделать активным" style="accent-color:#ffdd00;cursor:pointer;width:14px;height:14px;flex-shrink:0;">
                 `;
                 row.addEventListener('click', function (e) {
                     if (e.target.classList.contains('bank-radio')) return;
@@ -2412,11 +1485,7 @@
                 } else {
                     root = document.createElement('div');
                     root.className = `bank-card ${b.cls}`;
-                    root.innerHTML = `
-                        <div class="bank-card-icon">${b.emoji}</div>
-                        <div class="bank-card-name">${b.name}</div>
-                        <div class="bank-card-person">${displayName}</div>
-                    `;
+                    root.innerHTML = `<div class="bank-card-icon">${b.emoji}</div><div class="bank-card-name">${b.name}</div><div class="bank-card-person">${displayName}</div>`;
                     container.appendChild(root);
                 }
                 root.dataset.activeTarget = (activeBank === key) ? 'true' : '';
@@ -2433,11 +1502,7 @@
             const other = cards[0];
             const rest = cards.slice(1);
             if (rest.length === 0) return;
-            rest.forEach(card => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateX(-20px)';
-                card.style.transition = 'none';
-            });
+            rest.forEach(card => { card.style.opacity = '0'; card.style.transform = 'translateX(-20px)'; card.style.transition = 'none'; });
             const rectBefore = other.getBoundingClientRect();
             container.appendChild(other);
             const rectAfter = other.getBoundingClientRect();
@@ -2524,7 +1589,7 @@
             input.value = formatted;
             renderContactRow();
             updateS2Phone();
-            document.getElementById('phoneDisplay').textContent = formatted || '+7 000 000 00 00';
+            document.getElementById('phoneDisplay').textContent = formatted ? formatted : '000 000 00 00';
         });
         document.getElementById('recipientName').addEventListener('input', () => {
             renderContactRow();
@@ -2576,22 +1641,9 @@
             const level = parseInt(document.getElementById('batterySlider').value);
             const color = level < 20 ? '#ff3b30' : '#fff';
             if (batteryMode === 'simple') {
-                container.innerHTML = `
-                    <svg width="25" height="14" viewBox="0 0 100 50">
-                        <rect x="1" y="1" width="88" height="48" rx="10" fill="none" stroke="#818181" stroke-width="3"/>
-                        <rect x="90" y="16" width="7" height="18" rx="3" fill="#818181"/>
-                        <clipPath id="bclip"><rect x="4" y="4" width="82" height="42" rx="8"/></clipPath>
-                        <rect x="4" y="4" width="${(level / 100) * 82}" height="42" rx="8" fill="${color}" clip-path="url(#bclip)"/>
-                    </svg>`;
+                container.innerHTML = `<svg width="25" height="14" viewBox="0 0 100 50"><rect x="1" y="1" width="88" height="48" rx="10" fill="none" stroke="#818181" stroke-width="3"/><rect x="90" y="16" width="7" height="18" rx="3" fill="#818181"/><clipPath id="bclip"><rect x="4" y="4" width="82" height="42" rx="8"/></clipPath><rect x="4" y="4" width="${(level / 100) * 82}" height="42" rx="8" fill="${color}" clip-path="url(#bclip)"/></svg>`;
             } else {
-                container.innerHTML = `
-                    <div class="battery-detailed">
-                        <div class="battery-body-2">
-                            <div class="battery-fill" style="width:${level}%;background:${color};"></div>
-                            <span class="battery-text" style="color:${level < 20 ? '#fff' : '#000'}">${level}</span>
-                        </div>
-                        <div class="battery-cap"></div>
-                    </div>`;
+                container.innerHTML = `<div class="battery-detailed"><div class="battery-body-2"><div class="battery-fill" style="width:${level}%;background:${color};"></div><span class="battery-text" style="color:${level < 20 ? '#fff' : '#000'}">${level}</span></div><div class="battery-cap"></div></div>`;
             }
         }
         document.getElementById('batterySlider').addEventListener('input', renderBattery);
@@ -2647,11 +1699,7 @@
             for (let i = 0; i < digits.length; i++) {
                 const d = digits[i];
                 const keyEl = document.querySelector(`.sa-kb-key[data-val="${d}"]`);
-                if (keyEl) {
-                    keyEl.classList.add('pressed');
-                    await wait(80);
-                    keyEl.classList.remove('pressed');
-                }
+                if (keyEl) { keyEl.classList.add('pressed'); await wait(80); keyEl.classList.remove('pressed'); }
                 const typed = clean.slice(0, i + 1);
                 const num = parseInt(typed, 10);
                 display.textContent = num.toLocaleString('ru-RU');
@@ -2661,20 +1709,12 @@
             if (decimalMatch) {
                 const cents = decimalMatch[1];
                 const commaKey = document.querySelector('.sa-kb-key[data-val=","]');
-                if (commaKey) {
-                    commaKey.classList.add('pressed');
-                    await wait(80);
-                    commaKey.classList.remove('pressed');
-                }
+                if (commaKey) { commaKey.classList.add('pressed'); await wait(80); commaKey.classList.remove('pressed'); }
                 display.textContent = display.textContent + ',';
                 await wait(120);
                 for (const c of cents.split('')) {
                     const keyEl = document.querySelector(`.sa-kb-key[data-val="${c}"]`);
-                    if (keyEl) {
-                        keyEl.classList.add('pressed');
-                        await wait(80);
-                        keyEl.classList.remove('pressed');
-                    }
+                    if (keyEl) { keyEl.classList.add('pressed'); await wait(80); keyEl.classList.remove('pressed'); }
                     display.textContent = display.textContent + c;
                     await wait(110);
                 }
@@ -2738,9 +1778,7 @@
         }
 
         async function showPushNotification() {
-            /* Если уведомления отключены — пропускаем */
             if (!document.getElementById('notifEnabled').checked) return;
-
             const notifText = document.getElementById('notifText').value;
             document.getElementById('pushText').textContent = notifText;
             const push = document.getElementById('pushNotification');
@@ -2778,9 +1816,9 @@
             const s2limit = document.getElementById('s2LimitInput');
             if (s2limit) s2limit.value = '';
             const formatted = formatPhone(rawPhone);
-            document.getElementById('phoneDisplay').textContent = formatted ? `+7 ${formatted}` : '+7 000 000 00 00';
+            document.getElementById('phoneDisplay').textContent = formatted ? formatted : '000 000 00 00';
             document.getElementById('contactName').textContent = recipient;
-            document.getElementById('contactPhone').textContent = `+7 ${formatted}`;
+            document.getElementById('contactPhone').textContent = formatted;
             updateContactAvatar();
             await wait(300);
             contactRow.classList.add('visible');
@@ -2824,9 +1862,7 @@
                         const cropTarget = await CropTarget.fromElement(phoneScreen);
                         const [videoTrack] = stream.getVideoTracks();
                         await videoTrack.cropTo(cropTarget);
-                    } catch (cropError) {
-                        console.warn('CropTarget не сработал:', cropError);
-                    }
+                    } catch (cropError) { console.warn('CropTarget не сработал:', cropError); }
                 }
                 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 const oscillator = audioCtx.createOscillator();
@@ -2908,9 +1944,9 @@
 
         function formatPhoneInput(value) {
             let digits = value.replace(/\D/g, '');
-            if (digits.startsWith('8')) digits = '7' + digits.slice(1);
-            if (digits.startsWith('7')) digits = digits.slice(1);
-            let result = '+7 ';
+            // Strip leading 7 or 8 if user pastes full number
+            if (digits.startsWith('8') || digits.startsWith('7')) digits = digits.slice(1);
+            let result = '';
             if (digits.length > 0) result += digits.substring(0, 3);
             if (digits.length >= 3) result += ' ' + digits.substring(3, 6);
             if (digits.length >= 6) result += ' ' + digits.substring(6, 8);
@@ -2918,10 +1954,8 @@
             return result.trim();
         }
 
-        /* ══ ИНИЦИАЛИЗАЦИЯ ШАБЛОНОВ ══ */
         buildPresetList('error');
         buildPresetList('notif');
     </script>
 </body>
-
 </html>
