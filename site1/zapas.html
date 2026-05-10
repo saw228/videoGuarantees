@@ -1,0 +1,2088 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <title>Банковский перевод - Анимация</title>
+    <style>
+        /* =====================================================
+           СБРОС И БАЗОВЫЕ НАСТРОЙКИ — одинаковые на всех устройствах
+           ===================================================== */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+        }
+
+        html {
+            font-size: 16px;
+            /* фиксируем базовый размер */
+        }
+
+        body {
+            background: radial-gradient(900px circle at 20% 10%, rgba(39, 174, 96, 0.22), transparent 55%),
+                radial-gradient(800px circle at 80% 25%, rgba(60, 200, 140, 0.14), transparent 60%),
+                radial-gradient(700px circle at 50% 90%, rgba(255, 255, 255, 0.05), transparent 60%),
+                linear-gradient(180deg, #121816 0%, #151c19 45%, #101412 100%);
+
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            /* Явно фиксируем шрифт — без системных фолбэков, чтобы на всех устройствах было одинаково */
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* =====================================================
+           ОБЁРТКА СТРАНИЦЫ — фиксирует позиции блоков
+           ===================================================== */
+        .page-wrapper {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 40px;
+            padding: 40px 20px;
+            width: 100%;
+        }
+
+        /* =====================================================
+           ТЕЛЕФОН — фиксированный размер, не тянется
+           ===================================================== */
+        .phone-container {
+            position: relative;
+            /* Фиксируем размер жёстко — никаких % */
+            width: 375px;
+            height: 812px;
+            min-width: 375px;
+            min-height: 812px;
+            background: #1c1c1e;
+            padding: 10px;
+            flex-shrink: 0;
+        }
+
+        .phone-screen {
+            width: 100%;
+            height: 100%;
+            background: #121212;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .status-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 44px;
+            background: #141315;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 500;
+            z-index: 1000;
+            border-radius: 30px 30px 0 0;
+        }
+
+        .status-left {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-left: 10px;
+        }
+
+        .status-right {
+            display: flex;
+            align-items: center;
+            gap: 1px;
+        }
+
+        .bank-content {
+            position: absolute;
+            top: 44px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #121212;
+            color: #fff;
+            overflow: hidden;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            background: #121212;
+        }
+
+        .back-arrow {
+            font-size: 28px;
+            font-weight: 300;
+            margin-right: 16px;
+        }
+
+        .header-title {
+            font-size: 15px;
+            font-weight: 600;
+            flex: 1;
+            text-align: center;
+            margin-right: 44px;
+            color: #f5f5f5;
+        }
+
+        .tabs {
+            display: flex;
+            padding: 5px 16px 0;
+            gap: 24px;
+            background: #121212;
+        }
+
+        .tab {
+            color: #8E8E93;
+            font-size: 13px;
+            padding: 6px 0 10px;
+            border-bottom: 2px solid transparent;
+        }
+
+        .tab.active {
+            color: #f5f5f5;
+            background: transparent;
+            border-radius: 10px;
+            background-color: #202020;
+            padding-top: 9px;
+            padding-left: 13px;
+            padding-right: 13px;
+        }
+
+        .card-section {
+            padding: 14px 16px;
+            background: #121212;
+        }
+
+        .card-number-input {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 14px;
+            background: #1C1C1E;
+            border-radius: 12px;
+            min-height: 54px;
+        }
+
+        .input-content {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .input-label {
+            color: #289938;
+            font-size: 12px;
+            font-weight: 400;
+            margin-bottom: 2px;
+        }
+
+        .card-number {
+            font-size: 15px;
+            color: #f5f5f5;
+            letter-spacing: 0.3px;
+            font-weight: 400;
+        }
+
+        .input-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .clear-btn {
+            width: 0px;
+            height: 22px;
+            background: transparent;
+            border: none;
+            color: #7d7d7d;
+            font-size: 22px;
+            line-height: 1;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-top: 5px;
+        }
+
+        .scan-icon {
+            width: 35px;
+            height: 30px;
+        }
+
+        .info-text {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+            font-size: 13px;
+            line-height: 1.4;
+            text-align: center;
+            padding: 25px 30px 15px;
+            margin-bottom: 80px;
+        }
+
+        .keyboard {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #282828;
+            padding: 8px 0 34px;
+        }
+
+        .continue-button {
+            background: #30D158;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 14px;
+            text-align: center;
+            margin: 0 10px 8px;
+            border-radius: 12px;
+            letter-spacing: -0.3px;
+        }
+
+        .keyboard-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 7px 5px;
+            padding: 0 8px;
+        }
+
+        .key {
+            background: #626262;
+            border-radius: 5px;
+            padding: 0;
+            height: 42px;
+            text-align: center;
+            font-size: 23px;
+            color: #fff;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.1s;
+            font-weight: 300;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+            gap: 3px;
+            /* Отключаем масштабирование текста в кнопках */
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .key.zero {
+            grid-column: 2;
+        }
+
+        .key-letters {
+            font-size: 9px;
+            color: #fff;
+            font-weight: 400;
+            letter-spacing: 1.5px;
+            margin-top: -2px;
+        }
+
+        .key.delete {
+            background: #626262;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .keyboard-grid>div:nth-child(10) {
+            visibility: hidden;
+        }
+
+        .keyboard-header {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6px 16px;
+            background: transparent;
+            border-bottom: 1px solid #1C1C1E;
+            top: 250px;
+            left: 5px;
+        }
+
+        .continue-btn-green {
+            background: none;
+            border: none;
+            color: #1d9428;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 8px;
+            text-transform: uppercase;
+        }
+
+        .scan-button {
+            display: flex;
+            align-items: center;
+            margin-left: 17px;
+            gap: 5px;
+        }
+
+        .scan-button-icon {
+            width: 30px;
+        }
+
+        .scan-button-text {
+            font-size: 13px;
+            color: #1a8619;
+        }
+
+        .keyboard-header-img {
+            width: 35px;
+        }
+
+        .status-bar-image {
+            width: 170px;
+            margin-left: 20px;
+        }
+
+        .loading-overlay {
+            position: absolute;
+            top: 44px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid transparent;
+            border-top: 3px solid #30D158;
+            border-radius: 50%;
+        }
+
+        /* Amount screen */
+        .amount-screen {
+            position: absolute;
+            top: 44px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #121212;
+            color: #fff;
+            transform: translateX(100%);
+            z-index: 90;
+            overflow: hidden;
+        }
+
+        .amount-screen.show {
+            transform: translateX(0);
+        }
+
+        .amount-content {
+            padding: 0 0 300px 0;
+        }
+
+        .amount-row {
+            display: flex;
+            padding: 5px 15px;
+            flex-direction: row;
+            margin: 10px;
+            border-radius: 10px;
+            background-color: #202020;
+            align-items: center;
+            padding-bottom: 10px;
+        }
+
+        .amount-display {
+            font-size: 18px;
+            font-weight: 500;
+            color: #ebebeb;
+            margin-top: 5px;
+        }
+
+        .transfer-header {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px 20px;
+            background: #121212;
+        }
+
+        .transfer-title {
+            font-size: 17px;
+            font-weight: 600;
+            flex: 1;
+            text-align: center;
+            margin-left: 40px;
+            color: #FFFFFF;
+        }
+
+        .transfer-subtitle {
+            font-size: 13px;
+            color: #8E8E93;
+            text-align: center;
+            margin-left: 35px;
+            margin-top: 2px;
+        }
+
+        .transfer-row-block {
+            display: flex;
+            flex-direction: column;
+            margin-right: 79px;
+        }
+
+        .main-value {
+            font-size: 14px;
+            margin-top: 5px;
+            color: #ebebeb;
+        }
+
+        .transfer-label {
+            font-size: 12px;
+            color: #8E8E93;
+            font-weight: 400;
+            line-height: 22px;
+        }
+
+        .transfer-label-s {
+            font-size: 12px;
+        }
+
+        .transfer-label-m {
+            font-size: 12px;
+            margin-left: 20px;
+            color: #dddddd;
+        }
+
+        .commission-text {
+            color: #b03f11;
+            font-size: 11px;
+            font-weight: 400;
+            margin-top: 5px;
+        }
+
+        .payment-account-text {
+            color: #8E8E93;
+            font-size: 11px;
+            margin-top: 5px;
+        }
+
+        .ruble-icon-2 {
+            height: 40px;
+            width: 40px;
+        }
+
+        .bank-icon {
+            width: 45px;
+        }
+
+        .ruble-icon {
+            width: 45px;
+            height: 45px;
+        }
+
+        #amountKeyboardHeader {
+            position: relative !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            padding: 6px 16px !important;
+            background: transparent !important;
+            border-bottom: 1px solid #1C1C1E !important;
+            top: 130px !important;
+            left: 5px !important;
+            z-index: 95 !important;
+        }
+
+        #amountKeyboard {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #282828;
+            padding: 8px 0 34px;
+            z-index: 95;
+        }
+
+        .amount-screen .keyboard-header {
+            display: flex !important;
+            position: relative !important;
+            top: 120px !important;
+        }
+
+        /* Transfer screen */
+        .transfer-screen {
+            position: absolute;
+            top: 44px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #121212;
+            color: #fff;
+            transform: translateX(100%);
+            z-index: 100;
+            overflow: hidden;
+        }
+
+        .transfer-screen.show {
+            transform: translateX(0);
+        }
+
+        .transfer-content {
+            padding: 0 16px 120px 16px;
+        }
+
+        .transfer-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 18px 0;
+            border-bottom: 0.5px solid rgba(255, 255, 255, 0.1);
+            flex-direction: row;
+        }
+
+        .transfer-row:last-child {
+            border-bottom: none;
+        }
+
+        #transferToCard {
+            font-size: 14px;
+        }
+
+        .transfer-value {
+            font-size: 17px;
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 400;
+        }
+
+        .transfer-button {
+            position: absolute;
+            bottom: 34px;
+            left: 16px;
+            right: 16px;
+            background: #1d9428;
+            color: #FFFFFF;
+            font-size: 15px;
+            padding: 16px;
+            text-align: center;
+            border-radius: 14px;
+            border: none;
+            cursor: pointer;
+        }
+
+        svg {
+            width: 25px;
+        }
+
+        .wifi {
+            width: 20px;
+            margin-right: 2px;
+        }
+
+        .signal {
+            width: 25px;
+        }
+
+        /* Success screen */
+        .success-screen {
+            position: absolute;
+            top: 44px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #121212;
+            color: #fff;
+            transform: translateX(100%);
+            z-index: 120;
+            overflow: hidden;
+        }
+
+        .success-screen.show {
+            transform: translateX(0);
+        }
+
+        .success-wave {
+            position: absolute;
+            left: 50%;
+            top: 45%;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(180deg,
+                    #000000 0%,
+                    #0a1f17 20%,
+                    #124d35 50%,
+                    #1f8f5a 75%,
+                    #2e9c53 100%);
+            transform: translate(-50%, -50%) scale(0);
+            transform-origin: center center;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .success-circle {
+            position: absolute;
+            left: 50%;
+            top: 45%;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #fff;
+            transform: translate(-50%, -50%);
+            z-index: 3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .success-check {
+            opacity: 0;
+            width: 40px;
+            height: 60px;
+            display: block;
+        }
+
+        .success-check-2 {
+            opacity: 1;
+            width: 40px;
+            height: 60px;
+            display: block;
+        }
+
+        .success-amount {
+            position: absolute;
+            left: 50%;
+            top: calc(45% + 60px);
+            transform: translateX(-50%);
+            font-size: 26px;
+            font-weight: 600;
+            color: #fff;
+            opacity: 0;
+            white-space: nowrap;
+            z-index: 3;
+        }
+
+        .final-ui {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 4;
+        }
+
+        .final-ui.visible {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .final-title {
+            font-size: 16px;
+            font-weight: 600;
+            text-align: center;
+            color: #fff;
+            padding-top: 28px;
+            opacity: 0;
+            transform: translateY(-16px);
+            margin-bottom: 140px;
+        }
+
+        .final-circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #0e8f2a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 24px auto 0;
+            opacity: 0;
+            transform: scale(0.7);
+        }
+
+        .final-check {
+            width: 28px;
+            height: 28px;
+            color: white;
+        }
+
+        .final-amount-label {
+            font-size: 27px;
+            font-weight: 600;
+            text-align: center;
+            color: #fff;
+            margin-top: 22px;
+            opacity: 0;
+        }
+
+        .final-action {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            color: #27ae60;
+            font-size: 12px;
+        }
+
+        .action-icon {
+            font-size: 20px;
+        }
+
+        .final-panel {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #1e1e1e;
+            border-radius: 20px 20px 0 0;
+            padding: 20px 20px 34px;
+            transform: translateY(100%);
+            padding-top: 10px;
+        }
+
+        .final-panel-status {
+            margin-bottom: 16px;
+        }
+
+        .final-panel-status p {
+            color: #8E8E93;
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 4px;
+        }
+
+        .final-panel-status .status-sub {
+            font-size: 11px;
+        }
+
+        .final-details h3 {
+            color: #fff;
+            font-size: 17px;
+            margin-bottom: 12px;
+        }
+
+        .final-detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #2a2a2a;
+        }
+
+        .final-detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .final-detail-row span:first-child {
+            color: #8E8E93;
+            font-size: 13px;
+        }
+
+        .detail-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .detail-right span {
+            color: #fff;
+            font-size: 13px;
+        }
+
+        .final-delete-icon {
+            font-size: 14px;
+        }
+
+        .final-return-button {
+            width: 100%;
+            background: #0e8f2a;
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            padding: 14px;
+            font-size: 15px;
+            font-weight: 500;
+            margin-top: 27px;
+            cursor: pointer;
+        }
+
+        /* =====================================================
+           ПАНЕЛЬ УПРАВЛЕНИЯ — фиксированная, не зависит от экрана
+           ===================================================== */
+        .controls {
+            display: flex;
+            gap: 20px;
+            padding: 14px;
+            background: rgba(28, 28, 30, 0.55);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.35);
+            flex-shrink: 0;
+        }
+
+        .controls button {
+            padding: 12px 14px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            background: rgba(44, 44, 46, 0.6);
+            color: #fff;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.18s ease;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .controls button:hover {
+            background: rgba(60, 60, 62, 0.75);
+            transform: translateY(-2px);
+            border-color: rgba(39, 174, 96, 0.35);
+            box-shadow: 0 8px 20px rgba(39, 174, 96, 0.15);
+        }
+
+        .controls button:active {
+            transform: scale(0.97);
+            background: rgba(39, 174, 96, 0.15);
+        }
+
+        .btn-animate {
+            background: rgba(0, 122, 255, 0.3) !important;
+        }
+
+        .btn-download {
+            background: rgba(52, 199, 89, 0.3) !important;
+        }
+
+        @keyframes pulseFinal {
+            0% {
+                box-shadow: 0 0 0 0 rgba(39, 174, 96, 0.4);
+            }
+
+            70% {
+                box-shadow: 0 0 0 16px rgba(39, 174, 96, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(39, 174, 96, 0);
+            }
+        }
+
+        .final-actions {
+            display: flex;
+            justify-content: center;
+            gap: 45px;
+            margin-top: 40px;
+            opacity: 0;
+        }
+
+        .save-kvit {
+            width: 300px;
+        }
+
+        .transfer-willbe-get {
+            display: block;
+            color: white;
+            font-size: 15px;
+            margin-top: 10px;
+            margin-bottom: 5px;
+            max-width: 297px;
+        }
+
+        .few-days {
+            display: block;
+            color: #939393;
+            font-size: 12.5px;
+            max-width: 580px;
+        }
+
+        .receiver {
+            margin-top: 15px;
+            display: flex;
+        }
+
+        .receiver-image {
+            width: 40px;
+            height: 40px;
+        }
+
+        .receiver-block {
+            padding-left: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .receiver-block-text {
+            color: #848488;
+            font-size: 12.5px;
+        }
+
+        .receiver-block-card {
+            margin-top: 5px;
+            color: #d9d9d9;
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .info-block-divider {
+            position: relative;
+            left: -80px;
+            width: 145%;
+            height: 7px;
+            background-color: #2a2a2a;
+            margin-bottom: 19px;
+        }
+
+        .drag-handle {
+            width: 35px;
+            height: 4px;
+            background: #848488;
+            border-radius: 100px;
+            margin-left: 140px;
+            opacity: 0.6;
+        }
+
+        .arrowDown {
+            width: 35px;
+            height: 35px;
+        }
+
+        .battery {
+            display: flex;
+            align-items: center;
+            gap: 1px;
+            margin-top: 1px;
+        }
+
+        .battery-body-2 {
+            position: relative;
+            width: 24px;
+            height: 13px;
+            border-radius: 4px;
+            overflow: hidden;
+            background: #696769;
+            margin-left: 1px;
+        }
+
+        .battery-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 87%;
+            background: #fff;
+            transition: width 0.3s;
+            z-index: 1;
+        }
+
+        .battery-text {
+            position: absolute;
+            top: 45%;
+            left: 50%;
+            transform: translate(-50%, -45%);
+            font-size: 11.5px;
+            font-weight: 800;
+            color: #000;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .battery-cap {
+            width: 1px;
+            height: 2.5px;
+            background: #696766;
+            border-radius: 1px;
+            border-radius: 100%;
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+
+        /* =====================================================
+           ПАНЕЛЬ НАСТРОЕК — фиксированная ширина
+           ===================================================== */
+        .input-panel {
+            width: 300px;
+            min-width: 300px;
+            background: #1c1c1e;
+            border-radius: 18px;
+            padding: 18px;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+            flex-shrink: 0;
+            /* Убираем position: absolute — был источником расхождений */
+            position: static;
+        }
+
+        .panel-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 14px;
+        }
+
+        .input-group label {
+            font-size: 12px;
+            color: #8e8e93;
+            margin-bottom: 6px;
+        }
+
+        .input-group input {
+            background: #2c2c2e;
+            border: 1px solid transparent;
+            border-radius: 12px;
+            padding: 12px 14px;
+            color: #fff;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        .input-group input:focus {
+            border-color: #27ae60;
+            background: #2f2f32;
+        }
+
+        .panel-section-title {
+            font-size: 12px;
+            color: #8e8e93;
+            margin: 12px 0 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .panel-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .tpl-btn {
+            flex: 1;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #3a3a3c;
+            background: #2c2c2e;
+            color: #fff;
+            font-size: 13px;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .tpl-btn:hover {
+            background: #3a3a3c;
+            transform: translateY(-1px);
+        }
+
+        .tpl-btn:active {
+            transform: scale(0.97);
+        }
+
+        input[type="range"] {
+            accent-color: #27ae60;
+            height: 4px;
+            width: 100%;
+        }
+
+        /* =====================================================
+           КОЛОНКА СПРАВА — телефон + кнопки
+           ===================================================== */
+        .right-column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .charge-svg {
+            margin-top: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="page-wrapper">
+        <!-- ПАНЕЛЬ НАСТРОЕК -->
+        <div class="input-panel">
+            <div class="panel-title">Данные для перевода</div>
+
+            <div class="input-group">
+                <label>Время</label>
+                <input type="text" id="mainTime" value="10:00">
+            </div>
+
+            <div class="input-group">
+                <label>Номер карты получателя</label>
+                <input type="text" id="userCardNumber" placeholder="0000 0000 0000 0000" maxlength="19">
+            </div>
+
+            <div class="input-group">
+                <label>Сумма перевода</label>
+                <input type="text" id="transferAmount" placeholder="100 ₽">
+            </div>
+
+            <div class="input-group">
+                <label>Платежный счёт</label>
+                <input type="text" id="paymentAccount" placeholder="40817810099910004312">
+            </div>
+
+            <div class="panel-section-title">Тип батареи</div>
+
+            <div class="panel-row">
+                <button class="tpl-btn" onclick="setBatteryMode('simple')">Без цифр</button>
+                <button class="tpl-btn" onclick="setBatteryMode('detailed')">С процентом</button>
+            </div>
+
+            <div class="input-group">
+                <label>Заряд батареи</label>
+                <input type="range" min="0" max="100" value="50" id="slider">
+            </div>
+        </div>
+
+        <!-- ТЕЛЕФОН + КНОПКИ -->
+        <div class="right-column">
+            <div class="phone-container" id="phone">
+                <div class="phone-screen">
+                    <!-- STATUS BAR -->
+                    <div class="status-bar">
+                        <div class="status-left">
+                            <span class="status-left-text">10:00</span>
+                        </div>
+                        <img class="status-bar-image" src="./Screenshot_8-removebg-preview.png" alt="">
+                        <div class="status-right">
+                            <img src="./svyaz1.png" alt="" class="signal">
+                            <img src="./wifi.png" alt="" class="wifi">
+                            <div id="batteryContainer"></div>
+                        </div>
+                    </div>
+
+                    <!-- MAIN SCREEN -->
+                    <div class="bank-content" id="bankContent">
+                        <div class="header">
+                            <span class="back-arrow">‹</span>
+                            <div class="header-title">Новый перевод</div>
+                        </div>
+
+                        <div class="tabs">
+                            <div class="tab active">По России</div>
+                            <div class="tab">В другую страну</div>
+                        </div>
+
+                        <div class="card-section">
+                            <div class="card-number-input">
+                                <div class="input-content">
+                                    <span class="input-label">По карте</span>
+                                    <span class="card-number" id="displayCardNumber">2204 3204 5610 4530</span>
+                                </div>
+                                <div class="input-actions">
+                                    <button class="clear-btn">×</button>
+                                    <img class="scan-icon" src="./scan-image.png" alt="">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="scan-button">
+                            <img src="./Image-removebg-preview.png" alt="" class="scan-button-icon">
+                            <span class="scan-button-text">Сканировать карту</span>
+                        </div>
+
+                        <div class="info-text">
+                            Переводите клиентам Сбербанка или на карты МИР, Visa, MasterCard других банков
+                        </div>
+
+                        <div class="keyboard-header">
+                            <img src="./Image__1_-removebg-preview.png" alt="" class="keyboard-header-img">
+                            <button class="continue-btn-green">ПРОДОЛЖИТЬ</button>
+                        </div>
+
+                        <div class="keyboard">
+                            <div class="keyboard-grid">
+                                <div class="key" data-value="1">1</div>
+                                <div class="key" data-value="2">2<div class="key-letters">А Б В Г</div>
+                                </div>
+                                <div class="key" data-value="3">3<div class="key-letters">Д Е Ё Ж З</div>
+                                </div>
+                                <div class="key" data-value="4">4<div class="key-letters">И Й К Л</div>
+                                </div>
+                                <div class="key" data-value="5">5<div class="key-letters">М Н О П</div>
+                                </div>
+                                <div class="key" data-value="6">6<div class="key-letters">Р С Т У</div>
+                                </div>
+                                <div class="key" data-value="7">7<div class="key-letters">Ф Х Ц Ч</div>
+                                </div>
+                                <div class="key" data-value="8">8<div class="key-letters">Ш Щ Ъ Ы</div>
+                                </div>
+                                <div class="key" data-value="9">9<div class="key-letters">Ь Э Ю Я</div>
+                                </div>
+                                <div></div>
+                                <div class="key zero" data-value="0">0</div>
+                                <div class="key delete">⌫</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- LOADING OVERLAY -->
+                    <div class="loading-overlay" id="loadingOverlay">
+                        <div class="loading-spinner"></div>
+                    </div>
+
+                    <!-- AMOUNT SCREEN -->
+                    <div class="amount-screen" id="amountScreen">
+                        <div class="transfer-header">
+                            <span class="back-arrow">‹</span>
+                            <div>
+                                <div class="transfer-title">В другой банк по карте</div>
+                                <div class="transfer-subtitle">Шаг 1 из 2</div>
+                            </div>
+                        </div>
+
+                        <div class="amount-content">
+                            <div class="amount-row">
+                                <div class="transfer-row-block">
+                                    <span style="margin-right: 125px;" class="main-value" id="amountScreenCard">••
+                                        4530</span>
+                                </div>
+                                <img class="bank-icon" src="./bank-icon.png" alt="">
+                            </div>
+
+                            <div class="amount-row">
+                                <div class="transfer-row-block">
+                                    <span class="amount-display" id="amountDisplay">0 ₽</span>
+                                    <span class="commission-text" id="amountCommissionDisplay">Комиссия 0 ₽</span>
+                                </div>
+                            </div>
+
+                            <span class="transfer-label-m">Спишем <span class="transfer-label-s"
+                                    id="amountTotalDisplay"></span> ₽</span>
+
+                            <div class="amount-row">
+                                <div style="margin-right: 95px;" class="transfer-row-block">
+                                    <span class="transfer-label">Откуда</span>
+                                    <span class="main-value">22 771 392 ₽</span>
+                                    <span class="payment-account-text" id="amountPaymentAccount">Платёжный счёт ••
+                                        6425</span>
+                                </div>
+                                <img src="./ruble-icon.png" alt="" class="ruble-icon-2">
+                                <img class="arrowDown" src="./arrowDown.png" alt="">
+                            </div>
+
+                            <div class="keyboard-header" id="amountKeyboardHeader">
+                                <img src="./Image__1_-removebg-preview.png" alt="" class="keyboard-header-img">
+                                <button class="continue-btn-green" id="amountContinueBtn">ПРОДОЛЖИТЬ</button>
+                            </div>
+                        </div>
+
+                        <div class="keyboard" id="amountKeyboard">
+                            <div class="keyboard-grid">
+                                <div class="key" data-value="1">1</div>
+                                <div class="key" data-value="2">2<div class="key-letters">А Б В Г</div>
+                                </div>
+                                <div class="key" data-value="3">3<div class="key-letters">Д Е Ё Ж З</div>
+                                </div>
+                                <div class="key" data-value="4">4<div class="key-letters">И Й К Л</div>
+                                </div>
+                                <div class="key" data-value="5">5<div class="key-letters">М Н О П</div>
+                                </div>
+                                <div class="key" data-value="6">6<div class="key-letters">Р С Т У</div>
+                                </div>
+                                <div class="key" data-value="7">7<div class="key-letters">Ф Х Ц Ч</div>
+                                </div>
+                                <div class="key" data-value="8">8<div class="key-letters">Ш Щ Ъ Ы</div>
+                                </div>
+                                <div class="key" data-value="9">9<div class="key-letters">Ь Э Ю Я</div>
+                                </div>
+                                <div></div>
+                                <div class="key zero" data-value="0">0</div>
+                                <div class="key delete">⌫</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TRANSFER SCREEN -->
+                    <div class="transfer-screen" id="transferScreen">
+                        <div class="transfer-header">
+                            <span class="back-arrow">‹</span>
+                            <div>
+                                <div class="transfer-title">В другой банк по карте</div>
+                                <div class="transfer-subtitle">Шаг 2 из 2</div>
+                            </div>
+                        </div>
+
+                        <div class="transfer-content">
+                            <div class="transfer-row">
+                                <div class="transfer-row-block">
+                                    <span class="transfer-label">Куда</span>
+                                    <span class="main-value" id="transferToCard">•• 4530</span>
+                                </div>
+                                <img class="bank-icon" src="./bank-icon.png" alt="">
+                            </div>
+
+                            <div class="transfer-row">
+                                <div class="transfer-row-block">
+                                    <span class="transfer-label">Сколько</span>
+                                    <span class="main-value" id="transferAmountDisplay">10 ₽</span>
+                                    <span class="commission-text" id="commissionDisplay">Комиссия 30 ₽</span>
+                                </div>
+                            </div>
+
+                            <div class="transfer-row">
+                                <div class="transfer-row-block">
+                                    <span class="transfer-label">Спишем</span>
+                                    <span class="main-value" id="totalAmountDisplay">40 ₽</span>
+                                </div>
+                            </div>
+
+                            <div class="transfer-row">
+                                <div class="transfer-row-block">
+                                    <span class="transfer-label">Откуда</span>
+                                    <span class="main-value">22 771 392 ₽</span>
+                                    <span class="payment-account-text" id="paymentAccountDisplay">Платёжный счёт ••
+                                        6425</span>
+                                </div>
+                                <img src="./ruble-icon.png" alt="" class="ruble-icon">
+                            </div>
+                        </div>
+
+                        <button class="transfer-button" id="transferButtonText">Перевести 10 ₽</button>
+                    </div>
+
+                    <!-- SUCCESS SCREEN -->
+                    <div class="success-screen" id="successScreen">
+                        <div class="success-wave" id="successWave"></div>
+
+                        <div class="success-circle" id="successCircle">
+                            <svg class="success-check" id="successCheck" viewBox="0 0 24 24">
+                                <path fill="#27ae60" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+                            </svg>
+                        </div>
+
+                        <div class="success-amount" id="successAmount">10 ₽</div>
+
+                        <div class="final-ui" id="finalUI">
+                            <div class="final-title" id="finalTitle">Перевод выполнен</div>
+
+                            <div class="final-circle" id="finalCircle">
+                                <svg class="success-check-2" viewBox="0 0 24 24">
+                                    <path fill="#ffffff" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+                                </svg>
+                            </div>
+
+                            <div class="final-amount-label" id="finalAmountLabel">10 ₽</div>
+
+                            <div class="final-actions" id="finalActions">
+                                <img class="save-kvit" src="./Image.png" alt="">
+                            </div>
+
+                            <div class="final-panel" id="finalPanel">
+                                <div class="drag-handle"></div>
+
+                                <div class="final-panel-status">
+                                    <span class="transfer-willbe-get">Перевод будет зачислен в течение нескольких
+                                        минут</span>
+                                    <span class="few-days">В редких случаях срок зачисления увеличивается до нескольких
+                                        дней</span>
+                                </div>
+
+                                <div class="info-block-divider"></div>
+
+                                <div class="final-details">
+                                    <h3>Подробности</h3>
+                                    <div class="receiver">
+                                        <img class="receiver-image" src="./rus.png" alt="">
+                                        <div class="receiver-block">
+                                            <span class="receiver-block-text">Номер карты получателя</span>
+                                            <span class="receiver-block-card" id="finalDetailCard">••&#8202;4543</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="final-return-button">Вернуться на главный</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div><!-- /phone-screen -->
+            </div><!-- /phone-container -->
+
+            <div class="controls">
+                <button class="btn-animate" onclick="startAnimation()">▶ Произвести</button>
+                <button class="btn-download" onclick="downloadVideo()">⬇ Скачать</button>
+            </div>
+        </div><!-- /right-column -->
+    </div><!-- /page-wrapper -->
+
+    <script>
+
+        let batteryMode = 'detailed';
+
+        function setBatteryMode(mode) {
+            batteryMode = mode;
+            renderBattery();
+        }
+
+        function renderBattery() {
+            const container = document.getElementById('batteryContainer');
+
+            if (batteryMode === 'simple') {
+                container.innerHTML = `
+      <svg class="charge-svg" viewBox="0 0 100 50">
+        <rect x="1" y="1" width="90" height="48" rx="12" fill="none" stroke="#8e8e93" stroke-width="2" />
+        <rect x="92" y="15" width="6" height="20" rx="3" fill="#8e8e93" />
+        <clipPath id="clip">
+          <rect x="4" y="4" width="84" height="42" rx="10" />
+        </clipPath>
+        <rect id="level" x="4" y="4" width="10" height="42" rx="10" fill="#ff3b30" clip-path="url(#clip)" />
+      </svg>
+    `;
+            } else {
+                container.innerHTML = `
+      <div class="battery">
+        <div class="battery-body-2">
+          <div class="battery-fill" id="batteryFill-2"></div>
+          <span style="padding-top: 0px;" class="battery-text" id="batteryText">50</span>
+        </div>
+        <div class="battery-cap"></div>
+      </div>
+    `;
+            }
+
+            updateBatteryFromSlider();
+        }
+
+        const slider = document.getElementById('slider');
+        slider.addEventListener('input', updateBatteryFromSlider);
+
+        function updateBatteryFromSlider() {
+            const level = slider.value;
+
+            if (batteryMode === 'simple') {
+                const fill = document.getElementById('level');
+                if (!fill) return;
+                const maxWidth = 84;
+                fill.setAttribute('width', (level / 100) * maxWidth);
+                fill.setAttribute('fill', level < 20 ? '#ff3b30' : '#fff');
+            } else {
+                const fill = document.getElementById('batteryFill-2');
+                const text = document.getElementById('batteryText');
+                if (!fill || !text) return;
+                fill.style.width = level + '%';
+                text.textContent = level;
+                if (level < 20) {
+                    fill.style.background = '#FF3B30';
+                    text.style.color = '#fff';
+                } else {
+                    fill.style.background = '#fff';
+                    text.style.color = '#000';
+                }
+            }
+        }
+
+        renderBattery();
+
+        /* =====================================================
+           УТИЛИТЫ
+           ===================================================== */
+        function tween(duration, onProgress, easing) {
+            easing = easing || easeOutCubic;
+            return new Promise(resolve => {
+                const start = performance.now();
+                function tick(now) {
+                    const p = Math.min((now - start) / duration, 1);
+                    onProgress(easing(p), p);
+                    if (p < 1) requestAnimationFrame(tick);
+                    else resolve();
+                }
+                requestAnimationFrame(tick);
+            });
+        }
+
+        function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+        function easeInOutCubic(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
+        function easeOutBack(t) { const c = 1.70158, c3 = c + 1; return 1 + c3 * Math.pow(t - 1, 3) + c * Math.pow(t - 1, 2); }
+        function easeLinear(t) { return t; }
+
+        function wait(ms) { return new Promise(r => setTimeout(r, ms)); }
+        function formatNum(n) { return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
+
+        /* =====================================================
+           СОСТОЯНИЕ
+           ===================================================== */
+        let currentAmount = '';
+        let currentStep = 'card';
+
+        /* =====================================================
+           ИНПУТЫ
+           ===================================================== */
+        document.getElementById('mainTime').addEventListener('input', e => {
+            let v = e.target.value.replace(/\D/g, '').substring(0, 4);
+            if (v.length > 2) v = v.slice(0, 2) + ':' + v.slice(2);
+            e.target.value = v;
+            document.querySelector('.status-left-text').textContent = v;
+        });
+
+        document.getElementById('userCardNumber').addEventListener('input', e => {
+            let v = e.target.value.replace(/\s/g, '');
+            let f = '';
+            for (let i = 0; i < v.length; i++) { if (i > 0 && i % 4 === 0) f += ' '; f += v[i]; }
+            e.target.value = f;
+            if (v.length > 0) document.getElementById('displayCardNumber').textContent = f;
+        });
+
+        document.getElementById('transferAmount').addEventListener('input', e => {
+            e.target.value = e.target.value.replace(/[^0-9]/g, '');
+        });
+
+        /* =====================================================
+           СПИННЕР ЗАГРУЗКИ
+           ===================================================== */
+        let spinnerRAF = null;
+        let spinRot = 0;
+
+        function showLoading() {
+            document.getElementById('loadingOverlay').style.display = 'flex';
+            const sp = document.querySelector('.loading-spinner');
+            function spin() {
+                spinRot += 2;
+                sp.style.transform = `rotate(${spinRot}deg)`;
+                spinnerRAF = requestAnimationFrame(spin);
+            }
+            spinnerRAF = requestAnimationFrame(spin);
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingOverlay').style.display = 'none';
+            if (spinnerRAF) { cancelAnimationFrame(spinnerRAF); spinnerRAF = null; }
+            spinRot = 0;
+            document.querySelector('.loading-spinner').style.transform = 'rotate(0deg)';
+        }
+
+        /* =====================================================
+           АНИМАЦИЯ СКРЫТИЯ КЛАВИАТУРЫ
+           ===================================================== */
+        function animateKeyboardHide() {
+            const kb = document.querySelector('.keyboard');
+            const kh = document.querySelector('.keyboard-header');
+            const h = kb.offsetHeight;
+            return Promise.all([
+                tween(350, p => { kb.style.transform = `translateY(${p * (h + 100)}px)`; }, easeOutCubic),
+                tween(350, p => { kh.style.transform = `translateY(${p * (h + 100)}px)`; kh.style.opacity = 1 - p; }, easeOutCubic)
+            ]);
+        }
+
+        function animateAmountKeyboardHide() {
+            const kb = document.getElementById('amountKeyboard');
+            const kh = document.getElementById('amountKeyboardHeader');
+            const h = kb.offsetHeight;
+            return Promise.all([
+                tween(350, p => { kb.style.transform = `translateY(${p * (h + 100)}px)`; }, easeOutCubic),
+                tween(350, p => { kh.style.transform = `translateY(${p * (h + 100)}px)`; kh.style.opacity = 1 - p; }, easeOutCubic)
+            ]);
+        }
+
+        /* =====================================================
+           ПОКАЗ ЭКРАНОВ
+           ===================================================== */
+        function slideIn(el) {
+            el.style.transform = 'translateX(100%)';
+            el.classList.add('show');
+            return tween(280, p => { el.style.transform = `translateX(${(1 - p) * 100}%)`; }, easeOutCubic);
+        }
+
+        async function showAmountScreen() {
+            document.querySelector('.keyboard').style.display = 'none';
+            document.querySelector('.keyboard-header').style.display = 'none';
+
+            const card = document.getElementById('userCardNumber').value.replace(/\s/g, '');
+            const acc = document.getElementById('paymentAccount').value;
+            document.getElementById('amountScreenCard').textContent = `•• ${card.slice(-4) || '4530'}`;
+            document.getElementById('amountPaymentAccount').textContent = `Платёжный счёт •• ${acc.slice(-4) || '6425'}`;
+
+            await slideIn(document.getElementById('amountScreen'));
+        }
+
+        function updateAmountDisplay() {
+            const amt = parseFloat(currentAmount) || 0;
+            const com = Math.round(amt * 0.01);
+            document.getElementById('amountDisplay').textContent = `${formatNum(amt)} ₽`;
+            document.getElementById('amountCommissionDisplay').textContent = `Комиссия ${formatNum(com)} ₽`;
+            document.getElementById('amountTotalDisplay').textContent = `${formatNum(amt + com)}`;
+            const btn = document.getElementById('amountContinueBtn');
+            if (amt > 0) { btn.style.color = '#1d9428'; btn.style.opacity = '1'; btn.style.pointerEvents = 'all'; }
+            else { btn.style.color = '#666'; btn.style.opacity = '0.5'; btn.style.pointerEvents = 'none'; }
+        }
+
+        function updateTransferData() {
+            const card = document.getElementById('userCardNumber').value.replace(/\s/g, '');
+            const amt = parseFloat(currentAmount) || parseFloat(document.getElementById('transferAmount').value) || 100;
+            const acc = document.getElementById('paymentAccount').value;
+            const com = Math.round(amt * 0.01);
+
+            document.getElementById('transferToCard').textContent = `•• ${card.slice(-4) || '4530'}`;
+            document.getElementById('transferAmountDisplay').textContent = `${formatNum(amt)} ₽`;
+            document.getElementById('commissionDisplay').textContent = `Комиссия ${formatNum(com)} ₽`;
+            document.getElementById('totalAmountDisplay').textContent = `${formatNum(amt + com)} ₽`;
+            document.getElementById('paymentAccountDisplay').textContent = `Платёжный счёт •• ${acc.slice(-4) || '6425'}`;
+            document.getElementById('transferButtonText').textContent = 'Продолжить';
+        }
+
+        async function showTransferScreen() {
+            updateTransferData();
+            const ts = document.getElementById('transferScreen');
+            await slideIn(ts);
+            document.getElementById('amountScreen').style.display = 'none';
+
+            await wait(2000);
+
+            showLoading();
+            await wait(600);
+            hideLoading();
+            await wait(400);
+
+            await runSuccessAnimation();
+        }
+
+        /* =====================================================
+           ФИНАЛЬНАЯ АНИМАЦИЯ УСПЕХА
+           ===================================================== */
+        async function runSuccessAnimation() {
+            const card = document.getElementById('userCardNumber').value.replace(/\s/g, '');
+            const amt = parseFloat(currentAmount) || parseFloat(document.getElementById('transferAmount').value) || 10;
+            const amtStr = `${formatNum(amt)} ₽`;
+            const last4 = card.slice(-4) || '4530';
+
+            document.getElementById('successAmount').textContent = amtStr;
+            document.getElementById('finalAmountLabel').textContent = amtStr;
+            document.getElementById('finalDetailCard').textContent = `•• ${last4}`;
+
+            const wave = document.getElementById('successWave');
+            const circle = document.getElementById('successCircle');
+            const check = document.getElementById('successCheck');
+            const amount = document.getElementById('successAmount');
+            const finalUI = document.getElementById('finalUI');
+            const finalTitle = document.getElementById('finalTitle');
+            const finalCircle = document.getElementById('finalCircle');
+            const finalAmtLbl = document.getElementById('finalAmountLabel');
+            const finalActs = document.getElementById('finalActions');
+            const finalPanel = document.getElementById('finalPanel');
+
+            wave.style.width = '100px';
+            wave.style.height = '100px';
+            wave.style.borderRadius = '50%';
+            wave.style.transform = 'translate(-50%, -50%) scale(0)';
+            wave.style.opacity = '1';
+            wave.style.top = '45%';
+
+            circle.style.transform = 'translate(-50%, -50%)';
+            circle.style.opacity = '1';
+            circle.style.top = '45%';
+            check.style.opacity = '0';
+
+            amount.style.opacity = '0';
+            amount.style.top = 'calc(45% + 60px)';
+
+            finalUI.classList.remove('visible');
+            finalUI.style.opacity = '0';
+            finalTitle.style.opacity = '0';
+            finalTitle.style.transform = 'translateY(-16px)';
+            finalCircle.style.opacity = '0';
+            finalCircle.style.transform = 'scale(0.7)';
+            finalAmtLbl.style.opacity = '0';
+            finalActs.style.opacity = '0';
+            finalPanel.style.transform = 'translateY(100%)';
+
+            const ss = document.getElementById('successScreen');
+            await slideIn(ss);
+            document.getElementById('transferScreen').style.display = 'none';
+
+            await tween(800, p => {
+                const scale = p * 9;
+                wave.style.transform = `translate(-50%, -50%) scale(${scale})`;
+                if (p > 0.6) {
+                    const localP = (p - 0.6) / 0.4;
+                    check.style.opacity = localP;
+                    check.style.transform = `scale(${0.8 + 0.2 * localP})`;
+                }
+            }, easeOutCubic);
+
+            await wait(300);
+
+            tween(300, p => { amount.style.opacity = `${p}`; }, easeOutCubic);
+
+            await wait(600);
+
+            await Promise.all([
+                tween(800, p => {
+                    const topPct = 45 - p * 22;
+                    circle.style.top = `${topPct}%`;
+                    amount.style.top = `calc(${topPct}% + 60px)`;
+                    wave.style.top = `${topPct}%`;
+                    const scale = 9 - p * 8.5;
+                    wave.style.transform = `translate(-50%, -50%) scale(${scale})`;
+                }, easeInOutCubic),
+                tween(800, p => {
+                    const fadeStart = 0.6;
+                    if (p > fadeStart) {
+                        const fadeProgress = (p - fadeStart) / (1 - fadeStart);
+                        wave.style.opacity = `${1 - fadeProgress}`;
+                    }
+                }, easeLinear)
+            ]);
+
+            wave.style.display = 'none';
+
+            tween(200, p => { circle.style.opacity = `${1 - p}`; }, easeOutCubic);
+            tween(200, p => { amount.style.opacity = `${1 - p}`; }, easeOutCubic);
+
+            await wait(200);
+            circle.style.display = 'none';
+
+            finalUI.classList.add('visible');
+            finalUI.style.opacity = '1';
+
+            await Promise.all([
+                tween(450, p => {
+                    finalTitle.style.opacity = `${p}`;
+                    finalTitle.style.transform = `translateY(${-16 + 16 * p}px)`;
+                }, easeOutCubic),
+                tween(450, p => {
+                    finalCircle.style.opacity = `${p}`;
+                    finalCircle.style.transform = `scale(${0.7 + 0.3 * p})`;
+                }, easeOutBack),
+                tween(450, p => {
+                    finalAmtLbl.style.opacity = `${p}`;
+                }, easeOutCubic),
+                tween(500, p => {
+                    finalActs.style.opacity = `${p}`;
+                    finalActs.style.transform = `translateX(${(1 - p) * 120 - 20}px)`;
+                }, easeOutCubic),
+                tween(500, p => {
+                    finalPanel.style.transform = `translateY(${(1 - p) * 100}%)`;
+                }, easeInOutCubic),
+            ]);
+
+            finalCircle.style.animation = 'pulseFinal 2s infinite';
+        }
+
+        /* =====================================================
+           ОСНОВНАЯ АНИМАЦИЯ
+           ===================================================== */
+        async function startAnimation() {
+            currentStep = 'card';
+            currentAmount = '';
+
+            const kb = document.querySelector('.keyboard');
+            const kh = document.querySelector('.keyboard-header');
+            kb.style.display = 'block';
+            kb.style.transform = 'translateY(0)';
+            kh.style.display = 'flex';
+            kh.style.transform = 'translateY(0)';
+            kh.style.opacity = '1';
+
+            const amtScr = document.getElementById('amountScreen');
+            amtScr.style.display = 'block';
+            amtScr.style.transform = 'translateX(100%)';
+            amtScr.classList.remove('show');
+
+            const trScr = document.getElementById('transferScreen');
+            trScr.style.display = 'block';
+            trScr.style.transform = 'translateX(100%)';
+            trScr.classList.remove('show');
+
+            const sucScr = document.getElementById('successScreen');
+            sucScr.style.display = 'block';
+            sucScr.style.transform = 'translateX(100%)';
+            sucScr.classList.remove('show');
+
+            const wave = document.getElementById('successWave');
+            const circle = document.getElementById('successCircle');
+            wave.style.display = 'block';
+            circle.style.display = 'flex';
+
+            const userCard = document.getElementById('userCardNumber').value.replace(/\s/g, '');
+            if (userCard.length !== 16) { alert('Пожалуйста, введите 16 цифр номера карты'); return; }
+
+            document.getElementById('displayCardNumber').textContent = '';
+
+            for (let i = 0; i < userCard.length; i++) {
+                const d = userCard[i];
+                const key = document.querySelector(`.key[data-value="${d}"]`);
+                if (key) {
+                    key.style.background = '#4A4A4C';
+                    key.style.transform = 'scale(0.95)';
+                    setTimeout(() => { key.style.background = '#626262'; key.style.transform = 'scale(1)'; }, 100);
+                }
+                let cur = document.getElementById('displayCardNumber').textContent.replace(/\s/g, '') + d;
+                let fmt = ''; for (let j = 0; j < cur.length; j++) { if (j > 0 && j % 4 === 0) fmt += ' '; fmt += cur[j]; }
+                document.getElementById('displayCardNumber').textContent = fmt;
+                await wait(220 + Math.random() * 500);
+            }
+
+            await wait(400);
+
+            await animateKeyboardHide();
+            await wait(200);
+            showLoading();
+            await wait(600);
+            hideLoading();
+            currentStep = 'amount';
+
+            await showAmountScreen();
+
+            const inputAmt = document.getElementById('transferAmount').value || '100';
+            await wait(200);
+
+            for (let d of inputAmt) {
+                const key = document.querySelector(`#amountScreen .key[data-value="${d}"]`);
+                if (key) {
+                    key.style.background = '#4A4A4C'; key.style.transform = 'scale(0.95)';
+                    setTimeout(() => { key.style.background = '#626262'; key.style.transform = 'scale(1)'; }, 80);
+                }
+                currentAmount += d;
+                updateAmountDisplay();
+                await wait(180 + Math.random() * 120);
+            }
+
+            await wait(700);
+
+            await animateAmountKeyboardHide();
+            showLoading();
+            await wait(600);
+            hideLoading();
+            currentStep = 'confirm';
+            await wait(400);
+
+            await showTransferScreen();
+        }
+
+        /* =====================================================
+           ОБРАБОТЧИКИ КЛИКОВ
+           ===================================================== */
+        document.addEventListener('click', e => {
+            if (!e.target.closest('#amountScreen') || currentStep !== 'amount') return;
+            if (e.target.classList.contains('key') && e.target.dataset.value) {
+                e.target.style.background = '#4A4A4C'; e.target.style.transform = 'scale(0.95)';
+                setTimeout(() => { e.target.style.background = '#626262'; e.target.style.transform = 'scale(1)'; }, 100);
+                currentAmount += e.target.dataset.value;
+                updateAmountDisplay();
+            }
+            if (e.target.classList.contains('delete')) {
+                e.target.style.background = '#4A4A4C'; e.target.style.transform = 'scale(0.95)';
+                setTimeout(() => { e.target.style.background = '#626262'; e.target.style.transform = 'scale(1)'; }, 100);
+                currentAmount = currentAmount.slice(0, -1);
+                updateAmountDisplay();
+            }
+        });
+
+        document.querySelector('.continue-btn-green').addEventListener('click', async () => {
+            if (currentStep !== 'card') return;
+            const card = document.getElementById('displayCardNumber').textContent.replace(/\s/g, '');
+            if (card.length === 16) {
+                await animateKeyboardHide();
+                showLoading();
+                await wait(500);
+                hideLoading();
+                currentStep = 'amount';
+                await showAmountScreen();
+            }
+        });
+
+        document.addEventListener('click', e => {
+            if (e.target.id !== 'amountContinueBtn' || currentStep !== 'amount' || !currentAmount) return;
+            animateAmountKeyboardHide().then(async () => {
+                showLoading();
+                await wait(600);
+                hideLoading();
+                currentStep = 'confirm';
+                await wait(400);
+                await showTransferScreen();
+            });
+        });
+
+        updateAmountDisplay();
+
+        /* =====================================================
+           ЗАПИСЬ ВИДЕО — С АУДИОДОРОЖКОЙ (тихий синус)
+           ===================================================== */
+        async function downloadVideo() {
+            const btn = document.querySelector('.btn-download');
+
+            try {
+                console.log('🎬 Начинаем запись видео...');
+
+                const phoneScreen = document.querySelector('.phone-screen');
+                if (!phoneScreen) throw new Error('Элемент .phone-screen не найден');
+
+                // ── 1. Захват экрана ──────────────────────────────────
+                const stream = await navigator.mediaDevices.getDisplayMedia({
+                    video: {
+                        frameRate: 60,
+                        width: { ideal: 1920 },
+                        height: { ideal: 1080 },
+                        displaySurface: 'browser'
+                    },
+                    audio: false,
+                    preferCurrentTab: true
+                });
+
+                console.log('✅ Видеопоток получен');
+
+                // ── 2. Пробуем обрезать под телефон ──────────────────
+                if ('CropTarget' in window) {
+                    try {
+                        const cropTarget = await CropTarget.fromElement(phoneScreen);
+                        const [videoTrack] = stream.getVideoTracks();
+                        await videoTrack.cropTo(cropTarget);
+                        console.log('✅ CropTarget применён');
+                    } catch (cropError) {
+                        console.warn('⚠️ CropTarget не сработал:', cropError);
+                    }
+                }
+
+                // ── 3. Создаём тихую аудиодорожку через Web Audio API ─
+                //    Генерируем синус 440 Гц с очень низкой громкостью (0.001)
+                //    чтобы трек был непустым (некоторые кодеки требуют этого)
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+
+                oscillator.type = 'sine';
+                oscillator.frequency.value = 440; // частота не важна — всё равно не слышно
+                gainNode.gain.value = 0.0001;      // крайне тихо — практически тишина
+
+                oscillator.connect(gainNode);
+
+                // MediaStreamDestination — превращает Web Audio в MediaStream-трек
+                const audioDestination = audioCtx.createMediaStreamDestination();
+                gainNode.connect(audioDestination);
+                oscillator.start();
+
+                const audioTrack = audioDestination.stream.getAudioTracks()[0];
+
+                // ── 4. Объединяем видео + аудио в один поток ─────────
+                const combinedStream = new MediaStream([
+                    ...stream.getVideoTracks(),
+                    audioTrack
+                ]);
+
+                // ── 5. Выбираем формат ────────────────────────────────
+                const supportedTypes = [
+                    'video/webm;codecs=vp9,opus',
+                    'video/webm;codecs=vp8,opus',
+                    'video/webm'
+                ];
+                const selectedType = supportedTypes.find(t => MediaRecorder.isTypeSupported(t));
+                if (!selectedType) throw new Error('Нет поддерживаемого формата записи');
+
+                console.log('🎵 Формат:', selectedType);
+
+                // ── 6. Записываем ─────────────────────────────────────
+                const mr = new MediaRecorder(combinedStream, {
+                    mimeType: selectedType,
+                    videoBitsPerSecond: 20_000_000
+                });
+
+                const chunks = [];
+                mr.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
+
+                mr.onstop = () => {
+                    // Останавливаем аудиогенератор
+                    oscillator.stop();
+                    audioCtx.close();
+                    stream.getTracks().forEach(t => t.stop());
+
+                    if (chunks.length === 0) {
+                        alert('Ошибка: не удалось записать видео');
+                        btn.textContent = '⬇ Скачать';
+                        btn.disabled = false;
+                        return;
+                    }
+
+                    const blob = new Blob(chunks, { type: selectedType });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `sber-transfer-${Date.now()}.webm`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    setTimeout(() => URL.revokeObjectURL(url), 1000);
+
+                    btn.textContent = '⬇ Скачать';
+                    btn.disabled = false;
+                    console.log('✅ Видео сохранено, размер:', blob.size, 'байт');
+                };
+
+                mr.onerror = (error) => {
+                    console.error('❌ Ошибка записи:', error);
+                    oscillator.stop();
+                    audioCtx.close();
+                    stream.getTracks().forEach(t => t.stop());
+                    btn.textContent = '⬇ Скачать';
+                    btn.disabled = false;
+                };
+
+                btn.textContent = '● Запись...';
+                btn.disabled = true;
+
+                mr.start();
+                await wait(500);
+                startAnimation();
+                await wait(22000); // немного больше, чтобы успела завершиться анимация
+                mr.stop();
+
+            } catch (e) {
+                console.error('💥 Ошибка:', e);
+                btn.textContent = '⬇ Скачать';
+                btn.disabled = false;
+                if (e.name === 'NotAllowedError') {
+                    alert('Разрешите захват экрана в диалоге браузера');
+                } else {
+                    alert('Ошибка: ' + e.message);
+                }
+            }
+        }
+
+    </script>
+</body>
+
+</html>

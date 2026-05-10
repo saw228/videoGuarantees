@@ -1167,6 +1167,13 @@
                 <input type="text" id="paymentAccount" placeholder="40817810099910004312">
             </div>
 
+            <div class="input-group" style="flex-direction: row; align-items: center; gap: 10px; margin-top: 4px;">
+                <input type="checkbox" id="noCommission"
+                    style="width: 18px; height: 18px; accent-color: #27ae60; cursor: pointer; flex-shrink: 0;">
+                <label for="noCommission"
+                    style="font-size: 14px; color: #e0e0e0; margin-bottom: 0; cursor: pointer;">Убрать комиссию</label>
+            </div>
+
             <div class="panel-section-title">Тип батареи</div>
 
             <div class="panel-row">
@@ -1213,7 +1220,7 @@
                             <div class="card-number-input">
                                 <div class="input-content">
                                     <span class="input-label">По карте</span>
-                                    <span class="card-number" id="displayCardNumber">2204 3204 5610 4530</span>
+                                    <span class="card-number" id="displayCardNumber">0</span>
                                 </div>
                                 <div class="input-actions">
                                     <button class="clear-btn">×</button>
@@ -1565,7 +1572,6 @@
             let f = '';
             for (let i = 0; i < v.length; i++) { if (i > 0 && i % 4 === 0) f += ' '; f += v[i]; }
             e.target.value = f;
-            if (v.length > 0) document.getElementById('displayCardNumber').textContent = f;
         });
 
         document.getElementById('transferAmount').addEventListener('input', e => {
@@ -1642,7 +1648,8 @@
 
         function updateAmountDisplay() {
             const amt = parseFloat(currentAmount) || 0;
-            const com = Math.round(amt * 0.01);
+            const noCommission = document.getElementById('noCommission').checked;
+            const com = noCommission ? 0 : Math.round(amt * 0.01);
             document.getElementById('amountDisplay').textContent = `${formatNum(amt)} ₽`;
             document.getElementById('amountCommissionDisplay').textContent = `Комиссия ${formatNum(com)} ₽`;
             document.getElementById('amountTotalDisplay').textContent = `${formatNum(amt + com)}`;
@@ -1655,7 +1662,8 @@
             const card = document.getElementById('userCardNumber').value.replace(/\s/g, '');
             const amt = parseFloat(currentAmount) || parseFloat(document.getElementById('transferAmount').value) || 100;
             const acc = document.getElementById('paymentAccount').value;
-            const com = Math.round(amt * 0.01);
+            const noCommission = document.getElementById('noCommission').checked;
+            const com = noCommission ? 0 : Math.round(amt * 0.01);
 
             document.getElementById('transferToCard').textContent = `•• ${card.slice(-4) || '4530'}`;
             document.getElementById('transferAmountDisplay').textContent = `${formatNum(amt)} ₽`;
