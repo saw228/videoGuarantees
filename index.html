@@ -24,6 +24,8 @@
     position: fixed;
     top: 12px;
     display: flex;
+    flex-direction: column;
+    gap: 5px;
     gap: 10px;
     padding: 8px;
     background: rgba(30, 30, 40, 0.6);
@@ -78,7 +80,8 @@
 
 <!-- Панель -->
 <div id="topbar">
-  <button class="active" data-site="site1">Сбербанк КАРТА (успешно)</button>
+  <button class="active" data-site="site1">Сбербанк - другой банк (успешно)</button>
+  <button data-site="site3">Сбербанк - сбербанк (успешно)</button>
   <button data-site="site2">Т-банк СБП (отказ)</button>
 </div>
 
@@ -86,13 +89,15 @@
 <div class="container">
   <iframe id="site1" class="active" src="site1/index.html"></iframe>
   <iframe id="site2" src="site2/index.html"></iframe>
+  <iframe id="site3" src="site3/index.html"></iframe>
 </div>
 
 <script>
   const buttons = document.querySelectorAll("#topbar button");
   const iframes = {
     site1: document.getElementById("site1"),
-    site2: document.getElementById("site2")
+    site2: document.getElementById("site2"),
+    site3: document.getElementById("site3"),
   };
 
   function switchSite(site) {
