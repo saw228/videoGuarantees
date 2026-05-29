@@ -1,0 +1,1853 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Сбербанк — Перевод</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      font-size: 16px;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    /* ═══ ПАНЕЛЬ УПРАВЛЕНИЯ ═══ */
+    .input-panel {
+      width: 300px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 20px;
+      padding: 20px;
+      color: #fff;
+      margin-top: 30px;
+      margin-right: 40px;
+      flex-shrink: 0;
+      max-height: 95vh;
+      overflow-y: auto;
+      backdrop-filter: blur(20px);
+    }
+
+    .input-panel::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .input-panel::-webkit-scrollbar-thumb {
+      background: #444;
+      border-radius: 2px;
+    }
+
+    .panel-title {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: #fff;
+    }
+
+    .inp-group {
+      margin-bottom: 13px;
+    }
+
+    .inp-group label {
+      font-size: 11px;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .inp-group input[type="text"] {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      padding: 9px 12px;
+      color: #fff;
+      font-size: 13px;
+      outline: none;
+      font-family: inherit;
+    }
+
+    .inp-group input:focus {
+      border-color: rgba(33, 154, 72, 0.6);
+    }
+
+    .inp-group input[type="range"] {
+      accent-color: #219a48;
+      width: 100%;
+    }
+
+    .section-lbl {
+      font-size: 11px;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 7px;
+      margin-top: 4px;
+    }
+
+    .bmode-row {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .bmode-btn {
+      flex: 1;
+      padding: 7px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.06);
+      color: #aaa;
+      font-size: 11px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+    }
+
+    .bmode-btn.active {
+      border-color: #219a48;
+      color: #219a48;
+      background: rgba(33, 154, 72, 0.1);
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .checkbox-row input[type="checkbox"] {
+      accent-color: #219a48;
+      width: 14px;
+      height: 14px;
+    }
+
+    .checkbox-row label {
+      font-size: 12px;
+      color: #bbb;
+    }
+
+    .time-wrap {
+      display: none;
+    }
+
+    .time-wrap.visible {
+      display: flex;
+    }
+
+    .time-wrap input {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      padding: 7px 10px;
+      color: #fff;
+      font-size: 13px;
+      outline: none;
+      width: 80px;
+      font-family: inherit;
+    }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .controls button {
+      padding: 12px 22px;
+      font-size: 14px;
+      font-weight: 600;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+
+    .btn-animate {
+      background: #1a73e8;
+      color: #fff;
+    }
+
+    .btn-download {
+      background: #219a48;
+      color: #fff;
+    }
+
+    .controls button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    /* ═══ ТЕЛЕФОН ═══ */
+    .phone-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      padding-top: 30px;
+    }
+
+    .phone-container {
+      width: 375px;
+      height: 812px;
+      background: #1c1c1e;
+      padding: 11px;
+      box-shadow: 0 40px 100px rgba(0, 0, 0, 0.7), inset 0 0 0 1px #333;
+      flex-shrink: 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .phone-screen {
+      width: 100%;
+      height: 100%;
+      background: #fff;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* ═══ СТАТУС БАР ═══ */
+    .status-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 44px;
+      background: transparent;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+      z-index: 9999;
+      pointer-events: none;
+    }
+
+    .status-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .status-right {
+      display: flex;
+      align-items: center;
+      position: absolute;
+      right: 10px;
+      top: 9px;
+    }
+
+    .rec-image {
+      width: 170px;
+      margin-left: 25px;
+    }
+
+    .svyaz {
+      width: 60px;
+      margin-bottom: 1px;
+    }
+
+    #batteryContainer {
+      display: flex;
+      align-items: center;
+      margin-right: 5px;
+      margin-bottom: 1px;
+    }
+
+    .battery-detailed {
+      display: flex;
+      align-items: center;
+      gap: 1px;
+    }
+
+    .battery-body-2 {
+      position: relative;
+      width: 24px;
+      height: 13px;
+      border-radius: 4px;
+      overflow: hidden;
+      background: #818181;
+    }
+
+    .battery-fill {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 87%;
+      background: #fff;
+      transition: width 0.3s;
+      z-index: 1;
+    }
+
+    .battery-text {
+      position: absolute;
+      top: 45%;
+      left: 50%;
+      transform: translate(-50%, -45%);
+      font-size: 11.5px;
+      font-weight: 800;
+      color: #000;
+      z-index: 2;
+      pointer-events: none;
+      padding-top: 1px;
+    }
+
+    /* ═══ HOME BAR — фиксированный, всегда внизу экрана ═══ */
+    .home-bar-fixed {
+      position: absolute;
+      bottom: 6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 134px;
+      height: 4px;
+      background: #000;
+      border-radius: 2.5px;
+      opacity: 0.2;
+      z-index: 99999;
+      pointer-events: none;
+    }
+
+    /* ═══ ЭКРАН 1 — ВВОД КАРТЫ ═══ */
+    .screen-1 {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .s1-nav {
+      display: flex;
+      align-items: center;
+      padding: 56px 16px 8px;
+      position: relative;
+    }
+
+    .s1-back {
+      font-size: 24px;
+      color: #000;
+      font-weight: 300;
+      line-height: 1;
+      cursor: pointer;
+      width: 32px;
+    }
+
+    .s1-title {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 17px;
+      font-weight: 600;
+      color: #000;
+      top: 60px;
+    }
+
+    .s1-tabs {
+      display: flex;
+      margin: 8px 16px 16px;
+      border-radius: 10px;
+      padding: 3px;
+      gap: 10px;
+    }
+
+    .s1-tab {
+      flex: 0 0 auto;
+      width: 117px;
+      padding: 8px 0;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: #888;
+    }
+
+    .s1-tab.active {
+      background: #e5e4e5;
+      color: #000;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+      font-weight: 500;
+    }
+
+    .s1-card-input-wrap {
+      margin: 0 16px;
+      border: 1.5px solid #21a038;
+      border-radius: 12px;
+      position: relative;
+      background: #fff;
+      padding: 21px 14px 7px;
+    }
+
+    .s1-card-label {
+      position: absolute;
+      font-size: 10px;
+      color: #007e0b;
+      top: 8px;
+    }
+
+    .s1-card-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .s1-card-number {
+      font-size: 15px;
+      color: #000;
+      font-weight: 400;
+      letter-spacing: 0.5px;
+      min-height: 22px;
+      margin-top: 3px;
+    }
+
+    .s1-scan-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 12px 16px;
+      color: #21a038;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .s1-hint {
+      text-align: center;
+      font-size: 13px;
+      color: #aaa;
+      line-height: 1.5;
+      padding: 0 30px;
+      margin-top: auto;
+      margin-bottom: 20px;
+      position: absolute;
+      top: 50%;
+    }
+
+    .s1-bottom {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #c8c8cc;
+      padding-bottom: 40px;
+      /* НЕТ padding-bottom здесь — home bar теперь отдельный фиксированный элемент */
+    }
+
+    .s1-continue-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px 6px;
+      background-color: white;
+    }
+
+    .s1-continue-btn {
+      font-size: 13px;
+      font-weight: 600;
+      color: #aaa;
+      cursor: pointer;
+      letter-spacing: 0.3px;
+      transition: color 0.3s;
+    }
+
+    .s1-continue-btn.active {
+      color: #21a038;
+    }
+
+    /* Цифровая клавиатура */
+    .num-keyboard {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 5px;
+      background: #c8c8cc;
+      padding-top: 10px;
+    }
+
+    .num-key {
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 40px;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.08s;
+      position: relative;
+      border-radius: 5px;
+      width: 115px;
+    }
+
+    .num-key:active,
+    .num-key.pressed {
+      background: #d1d1d6;
+    }
+
+    .num-key-dark {
+      background: #aeb5be;
+    }
+
+    .num-key-dark:active,
+    .num-key-dark.pressed {
+      background: #9a9fa8;
+    }
+
+    .nk-num {
+      font-size: 23px;
+      font-weight: 400;
+      color: #000;
+      line-height: 1;
+      margin-bottom: 1px;
+    }
+
+    .nk-letters {
+      font-size: 9px;
+      font-weight: 600;
+      color: #000;
+      letter-spacing: 1px;
+      line-height: 1;
+    }
+
+    .nk-backspace {
+      font-size: 22px;
+      color: #000;
+    }
+
+    .num-keyboard-bottom {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1px;
+      background: #c8c8cc;
+    }
+
+    .nk-empty {
+      background: #c8c8cc;
+      height: 54px;
+    }
+
+    .nk-zero {
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      user-select: none;
+      margin-top: 5px;
+    }
+
+    .nk-zero:active,
+    .nk-zero.pressed {
+      background: #d1d1d6;
+    }
+
+    .nk-zero .nk-num {
+      margin-bottom: 0;
+    }
+
+    .nk-del {
+      background: #c8c8cc;
+      height: 54px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .nk-del:active,
+    .nk-del.pressed {
+      background: #9a9fa8;
+    }
+
+    /* ═══ ЭКРАНЫ 2+ ═══ */
+    .screen-slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #fff;
+      transform: translateX(100%);
+      transition: transform 0.32s cubic-bezier(0.25, 0.1, 0.25, 1);
+      z-index: 10;
+      overflow: hidden;
+    }
+
+    .screen-slide.show {
+      transform: translateX(0);
+    }
+
+    /* Лоадер */
+    .loader-screen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(255, 255, 255, 0.75);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 20;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.18s;
+      backdrop-filter: blur(1px);
+    }
+
+    .loader-screen.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .sber-spinner {
+      width: 48px;
+      height: 48px;
+      border: 3px solid #e0e0e0;
+      border-top-color: #21a038;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* ═══ ЭКРАН 3 — ПОЛУЧАТЕЛЬ ═══ */
+    .s3-nav {
+      display: flex;
+      align-items: center;
+      padding: 56px 16px 8px;
+      position: relative;
+    }
+
+    .s3-back {
+      font-size: 24px;
+      color: #000;
+      font-weight: 300;
+      line-height: 1;
+      width: 32px;
+    }
+
+    .s3-title {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 17px;
+      font-weight: 600;
+      color: #000;
+      top: 60px;
+    }
+
+    .s3-bank-label {
+      padding: 8px 16px 12px;
+      font-size: 20px;
+      font-weight: 700;
+      color: #000;
+    }
+
+    .s3-recipient-card {
+      margin: 0 16px;
+      background: #f5f5f5;
+      border-radius: 14px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .s3-check-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 2.5px solid #21a038;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .s3-check-icon svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .s3-recipient-info {
+      flex: 1;
+    }
+
+    .s3-recipient-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: #000;
+      margin-bottom: 3px;
+    }
+
+    .s3-recipient-card-num {
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 8px;
+    }
+
+    .s3-continue-link {
+      font-size: 14px;
+      color: #21a038;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    /* ═══ ЭКРАН 5 — ВВОД СУММЫ ═══ */
+    .s5-header {
+      background: #1e952a;
+      padding: 56px 0 16px;
+    }
+
+    .s5-header-top {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .s5-back {
+      font-size: 32px;
+      color: rgba(255, 255, 255, 0.8);
+      font-weight: 300;
+      width: 32px;
+      margin-left: 20px;
+    }
+
+    .s5-card-info {
+      text-align: center;
+      width: 250px;
+    }
+
+    .s5-card-last {
+      font-size: 14px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.9);
+      margin-bottom: 3px;
+    }
+
+    .s5-card-name {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.75);
+    }
+
+    .s5-amount-section {
+      text-align: center;
+      padding: 16px 0 8px;
+    }
+
+    .s5-amount-label {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.8);
+      margin-bottom: 6px;
+    }
+
+    .s5-amount-display {
+      font-size: 20px;
+      font-weight: 300;
+      color: #fff;
+      letter-spacing: -1px;
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 2px;
+      background-color: #186e22;
+      padding: 13px 0;
+    }
+
+    .s5-amount-cursor {
+      display: inline-block;
+      width: 1.5px;
+      height: 20px;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 1px;
+      animation: blink 1s step-end infinite;
+      vertical-align: bottom;
+      margin-left: 2px;
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: 0
+      }
+    }
+
+    .s5-msg-row {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      margin: 0 16px;
+      padding: 17px 14px;
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .s5-body {
+      background: #fff;
+      flex: 1;
+      padding: 14px 16px;
+    }
+
+    .s5-account-row {
+      background: #f5f5f5;
+      border-radius: 12px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .s5-account-amount {
+      font-size: 15px;
+      font-weight: 600;
+      color: #000;
+    }
+
+    .s5-account-sub {
+      font-size: 12px;
+      color: #888;
+      margin-top: 2px;
+    }
+
+    .s5-p-icon {
+      width: 25px;
+      height: 25px;
+      background: #21a038;
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: #fff;
+      position: absolute;
+      right: 15px;
+      top: 130px;
+    }
+
+    .s3-p-icon {
+      width: 25px;
+      height: 25px;
+      background: #21a038;
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .s5-account-icon-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .s5-chevron {
+      font-size: 14px;
+      color: #aaa;
+    }
+
+    .s5-keyboard-wrap {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      transform: translateY(100%);
+      transition: transform 0.35s cubic-bezier(0.25, 0.1, 0.25, 1);
+      /* НЕТ padding-bottom — home bar теперь отдельный фиксированный элемент */
+      background-color: #c8c8cc;
+      padding-bottom: 40px;
+    }
+
+    .s5-keyboard-wrap.visible {
+      transform: translateY(0);
+    }
+
+    .s5-continue-btn-row {
+      background: #fff;
+      padding: 10px 16px 6px;
+      text-align: center;
+    }
+
+    /* ═══ ЭКРАН 6 — ПОДТВЕРЖДЕНИЕ ═══ */
+    .s6-nav {
+      display: flex;
+      align-items: center;
+      padding: 56px 16px 8px;
+      position: relative;
+      margin-bottom: 10px;
+    }
+
+    .s6-back {
+      font-size: 24px;
+      color: #000;
+      font-weight: 300;
+      line-height: 1;
+      width: 32px;
+    }
+
+    .s6-title {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 17px;
+      font-weight: 600;
+      color: #000;
+      top: 60px;
+      min-width: 225px;
+    }
+
+    .s6-rows {
+      padding: 0 16px;
+    }
+
+    .s6-row {
+      padding: 14px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .s6-row:last-child {
+      border-bottom: none;
+    }
+
+    .s6-row-label {
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 4px;
+    }
+
+    .s6-row-val {
+      font-size: 15px;
+      font-weight: 600;
+      color: #000;
+      margin: 5px 0;
+    }
+
+    .s6-row-val.green {
+      color: #cf7b5a;
+    }
+
+    .s6-limit-note {
+      margin: 0 16px;
+      font-size: 13px;
+      color: #888;
+      line-height: 1.4;
+      padding-top: 4px;
+    }
+
+    .s6-action {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 0 16px 30px;
+      background: #fff;
+    }
+
+    .s6-btn {
+      width: 100%;
+      background: #21a038;
+      border-radius: 16px;
+      padding: 16px;
+      text-align: center;
+      font-size: 15px;
+      font-weight: 500;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    /* ═══ ЭКРАН УСПЕХА ═══ */
+    .screen-success {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(160deg, #e8f8ee 0%, #f0faf5 40%, #e0f5f0 100%);
+      z-index: 60;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s ease;
+    }
+
+    .screen-success.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .success-card {
+      background: #fff;
+      border-radius: 24px;
+      padding: 36px 28px 28px;
+      width: calc(100% - 40px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    .success-video-wrap {
+      width: 120px;
+      height: 100px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .success-video-wrap video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .success-title {
+      font-size: 17px;
+      font-weight: 600;
+      color: #000;
+      margin-bottom: 6px;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    .success-amount {
+      font-size: 26px;
+      font-weight: 700;
+      color: #000;
+      margin-bottom: 10px;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.4s ease 0.1s, transform 0.4s ease 0.1s;
+    }
+
+    .success-sub {
+      font-size: 13px;
+      color: #888;
+      text-align: center;
+      line-height: 1.6;
+      margin-bottom: 24px;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.4s ease 0.2s, transform 0.4s ease 0.2s;
+    }
+
+    .success-btns {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.4s ease 0.3s, transform 0.4s ease 0.3s;
+    }
+
+    .success-btn-check {
+      flex: 1;
+      padding: 14px;
+      border-radius: 14px;
+      background: #f0f0f0;
+      border: none;
+      font-size: 15px;
+      font-weight: 500;
+      color: #000;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-family: inherit;
+    }
+
+    .success-btn-home {
+      flex: 1.4;
+      padding: 14px;
+      border-radius: 14px;
+      background: #1a1a1a;
+      border: none;
+      font-size: 15px;
+      font-weight: 500;
+      color: #fff;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .success-card.revealed .success-title,
+    .success-card.revealed .success-amount,
+    .success-card.revealed .success-sub,
+    .success-card.revealed .success-btns {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ═══ PUSH УВЕДОМЛЕНИЕ ═══ */
+    .push-notif {
+      position: absolute;
+      top: 50px;
+      left: 10px;
+      right: 10px;
+      background: #4f4d4f;
+      border-radius: 14px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      z-index: 9998;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
+      transform: translateY(-120px);
+      opacity: 0;
+      transition: transform 0.45s cubic-bezier(0.34, 1.2, 0.64, 1), opacity 0.3s ease;
+    }
+
+    .push-notif.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .push-notif-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: #21a038;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .push-notif-body {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .push-notif-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2px;
+    }
+
+    .push-notif-app {
+      font-size: 12px;
+      font-weight: 600;
+      color: #e9e9e9;
+    }
+
+    .push-notif-time {
+      font-size: 11px;
+      color: #999;
+    }
+
+    .push-notif-text {
+      font-size: 13px;
+      color: #d8d8d8;
+      line-height: 1.4;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ПАНЕЛЬ УПРАВЛЕНИЯ -->
+  <div class="input-panel">
+    <div class="panel-title">Данные перевода</div>
+    <div class="checkbox-row">
+      <input type="checkbox" id="customTimeCheck">
+      <label for="customTimeCheck">Своё время</label>
+    </div>
+    <div class="time-wrap" id="timeWrap">
+      <input type="text" id="customTimeInput" maxlength="5" placeholder="16:11">
+    </div>
+    <!-- НОВЫЙ ЧЕКБОКС УВЕДОМЛЕНИЕ -->
+    <div class="checkbox-row" style="margin-top:6px;">
+      <input type="checkbox" id="showPushCheck" checked>
+      <label for="showPushCheck">Уведомление</label>
+    </div>
+    <div class="inp-group" style="margin-top:10px;">
+      <label>Номер карты</label>
+      <input type="text" id="cardInput" placeholder="2202 2062 1423 4804" maxlength="19" inputmode="numeric">
+    </div>
+    <div class="inp-group">
+      <label>Получатель (ФИО)</label>
+      <input type="text" id="recipientInput" placeholder="Малик Рамзанович А.">
+    </div>
+    <div class="inp-group">
+      <label>Сумма перевода</label>
+      <input type="text" id="amountInput" placeholder="20">
+    </div>
+    <div class="inp-group">
+      <label>Баланс счёта</label>
+      <input type="text" id="balanceInput" value="88,08">
+    </div>
+    <div class="inp-group">
+      <label>Номер счёта (последние 4)</label>
+      <input type="text" id="accountInput" placeholder="1471" value="1471">
+    </div>
+    <div class="inp-group">
+      <label>Банк получателя</label>
+      <input type="text" id="bankNameInput" placeholder="СберБанк" value="СберБанк">
+    </div>
+    <div class="inp-group">
+      <label>Комиссия</label>
+      <input type="text" id="commissionInput" placeholder="0" value="0">
+    </div>
+    <div class="inp-group">
+      <label>Лимит</label>
+      <input type="text" id="limitInput" placeholder="996 000" value="996 000">
+    </div>
+    <div class="inp-group">
+      <label>Текст уведомления</label>
+      <input type="text" id="pushTextInput" value="СЧЁТ1471 16:11 перевод 20р  Баланс: 68.08р">
+    </div>
+    <div class="section-lbl" style="margin-top:6px;">Батарея</div>
+    <div class="bmode-row">
+      <button class="bmode-btn active" id="bmodeSimple" onclick="setBatteryMode('simple')">Без %</button>
+      <button class="bmode-btn" id="bmodeDetailed" onclick="setBatteryMode('detailed')">С %</button>
+    </div>
+    <div class="inp-group">
+      <label>Заряд</label>
+      <input type="range" min="1" max="100" value="80" id="batterySlider">
+    </div>
+    <div class="controls" style="margin-top:14px;">
+      <button class="btn-animate" onclick="startAnimation()">▶ Запустить</button>
+      <button class="btn-download" onclick="downloadVideo()">⬇ Скачать</button>
+    </div>
+  </div>
+
+  <!-- ТЕЛЕФОН -->
+  <div class="phone-wrap">
+    <div class="phone-container">
+      <div class="phone-screen" id="phoneScreen">
+
+        <!-- СТАТУС БАР — прозрачный, всегда поверх, не двигается -->
+        <div class="status-bar">
+          <div class="status-left">
+            <span id="statusTime" style="font-size:15px;font-weight:600;color:#000;"></span>
+          </div>
+          <img style="width:180px;position:absolute;left:60px;" src="./source/Screenshot_8-removebg-preview.png" alt=""
+            class="rec-image">
+          <div class="status-right">
+            <img style="width: 50px;" src="./source/blackwifis-removebg-preview.png" alt="" class="svyaz">
+            <div id="batteryContainer"></div>
+          </div>
+        </div>
+
+        <!-- HOME BAR — фиксированный, всегда внизу, поверх всего -->
+        <div class="home-bar-fixed"></div>
+
+        <!-- ЭКРАН 1 — ВВОД КАРТЫ -->
+        <div class="screen-1" id="screen1">
+          <div class="s1-nav">
+            <img style="width:25px;" src="./source/backarrow.png" alt="">
+            <span class="s1-title">Новый перевод</span>
+          </div>
+          <div class="s1-tabs">
+            <div class="s1-tab active">По России</div>
+            <div class="s1-tab">В другую страну</div>
+          </div>
+          <div class="s1-card-input-wrap" id="cardInputWrap">
+            <div class="s1-card-label">По карте</div>
+            <div class="s1-card-row">
+              <div class="s1-card-number" id="cardDisplay"></div>
+              <img style="width:30px;position:absolute;right:10px;top:10px;" src="./source/scan.png" alt="">
+            </div>
+          </div>
+          <div class="s1-scan-row">
+            <img style="width:25px;" src="./source/cardd.png" alt="">
+            <span>Сканировать карту</span>
+          </div>
+          <div class="s1-hint">
+            Переводите клиентам Сбербанка или на карты МИР, Visa, MasterCard других банков
+          </div>
+          <div class="s1-bottom" id="s1Bottom">
+            <div class="s1-continue-row">
+              <img style="width:25px;" src="./source/9dots.png" alt="">
+              <div class="s1-continue-btn" id="continueBtn" onclick="onContinueCard()">ПРОДОЛЖИТЬ</div>
+            </div>
+            <div class="num-keyboard" id="numKeyboard">
+              <div class="num-key" data-val="1"><span class="nk-num">1</span><span class="nk-letters"></span></div>
+              <div class="num-key" data-val="2"><span class="nk-num">2</span><span class="nk-letters">А Б В Г</span></div>
+              <div class="num-key" data-val="3"><span class="nk-num">3</span><span class="nk-letters">Д Е Ж З</span></div>
+              <div class="num-key" data-val="4"><span class="nk-num">4</span><span class="nk-letters">И Й К Л</span></div>
+              <div class="num-key" data-val="5"><span class="nk-num">5</span><span class="nk-letters">М Н О П</span></div>
+              <div class="num-key" data-val="6"><span class="nk-num">6</span><span class="nk-letters">Р С Т У</span></div>
+              <div class="num-key" data-val="7"><span class="nk-num">7</span><span class="nk-letters">Ф Х Ц Ч</span></div>
+              <div class="num-key" data-val="8"><span class="nk-num">8</span><span class="nk-letters">Ш Щ Ъ Ы</span></div>
+              <div class="num-key" data-val="9"><span class="nk-num">9</span><span class="nk-letters">Ь Э Ю Я</span></div>
+            </div>
+            <div class="num-keyboard-bottom">
+              <div class="nk-empty"></div>
+              <div class="nk-zero num-key" data-val="0"><span class="nk-num">0</span></div>
+              <div class="nk-del num-key" data-val="backspace"><span class="nk-backspace">⌫</span></div>
+            </div>
+            <!-- home-bar УБРАН ОТСЮДА — теперь он отдельный фиксированный элемент -->
+          </div>
+        </div>
+
+        <!-- ЛОАДЕР 1 -->
+        <div class="loader-screen" id="loader1">
+          <div class="sber-spinner"></div>
+        </div>
+
+        <!-- ЭКРАН 3 — ПОЛУЧАТЕЛЬ -->
+        <div class="screen-slide" id="screen3">
+          <div class="s3-nav">
+            <img style=" width:25px" src="./source/backarrow.png" alt="">
+            <span class="s3-title">Перевод на карту</span>
+          </div>
+          <div class="s3-bank-label" id="s3BankLabel">В СберБанк</div>
+          <div class="s3-recipient-card">
+            <img style="width: 35px;" src="./source/sberIcon.png" alt="">
+            <div class="s3-recipient-info">
+              <div class="s3-recipient-name" id="s3RecipientName">Малик Рамзанович А.</div>
+              <div class="s3-recipient-card-num" id="s3CardNum">2202 2062 1423 4804</div>
+              <div class="s3-continue-link" onclick="onContinueRecipient()">Продолжить</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ЛОАДЕР 2 -->
+        <div class="loader-screen" id="loader2" style="z-index:25;">
+          <div class="sber-spinner"></div>
+        </div>
+
+        <!-- ЭКРАН 5 — ВВОД СУММЫ -->
+        <div class="screen-slide" id="screen5" style="display:flex;flex-direction:column;">
+          <div class="s5-header">
+            <div class="s5-header-top">
+              <span class="s5-back">‹</span>
+              <div class="s5-card-info">
+                <div class="s5-card-last" id="s5CardLast">•• 4804</div>
+                <div class="s5-card-name" id="s5RecipientName">Малик Рамзанович А.</div>
+              </div>
+              <span style="width:32px;"></span>
+            </div>
+            <div class="s5-amount-section">
+              <div class="s5-amount-label">Сумма</div>
+              <div class="s5-amount-display">
+                <span id="s5AmountDisplay">0</span>
+                <span id="s5Cursor" class="s5-amount-cursor"></span>
+                <span style="font-size:20px;font-weight:500;color:rgba(255,255,255,0.8);">₽</span>
+              </div>
+            </div>
+            <div class="s5-msg-row">Сообщение получателю</div>
+          </div>
+          <div class="s5-body">
+            <div class="s5-account-row">
+              <div class="s5-account-left">
+                <div class="s5-account-amount" id="s5Balance">88,08 ₽</div>
+                <div class="s5-account-sub" id="s5AccountSub">Платёжный счёт •• 1471</div>
+              </div>
+              <div class="s5-account-icon-row">
+                <div class="s3-p-icon">P</div>
+                <span class="s5-chevron">›</span>
+              </div>
+            </div>
+          </div>
+          <div class="s5-keyboard-wrap" id="s5KeyboardWrap">
+            <div style="display: flex; justify-content: space-between; align-items: center;" class="s5-continue-btn-row">
+              <img style="width:25px;" src="./source/9dots.png" alt="">
+              <div class="s1-continue-btn" id="s5ContinueBtn" onclick="onContinueAmount()" style="text-align:center;">ПРОДОЛЖИТЬ</div>
+            </div>
+            <div class="num-keyboard" id="s5NumKb">
+              <div class="num-key" data-val="1"><span class="nk-num">1</span><span class="nk-letters"></span></div>
+              <div class="num-key" data-val="2"><span class="nk-num">2</span><span class="nk-letters">А Б В Г</span></div>
+              <div class="num-key" data-val="3"><span class="nk-num">3</span><span class="nk-letters">Д Е Ж З</span></div>
+              <div class="num-key" data-val="4"><span class="nk-num">4</span><span class="nk-letters">И Й К Л</span></div>
+              <div class="num-key" data-val="5"><span class="nk-num">5</span><span class="nk-letters">М Н О П</span></div>
+              <div class="num-key" data-val="6"><span class="nk-num">6</span><span class="nk-letters">Р С Т У</span></div>
+              <div class="num-key" data-val="7"><span class="nk-num">7</span><span class="nk-letters">Ф Х Ц Ч</span></div>
+              <div class="num-key" data-val="8"><span class="nk-num">8</span><span class="nk-letters">Ш Щ Ъ Ы</span></div>
+              <div class="num-key" data-val="9"><span class="nk-num">9</span><span class="nk-letters">Ь Э Ю Я</span></div>
+            </div>
+            <div class="num-keyboard-bottom">
+              <div class="nk-empty"></div>
+              <div class="nk-zero num-key" data-val="0"><span class="nk-num">0</span></div>
+              <div class="nk-del num-key" data-val="backspace"><span class="nk-backspace">⌫</span></div>
+            </div>
+            <!-- home-bar УБРАН ОТСЮДА тоже -->
+          </div>
+        </div>
+
+        <!-- ЛОАДЕР 3 -->
+        <div class="loader-screen" id="loader3" style="z-index:35;">
+          <div class="sber-spinner"></div>
+        </div>
+
+        <!-- ЭКРАН 6 — ПОДТВЕРЖДЕНИЕ -->
+        <div class="screen-slide" id="screen6" style="z-index:40;">
+          <div class="s6-nav">
+            <span class="s6-back">‹</span>
+            <span class="s6-title">Подтверждение перевода</span>
+          </div>
+          <div class="s6-rows">
+            <div class="s6-row">
+              <div class="s6-row-label">Счёт списания</div>
+              <div class="s6-row-val" id="s6Balance">88,08 ₽</div>
+              <div style="display:flex;align-items:center;gap:6px;margin-top:2px;">
+                <div class="s5-p-icon" style="width:24px;height:24px;font-size:12px;border-radius:6px;flex-shrink:0;">P</div>
+                <span style="font-size:12px;color:#888;" id="s6AccountSub">Платёжный счёт •• 1471</span>
+              </div>
+            </div>
+            <div class="s6-row">
+              <div class="s6-row-label">ФИО получателя</div>
+              <div class="s6-row-val" id="s6RecipientName">Малик Рамзанович А.</div>
+            </div>
+            <div class="s6-row">
+              <div class="s6-row-label">Номер карты получателя</div>
+              <div style="display:flex;align-items:center;justify-content:space-between;">
+                <div class="s6-row-val" id="s6CardLast">•• 4804</div>
+                <svg width="28" height="20" viewBox="0 0 28 20" fill="none">
+                  <rect x="0.5" y="0.5" width="27" height="19" rx="3.5" stroke="#ddd" />
+                  <rect x="3" y="7" width="7" height="5" rx="1" fill="#aaa" />
+                </svg>
+              </div>
+            </div>
+            <div class="s6-row">
+              <div class="s6-row-label">Сумма перевода</div>
+              <div class="s6-row-val" id="s6Amount">20 ₽</div>
+            </div>
+            <div class="s6-row">
+              <div class="s6-row-label">Комиссия</div>
+              <div class="s6-row-val green" id="s6Commission">0 ₽</div>
+            </div>
+          </div>
+          <div class="s6-limit-note" id="s6LimitNote">Доступный лимит для совершения операции составляет 996 000 ₽</div>
+          <div class="s6-action">
+            <div class="s6-btn" id="s6Btn">Перевести 20 ₽</div>
+          </div>
+        </div>
+
+        <!-- ЛОАДЕР 4 -->
+        <div class="loader-screen" id="loader4" style="z-index:50;">
+          <div class="sber-spinner"></div>
+        </div>
+
+        <!-- ЭКРАН УСПЕХА -->
+        <div class="screen-success" id="screenSuccess">
+          <div class="success-card" id="successCard">
+            <div class="success-video-wrap">
+              <video id="successVideo" src="./source/transf.mp4" muted playsinline></video>
+            </div>
+            <div class="success-title">Перевод доставлен</div>
+            <div class="success-amount" id="successAmount">20 ₽</div>
+            <div class="success-sub" id="successSub">Комиссия 0 ₽<br>Малик Рамзанович А.</div>
+            <div class="success-btns">
+              <button class="success-btn-check">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                  <polyline points="14 2 14 8 20 8" />
+                  <line x1="16" y1="13" x2="8" y2="13" />
+                  <line x1="16" y1="17" x2="8" y2="17" />
+                </svg>
+                Чек
+              </button>
+              <button class="success-btn-home">На главный</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- PUSH УВЕДОМЛЕНИЕ -->
+        <div style="align-items: center;" class="push-notif" id="pushNotif">
+          <img style="width: 45px;" src="./source/operatorIcon.png" alt="">
+          <div class="push-notif-body">
+            <div class="push-notif-header">
+              <span class="push-notif-app">Оператор</span>
+              <span class="push-notif-time">сейчас</span>
+            </div>
+            <div class="push-notif-text" id="pushNotifText">СЧЁТ1471 16:11 перевод 20р Баланс: 68.08р</div>
+          </div>
+        </div>
+
+      </div><!-- /phone-screen -->
+    </div><!-- /phone-container -->
+
+    <div class="controls">
+      <button class="btn-animate" onclick="startAnimation()">▶ Запустить</button>
+      <button class="btn-download" onclick="downloadVideo()">⬇ Скачать</button>
+    </div>
+  </div>
+
+  <script>
+    function tween(duration, onProgress, easing) {
+      easing = easing || easeOutCubic;
+      return new Promise(resolve => {
+        const start = performance.now();
+        function tick(now) {
+          const p = Math.min((now - start) / duration, 1);
+          onProgress(easing(p), p);
+          if (p < 1) requestAnimationFrame(tick);
+          else resolve();
+        }
+        requestAnimationFrame(tick);
+      });
+    }
+    function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+    function easeInOutCubic(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
+    function wait(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+    function getCurrentTime() {
+      const now = new Date();
+      return String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+    }
+    function updateStatusTime() {
+      if (!document.getElementById('customTimeCheck').checked) {
+        document.getElementById('statusTime').textContent = getCurrentTime();
+      }
+    }
+    document.getElementById('customTimeCheck').addEventListener('change', function () {
+      document.getElementById('timeWrap').classList.toggle('visible', this.checked);
+      if (!this.checked) updateStatusTime();
+    });
+    document.getElementById('customTimeInput').addEventListener('input', function () {
+      let v = this.value.replace(/\D/g, '').substring(0, 4);
+      if (v.length > 2) v = v.slice(0, 2) + ':' + v.slice(2);
+      this.value = v;
+      document.getElementById('statusTime').textContent = v || getCurrentTime();
+    });
+    updateStatusTime();
+    setInterval(updateStatusTime, 10000);
+
+    let batteryMode = 'simple';
+    function setBatteryMode(mode) {
+      batteryMode = mode;
+      document.getElementById('bmodeSimple').classList.toggle('active', mode === 'simple');
+      document.getElementById('bmodeDetailed').classList.toggle('active', mode === 'detailed');
+      renderBattery();
+    }
+    function renderBattery() {
+      const container = document.getElementById('batteryContainer');
+      const level = parseInt(document.getElementById('batterySlider').value);
+      const color = level < 20 ? '#ff3b30' : '#000';
+      if (batteryMode === 'simple') {
+        container.innerHTML = `<svg style="width:25px;" viewBox="0 0 100 50">
+      <rect x="1" y="1" width="90" height="48" rx="12" fill="none" stroke="#8e8e93" stroke-width="2"/>
+      <rect x="92" y="15" width="6" height="20" rx="3" fill="#8e8e93"/>
+      <clipPath id="bclip"><rect x="4" y="4" width="84" height="42" rx="10"/></clipPath>
+      <rect x="4" y="4" width="${(level / 100) * 84}" height="42" rx="10" fill="${color}" clip-path="url(#bclip)"/>
+    </svg>`;
+      } else {
+        container.innerHTML = `<div class="battery-detailed">
+      <div class="battery-body-2">
+        <div class="battery-fill" style="width:${level}%;background:${color};"></div>
+        <span class="battery-text" style="color:${level < 20 ? '#fff' : '#000'}">${level}</span>
+      </div>
+      <div class="battery-cap"></div>
+    </div>`;
+      }
+    }
+    document.getElementById('batterySlider').addEventListener('input', renderBattery);
+    renderBattery();
+
+    function formatCard(digits) {
+      let r = '';
+      for (let i = 0; i < digits.length && i < 16; i++) {
+        if (i > 0 && i % 4 === 0) r += ' ';
+        r += digits[i];
+      }
+      return r;
+    }
+
+    let currentStep = 'idle';
+
+    async function animateCardInput(cardRaw) {
+      const digits = cardRaw.replace(/\D/g, '').substring(0, 16);
+      const display = document.getElementById('cardDisplay');
+      const continueBtn = document.getElementById('continueBtn');
+      display.textContent = '';
+      for (let i = 0; i < digits.length; i++) {
+        const d = digits[i];
+        const keyEl = document.querySelector(`#numKeyboard [data-val="${d}"], #s1Bottom .nk-zero[data-val="${d}"]`);
+        if (keyEl) { keyEl.classList.add('pressed'); await wait(60 + Math.random() * 60); keyEl.classList.remove('pressed'); }
+        display.textContent = formatCard(digits.slice(0, i + 1));
+        if ((i + 1) % 4 === 0 && i < 15) {
+          await wait(500 + Math.random() * 600);
+        } else {
+          const rand = Math.random();
+          if (rand < 0.15) await wait(400 + Math.random() * 300);
+          else if (rand < 0.35) await wait(200 + Math.random() * 150);
+          else await wait(120 + Math.random() * 100);
+        }
+      }
+      continueBtn.classList.add('active');
+    }
+
+    async function onContinueCard() { if (currentStep !== 'idle') return; }
+    async function onContinueRecipient() { }
+    async function onContinueAmount() { }
+
+    async function hideKeyboard() {
+      const bottom = document.getElementById('s1Bottom');
+      const h = bottom.offsetHeight;
+      return tween(380, p => { bottom.style.transform = `translateY(${p * (h + 10)}px)`; }, easeOutCubic);
+    }
+
+    async function showLoader(id, ms) {
+      const el = document.getElementById(id);
+      el.classList.add('active');
+      await wait(ms);
+      el.classList.remove('active');
+    }
+
+    async function slideIn(id) {
+      const el = document.getElementById(id);
+      el.style.transition = 'none';
+      el.style.transform = 'translateX(100%)';
+      el.classList.add('show');
+      el.getBoundingClientRect();
+      el.style.transition = 'transform 0.28s cubic-bezier(0.25,0.1,0.25,1)';
+      el.style.transform = 'translateX(0)';
+      return wait(280);
+    }
+
+    async function animateAmountInput(rawAmount) {
+      const display = document.getElementById('s5AmountDisplay');
+      const continueBtn = document.getElementById('s5ContinueBtn');
+      display.textContent = '0';
+      const digits = String(rawAmount).replace(/[^\d]/g, '');
+      for (let i = 0; i < digits.length; i++) {
+        const d = digits[i];
+        const keyEl = document.querySelector(`#s5NumKb [data-val="${d}"], #screen5 .nk-zero[data-val="${d}"]`);
+        if (keyEl) { keyEl.classList.add('pressed'); await wait(70); keyEl.classList.remove('pressed'); }
+        display.textContent = parseInt(digits.slice(0, i + 1)).toLocaleString('ru-RU');
+        await wait(120 + Math.random() * 60);
+      }
+      continueBtn.classList.add('active');
+    }
+
+    function updateScreenData() {
+      const recipient = document.getElementById('recipientInput').value || 'Малик Рамзанович А.';
+      const cardRaw = document.getElementById('cardInput').value || '2202206214234804';
+      const cardFmt = formatCard(cardRaw.replace(/\D/g, ''));
+      const cardLast = '•• ' + cardRaw.replace(/\D/g, '').slice(-4);
+      const amount = document.getElementById('amountInput').value || '20';
+      const balance = document.getElementById('balanceInput').value || '88,08';
+      const account = document.getElementById('accountInput').value || '1471';
+      const bank = document.getElementById('bankNameInput').value || 'СберБанк';
+      const commission = document.getElementById('commissionInput').value || '0';
+      const limit = document.getElementById('limitInput').value || '996 000';
+
+      document.getElementById('s3BankLabel').textContent = 'В ' + bank;
+      document.getElementById('s3RecipientName').textContent = recipient;
+      document.getElementById('s3CardNum').textContent = cardFmt;
+      document.getElementById('s5CardLast').textContent = cardLast;
+      document.getElementById('s5RecipientName').textContent = recipient;
+      document.getElementById('s5Balance').textContent = balance + ' ₽';
+      document.getElementById('s5AccountSub').textContent = 'Платёжный счёт •• ' + account;
+      document.getElementById('s6Balance').textContent = balance + ' ₽';
+      document.getElementById('s6AccountSub').textContent = 'Платёжный счёт •• ' + account;
+      document.getElementById('s6RecipientName').textContent = recipient;
+      document.getElementById('s6CardLast').textContent = cardLast;
+      document.getElementById('s6Amount').textContent = amount + ' ₽';
+      document.getElementById('s6Commission').textContent = commission + ' ₽';
+      document.getElementById('s6LimitNote').textContent = 'Доступный лимит для совершения операции составляет ' + limit + ' ₽';
+      document.getElementById('s6Btn').textContent = 'Перевести ' + amount + ' ₽';
+      document.getElementById('successAmount').textContent = amount + ' ₽';
+      document.getElementById('successSub').innerHTML = 'Комиссия ' + commission + ' ₽<br>' + recipient;
+      document.getElementById('pushNotifText').textContent = document.getElementById('pushTextInput').value;
+    }
+
+    document.getElementById('cardInput').addEventListener('input', function () {
+      let digits = this.value.replace(/\D/g, '').substring(0, 16);
+      let formatted = '';
+      for (let i = 0; i < digits.length; i++) { if (i > 0 && i % 4 === 0) formatted += ' '; formatted += digits[i]; }
+      this.value = formatted;
+    });
+
+    async function startAnimation() {
+      if (currentStep === 'running') return;
+      currentStep = 'running';
+
+      const screenSuccess = document.getElementById('screenSuccess');
+      const successCard = document.getElementById('successCard');
+      const sv = document.getElementById('successVideo');
+      const s1Bottom = document.getElementById('s1Bottom');
+      const s5Kb = document.getElementById('s5KeyboardWrap');
+
+      document.getElementById('cardDisplay').textContent = '';
+      document.getElementById('continueBtn').classList.remove('active');
+      document.getElementById('s5AmountDisplay').textContent = '0';
+      document.getElementById('s5ContinueBtn').classList.remove('active');
+      s1Bottom.style.transform = 'translateY(0)';
+      s1Bottom.style.transition = 'none';
+      document.getElementById('loader1').classList.remove('active');
+      document.getElementById('loader2').classList.remove('active');
+      document.getElementById('loader3').classList.remove('active');
+      document.getElementById('loader4').classList.remove('active');
+      document.getElementById('screen3').classList.remove('show');
+      document.getElementById('screen3').style.transform = 'translateX(100%)';
+      document.getElementById('screen5').classList.remove('show');
+      document.getElementById('screen5').style.transform = 'translateX(100%)';
+      document.getElementById('screen6').classList.remove('show');
+      document.getElementById('screen6').style.transform = 'translateX(100%)';
+      screenSuccess.classList.remove('active');
+      successCard.classList.remove('revealed');
+      sv.pause(); sv.currentTime = 0;
+      document.getElementById('pushNotif').classList.remove('show');
+      s5Kb.classList.remove('visible');
+
+      updateScreenData();
+      await wait(400);
+
+      const cardRaw = document.getElementById('cardInput').value || '2202206214234804';
+      await animateCardInput(cardRaw);
+      await wait(600);
+      await hideKeyboard();
+      await wait(200);
+      await showLoader('loader1', 1200);
+      await slideIn('screen3');
+
+      await wait(1000);
+
+      document.getElementById('loader2').classList.add('active');
+      document.querySelector('.s3-recipient-card').style.opacity = '0.4';
+      await wait(1200);
+      document.getElementById('loader2').classList.remove('active');
+      document.querySelector('.s3-recipient-card').style.opacity = '1';
+
+      await slideIn('screen5');
+
+      await wait(600);
+      s5Kb.classList.add('visible');
+
+      await wait(700);
+
+      const amount = document.getElementById('amountInput').value || '20';
+      await animateAmountInput(amount);
+      await wait(700);
+      s5Kb.classList.remove('visible');
+      await wait(500);
+      await showLoader('loader3', 1200);
+      await slideIn('screen6');
+
+      await wait(2000);
+
+      document.getElementById('loader4').classList.add('active');
+      await wait(1400);
+      document.getElementById('loader4').classList.remove('active');
+
+      screenSuccess.classList.add('active');
+      sv.currentTime = 0;
+      sv.play().catch(() => { });
+      await wait(400);
+      successCard.classList.add('revealed');
+
+      // Показываем push только если чекбокс включён
+      await wait(3000);
+      if (document.getElementById('showPushCheck').checked) {
+        document.getElementById('pushNotif').classList.add('show');
+      }
+
+      currentStep = 'idle';
+    }
+
+    async function downloadVideo() {
+      const btn = document.querySelector('.btn-download');
+      try {
+        const phoneScreen = document.getElementById('phoneScreen');
+        const stream = await navigator.mediaDevices.getDisplayMedia({
+          video: { frameRate: 60, width: { ideal: 1920 }, height: { ideal: 1080 }, displaySurface: 'browser' },
+          audio: false, preferCurrentTab: true
+        });
+        if ('CropTarget' in window) {
+          try {
+            const cropTarget = await CropTarget.fromElement(phoneScreen);
+            const [videoTrack] = stream.getVideoTracks();
+            await videoTrack.cropTo(cropTarget);
+          } catch (e) { console.warn('CropTarget:', e); }
+        }
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        gain.gain.value = 0.0001;
+        osc.connect(gain);
+        const audioDst = audioCtx.createMediaStreamDestination();
+        gain.connect(audioDst);
+        osc.start();
+        const audioTrack = audioDst.stream.getAudioTracks()[0];
+        const combined = new MediaStream([...stream.getVideoTracks(), audioTrack]);
+        const types = ['video/webm;codecs=vp9,opus', 'video/webm;codecs=vp8,opus', 'video/webm'];
+        const mime = types.find(t => MediaRecorder.isTypeSupported(t));
+        if (!mime) throw new Error('Нет поддерживаемого формата');
+        const mr = new MediaRecorder(combined, { mimeType: mime, videoBitsPerSecond: 20_000_000 });
+        const chunks = [];
+        mr.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
+        mr.onstop = () => {
+          osc.stop(); audioCtx.close();
+          stream.getTracks().forEach(t => t.stop());
+          const blob = new Blob(chunks, { type: mime });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url; a.download = `sber-transfer-${Date.now()}.webm`;
+          document.body.appendChild(a); a.click(); document.body.removeChild(a);
+          setTimeout(() => URL.revokeObjectURL(url), 1000);
+          btn.textContent = '⬇ Скачать'; btn.disabled = false;
+        };
+        mr.onerror = e => { console.error(e); btn.textContent = '⬇ Скачать'; btn.disabled = false; };
+        btn.textContent = '● Запись...'; btn.disabled = true;
+        mr.start();
+        await wait(500);
+        await startAnimation();
+        await wait(1500);
+        mr.stop();
+      } catch (e) {
+        console.error(e);
+        btn.textContent = '⬇ Скачать'; btn.disabled = false;
+        if (e.name === 'NotAllowedError') alert('Разрешите захват экрана');
+        else alert('Ошибка: ' + e.message);
+      }
+    }
+  </script>
+</body>
+
+</html>
