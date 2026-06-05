@@ -229,7 +229,7 @@
       position: relative;
     }
 
-    /* ═══ СТАТУС БАР ═══ */
+    /* ═══ СТАТУС БАР — прозрачный, поверх всего, не двигается ═══ */
     .status-bar {
       position: absolute;
       top: 0;
@@ -313,21 +313,6 @@
       z-index: 2;
       pointer-events: none;
       padding-top: 1px;
-    }
-
-    /* ═══ HOME BAR — фиксированный, всегда внизу экрана ═══ */
-    .home-bar-fixed {
-      position: absolute;
-      bottom: 6px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 134px;
-      height: 4px;
-      background: #000;
-      border-radius: 2.5px;
-      opacity: 0.2;
-      z-index: 99999;
-      pointer-events: none;
     }
 
     /* ═══ ЭКРАН 1 — ВВОД КАРТЫ ═══ */
@@ -446,8 +431,6 @@
       padding: 0 30px;
       margin-top: auto;
       margin-bottom: 20px;
-      position: absolute;
-      top: 50%;
     }
 
     .s1-bottom {
@@ -456,8 +439,7 @@
       left: 0;
       right: 0;
       background: #c8c8cc;
-      padding-bottom: 40px;
-      /* НЕТ padding-bottom здесь — home bar теперь отдельный фиксированный элемент */
+      padding-bottom: 55px;
     }
 
     .s1-continue-row {
@@ -584,6 +566,18 @@
     .nk-del:active,
     .nk-del.pressed {
       background: #9a9fa8;
+    }
+
+    .home-bar {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 134px;
+      height: 4px;
+      background: #000;
+      border-radius: 2.5px;
+      opacity: 0.2;
+      bottom: 0;
     }
 
     /* ═══ ЭКРАНЫ 2+ ═══ */
@@ -893,9 +887,8 @@
       right: 0;
       transform: translateY(100%);
       transition: transform 0.35s cubic-bezier(0.25, 0.1, 0.25, 1);
-      /* НЕТ padding-bottom — home bar теперь отдельный фиксированный элемент */
+      padding-bottom: 55px;
       background-color: #c8c8cc;
-      padding-bottom: 40px;
     }
 
     .s5-keyboard-wrap.visible {
@@ -1192,146 +1185,6 @@
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
     }
-
-
-    .inp-group {
-      position: relative;
-    }
-
-    .save-btn {
-      position: absolute;
-      right: 6px;
-      bottom: 7px;
-      background: #219a48;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      padding: 3px 8px;
-      font-size: 10px;
-      font-weight: 600;
-      cursor: pointer;
-      font-family: inherit;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.15s;
-      z-index: 10;
-    }
-
-    .save-btn.visible {
-      opacity: 1;
-      pointer-events: all;
-    }
-
-    .inp-group input[type="text"] {
-      padding-right: 70px;
-    }
-
-    .saved-dropdown {
-      position: absolute;
-      top: calc(100% + 4px);
-      left: 0;
-      right: 0;
-      background: #1e1e2e;
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      border-radius: 10px;
-      z-index: 9999;
-      overflow: hidden;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-      display: none;
-    }
-
-    .saved-dropdown.open {
-      display: block;
-    }
-
-    .saved-dropdown-empty {
-      padding: 10px 12px;
-      font-size: 12px;
-      color: #666;
-    }
-
-    .saved-item {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 10px;
-      cursor: pointer;
-      transition: background 0.1s;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-    }
-
-    .saved-item:last-child {
-      border-bottom: none;
-    }
-
-    .saved-item:hover {
-      background: rgba(255, 255, 255, 0.07);
-    }
-
-    .saved-item-text {
-      flex: 1;
-      font-size: 12px;
-      color: #ddd;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .saved-star {
-      font-size: 14px;
-      line-height: 1;
-      cursor: pointer;
-      flex-shrink: 0;
-      opacity: 0.4;
-      transition: opacity 0.15s;
-    }
-
-    .saved-star.active {
-      opacity: 1;
-      color: #ffd700;
-    }
-
-    .saved-star:hover {
-      opacity: 0.8;
-    }
-
-    .saved-del {
-      font-size: 14px;
-      line-height: 1;
-      cursor: pointer;
-      flex-shrink: 0;
-      color: #ff5555;
-      opacity: 0.5;
-      transition: opacity 0.15s;
-    }
-
-    .saved-del:hover {
-      opacity: 1;
-    }
-
-    .autoload-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 10px;
-      margin-top: 2px;
-      padding: 8px 10px;
-      background: rgba(33, 154, 72, 0.1);
-      border: 1px solid rgba(33, 154, 72, 0.25);
-      border-radius: 10px;
-    }
-
-    .autoload-row input[type="checkbox"] {
-      accent-color: #219a48;
-      width: 14px;
-      height: 14px;
-    }
-
-    .autoload-row label {
-      font-size: 12px;
-      color: #bbb;
-      cursor: pointer;
-    }
   </style>
 </head>
 
@@ -1346,11 +1199,6 @@
     </div>
     <div class="time-wrap" id="timeWrap">
       <input type="text" id="customTimeInput" maxlength="5" placeholder="16:11">
-    </div>
-    <!-- НОВЫЙ ЧЕКБОКС УВЕДОМЛЕНИЕ -->
-    <div class="checkbox-row" style="margin-top:6px;">
-      <input type="checkbox" id="showPushCheck" checked>
-      <label for="showPushCheck">Уведомление</label>
     </div>
     <div class="inp-group" style="margin-top:10px;">
       <label>Номер карты</label>
@@ -1421,9 +1269,6 @@
           </div>
         </div>
 
-        <!-- HOME BAR — фиксированный, всегда внизу, поверх всего -->
-        <div class="home-bar-fixed"></div>
-
         <!-- ЭКРАН 1 — ВВОД КАРТЫ -->
         <div class="screen-1" id="screen1">
           <div class="s1-nav">
@@ -1477,7 +1322,7 @@
               <div class="nk-zero num-key" data-val="0"><span class="nk-num">0</span></div>
               <div class="nk-del num-key" data-val="backspace"><span class="nk-backspace">⌫</span></div>
             </div>
-            <!-- home-bar УБРАН ОТСЮДА — теперь он отдельный фиксированный элемент -->
+            <div class="home-bar"></div>
           </div>
         </div>
 
@@ -1542,8 +1387,7 @@
             </div>
           </div>
           <div class="s5-keyboard-wrap" id="s5KeyboardWrap">
-            <div style="display: flex; justify-content: space-between; align-items: center;"
-              class="s5-continue-btn-row">
+            <div style="display: flex; justify-content: space-between; align-items: center;" class="s5-continue-btn-row">
               <img style="width:25px;" src="./source/9dots.png" alt="">
               <div class="s1-continue-btn" id="s5ContinueBtn" onclick="onContinueAmount()" style="text-align:center;">
                 ПРОДОЛЖИТЬ</div>
@@ -1572,7 +1416,7 @@
               <div class="nk-zero num-key" data-val="0"><span class="nk-num">0</span></div>
               <div class="nk-del num-key" data-val="backspace"><span class="nk-backspace">⌫</span></div>
             </div>
-            <!-- home-bar УБРАН ОТСЮДА тоже -->
+            <div class="home-bar"></div>
           </div>
         </div>
 
@@ -1678,212 +1522,6 @@
   </div>
 
   <script>
-
-    const SAVE_KEY = 'sber_saved_v1';
-    const AUTO_KEY = 'sber_autoload';
-
-    function getAllSaved() {
-      try { return JSON.parse(localStorage.getItem(SAVE_KEY)) || {}; } catch { return {}; }
-    }
-    function setAllSaved(data) { localStorage.setItem(SAVE_KEY, JSON.stringify(data)); }
-
-    function getSaved(fieldId) {
-      return getAllSaved()[fieldId] || { items: [], defaultVal: null };
-    }
-    function setSaved(fieldId, data) {
-      const all = getAllSaved();
-      all[fieldId] = data;
-      setAllSaved(all);
-    }
-
-    function saveValue(fieldId, value) {
-      if (!value.trim()) return;
-      const data = getSaved(fieldId);
-      if (!data.items.includes(value)) {
-        data.items.unshift(value);
-        if (data.items.length > 8) data.items = data.items.slice(0, 8);
-      }
-      setSaved(fieldId, data);
-    }
-
-    function setDefault(fieldId, value) {
-      const data = getSaved(fieldId);
-      data.defaultVal = data.defaultVal === value ? null : value;
-      setSaved(fieldId, data);
-    }
-
-    function deleteValue(fieldId, value) {
-      const data = getSaved(fieldId);
-      data.items = data.items.filter(v => v !== value);
-      if (data.defaultVal === value) data.defaultVal = null;
-      setSaved(fieldId, data);
-    }
-
-    /* ══ Дропдаун ══ */
-    let activeDropdown = null;
-
-    function closeAllDropdowns() {
-      document.querySelectorAll('.saved-dropdown.open').forEach(d => d.classList.remove('open'));
-      activeDropdown = null;
-    }
-
-    function renderDropdown(fieldId, dropdown, inputEl) {
-      const data = getSaved(fieldId);
-      dropdown.innerHTML = '';
-      if (!data.items.length) {
-        dropdown.innerHTML = '<div class="saved-dropdown-empty">Нет сохранений</div>';
-        return;
-      }
-      data.items.forEach(val => {
-        const item = document.createElement('div');
-        item.className = 'saved-item';
-
-        const star = document.createElement('span');
-        star.className = 'saved-star' + (data.defaultVal === val ? ' active' : '');
-        star.textContent = '★';
-        star.title = 'По умолчанию';
-        star.addEventListener('click', e => {
-          e.stopPropagation();
-          setDefault(fieldId, val);
-          renderDropdown(fieldId, dropdown, inputEl);
-        });
-
-        const text = document.createElement('span');
-        text.className = 'saved-item-text';
-        text.textContent = val;
-        text.title = val;
-        text.addEventListener('click', () => {
-          inputEl.value = val;
-          inputEl.dispatchEvent(new Event('input'));
-          closeAllDropdowns();
-          hideSaveBtn(inputEl);
-        });
-
-        const del = document.createElement('span');
-        del.className = 'saved-del';
-        del.textContent = '✕';
-        del.title = 'Удалить';
-        del.addEventListener('click', e => {
-          e.stopPropagation();
-          deleteValue(fieldId, val);
-          renderDropdown(fieldId, dropdown, inputEl);
-        });
-
-        item.appendChild(star);
-        item.appendChild(text);
-        item.appendChild(del);
-        dropdown.appendChild(item);
-      });
-    }
-
-    function showSaveBtn(inputEl) {
-      const btn = inputEl.parentElement.querySelector('.save-btn');
-      if (btn) btn.classList.add('visible');
-    }
-    function hideSaveBtn(inputEl) {
-      const btn = inputEl.parentElement.querySelector('.save-btn');
-      if (btn) btn.classList.remove('visible');
-    }
-
-    /* ══ Инициализация полей ══ */
-    function initSaveable(inputEl) {
-      const fieldId = inputEl.id;
-      if (!fieldId) return;
-      const group = inputEl.parentElement;
-
-      // Кнопка сохранить
-      const saveBtn = document.createElement('button');
-      saveBtn.className = 'save-btn';
-      saveBtn.textContent = 'Сохранить';
-      saveBtn.addEventListener('click', e => {
-        e.stopPropagation();
-        const val = inputEl.value.trim();
-        if (!val) return;
-        saveValue(fieldId, val);
-        hideSaveBtn(inputEl);
-        // обновить дропдаун если открыт
-        const dd = group.querySelector('.saved-dropdown');
-        if (dd && dd.classList.contains('open')) renderDropdown(fieldId, dd, inputEl);
-      });
-      group.appendChild(saveBtn);
-
-      // Дропдаун
-      const dropdown = document.createElement('div');
-      dropdown.className = 'saved-dropdown';
-      group.appendChild(dropdown);
-
-      // Показывать кнопку при изменении
-      inputEl.addEventListener('input', () => {
-        const saved = getSaved(fieldId);
-        const originalVal = inputEl.getAttribute('data-original') || '';
-        const val = inputEl.value.trim();
-        if (val && inputEl.value !== originalVal && !saved.items.includes(val)) {
-          showSaveBtn(inputEl);
-        } else {
-          hideSaveBtn(inputEl);
-        }
-      });
-
-      // Открыть дропдаун при фокусе
-      inputEl.addEventListener('focus', () => {
-        const data = getSaved(fieldId);
-        if (!data.items.length) return;
-        closeAllDropdowns();
-        renderDropdown(fieldId, dropdown, inputEl);
-        dropdown.classList.add('open');
-        activeDropdown = dropdown;
-      });
-
-      // Сохранить оригинальное значение
-      inputEl.setAttribute('data-original', inputEl.value);
-
-      // Скрыть кнопку если текущее значение уже есть в сохранениях
-      const existingData = getSaved(fieldId);
-      if (existingData.items.includes(inputEl.value.trim())) {
-        hideSaveBtn(inputEl);
-      }
-    }
-
-    /* ══ Автозагрузка ══ */
-    function addAutoloadCheckbox() {
-      const panel = document.querySelector('.input-panel');
-      const title = panel.querySelector('.panel-title');
-
-      const row = document.createElement('div');
-      row.className = 'autoload-row';
-      row.innerHTML = `
-      <input type="checkbox" id="autoloadCheck">
-      <label for="autoloadCheck">Автозаполнение по умолчанию при загрузке</label>
-    `;
-      title.after(row);
-
-      const chk = document.getElementById('autoloadCheck');
-      chk.checked = localStorage.getItem(AUTO_KEY) === '1';
-      chk.addEventListener('change', () => {
-        localStorage.setItem(AUTO_KEY, chk.checked ? '1' : '0');
-      });
-    }
-
-    function applyDefaults() {
-      if (localStorage.getItem(AUTO_KEY) !== '1') return;
-      const all = getAllSaved();
-      Object.entries(all).forEach(([fieldId, data]) => {
-        if (data.defaultVal) {
-          const el = document.getElementById(fieldId);
-          if (el && el.type === 'text') {
-            el.value = data.defaultVal;
-            el.dispatchEvent(new Event('input'));
-          }
-        }
-      });
-    }
-
-    /* ══ Закрытие по клику вне ══ */
-    document.addEventListener('click', e => {
-      if (!e.target.closest('.inp-group')) closeAllDropdowns();
-    });
-
-    /* ══ УТИЛИТЫ ══ */
     function tween(duration, onProgress, easing) {
       easing = easing || easeOutCubic;
       return new Promise(resolve => {
@@ -1936,19 +1574,19 @@
       const color = level < 20 ? '#ff3b30' : '#000';
       if (batteryMode === 'simple') {
         container.innerHTML = `<svg style="width:25px;" viewBox="0 0 100 50">
-    <rect x="1" y="1" width="90" height="48" rx="12" fill="none" stroke="#8e8e93" stroke-width="2"/>
-    <rect x="92" y="15" width="6" height="20" rx="3" fill="#8e8e93"/>
-    <clipPath id="bclip"><rect x="4" y="4" width="84" height="42" rx="10"/></clipPath>
-    <rect x="4" y="4" width="${(level / 100) * 84}" height="42" rx="10" fill="${color}" clip-path="url(#bclip)"/>
-  </svg>`;
+      <rect x="1" y="1" width="90" height="48" rx="12" fill="none" stroke="#8e8e93" stroke-width="2"/>
+      <rect x="92" y="15" width="6" height="20" rx="3" fill="#8e8e93"/>
+      <clipPath id="bclip"><rect x="4" y="4" width="84" height="42" rx="10"/></clipPath>
+      <rect x="4" y="4" width="${(level / 100) * 84}" height="42" rx="10" fill="${color}" clip-path="url(#bclip)"/>
+    </svg>`;
       } else {
         container.innerHTML = `<div class="battery-detailed">
-    <div class="battery-body-2">
-      <div class="battery-fill" style="width:${level}%;background:${color};"></div>
-      <span class="battery-text" style="color:#fff">${level}</span>
-    </div>
-    <div class="battery-cap"></div>
-  </div>`;
+      <div class="battery-body-2">
+        <div class="battery-fill" style="width:${level}%;background:${color};"></div>
+        <span class="battery-text" style="color:${level < 20 ? '#fff' : '#000'}">${level}</span>
+      </div>
+      <div class="battery-cap"></div>
+    </div>`;
       }
     }
     document.getElementById('batterySlider').addEventListener('input', renderBattery);
@@ -2112,6 +1750,8 @@
       await showLoader('loader1', 1200);
       await slideIn('screen3');
 
+      
+
       await wait(1000);
 
       document.getElementById('loader2').classList.add('active');
@@ -2121,6 +1761,8 @@
       document.querySelector('.s3-recipient-card').style.opacity = '1';
 
       await slideIn('screen5');
+
+      
 
       await wait(600);
       s5Kb.classList.add('visible');
@@ -2143,14 +1785,12 @@
 
       screenSuccess.classList.add('active');
       sv.currentTime = 0;
+
       sv.play().catch(() => { });
       await wait(400);
       successCard.classList.add('revealed');
-
       await wait(3000);
-      if (document.getElementById('showPushCheck').checked) {
-        document.getElementById('pushNotif').classList.add('show');
-      }
+      document.getElementById('pushNotif').classList.add('show');
 
       currentStep = 'idle';
     }
@@ -2211,11 +1851,6 @@
         else alert('Ошибка: ' + e.message);
       }
     }
-
-    /* ══ ЗАПУСК ══ */
-    addAutoloadCheckbox();
-    document.querySelectorAll('.inp-group input[type="text"]').forEach(initSaveable);
-    applyDefaults();
   </script>
 </body>
 

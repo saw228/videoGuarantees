@@ -229,20 +229,28 @@
       position: relative;
     }
 
-    /* ═══ СТАТУС БАР ═══ */
+    /* ═══ СТАТУС БАР (T-Bank style) ═══ */
     .status-bar {
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
       height: 44px;
-      background: transparent;
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 0 20px;
-      z-index: 9999;
-      pointer-events: none;
+      z-index: 1000;
+      border-radius: 44px 44px 0 0;
+    }
+
+    #screen5 .status-bar-overlay {
+      display: none;
+    }
+
+    #screen5 {
+      top: 0;
+      overflow: visible;
     }
 
     .status-left {
@@ -273,7 +281,7 @@
       display: flex;
       align-items: center;
       margin-right: 5px;
-      margin-bottom: 1px;
+      margin-bottom: 2px;
     }
 
     .battery-detailed {
@@ -315,25 +323,20 @@
       padding-top: 1px;
     }
 
-    /* ═══ HOME BAR — фиксированный, всегда внизу экрана ═══ */
-    .home-bar-fixed {
-      position: absolute;
-      bottom: 6px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 134px;
-      height: 4px;
-      background: #000;
-      border-radius: 2.5px;
-      opacity: 0.2;
-      z-index: 99999;
-      pointer-events: none;
+    .s5-account-icon-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
-    /* ═══ ЭКРАН 1 — ВВОД КАРТЫ ═══ */
+    .s5-chevron {
+      font-size: 14px;
+      color: #aaa;
+    }
+
     .screen-1 {
       position: absolute;
-      top: 0;
+      top: 44px;
       left: 0;
       right: 0;
       bottom: 0;
@@ -345,7 +348,7 @@
     .s1-nav {
       display: flex;
       align-items: center;
-      padding: 56px 16px 8px;
+      padding: 12px 16px 8px;
       position: relative;
     }
 
@@ -365,7 +368,6 @@
       font-size: 17px;
       font-weight: 600;
       color: #000;
-      top: 60px;
     }
 
     .s1-tabs {
@@ -378,6 +380,7 @@
 
     .s1-tab {
       flex: 0 0 auto;
+
       width: 117px;
       padding: 8px 0;
       border-radius: 8px;
@@ -400,15 +403,19 @@
       margin: 0 16px;
       border: 1.5px solid #21a038;
       border-radius: 12px;
+      padding: 10px 14px;
       position: relative;
       background: #fff;
-      padding: 21px 14px 7px;
+      padding-bottom: 0px;
+      padding-top: 21px;
+      padding-bottom: 7px;
     }
 
     .s1-card-label {
       position: absolute;
       font-size: 10px;
       color: #007e0b;
+      margin-bottom: 2px;
       top: 8px;
     }
 
@@ -427,6 +434,52 @@
       margin-top: 3px;
     }
 
+    .s1-card-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .s1-clear-btn {
+      font-size: 18px;
+      color: #aaa;
+      cursor: pointer;
+      display: none;
+    }
+
+    .s1-scan-icon {
+      width: 26px;
+      height: 26px;
+      border: 2px solid #21a038;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .s1-scan-icon::before {
+      content: '';
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-top: 2px solid #21a038;
+      border-left: 2px solid #21a038;
+      top: 3px;
+      left: 3px;
+    }
+
+    .s1-scan-icon::after {
+      content: '';
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-bottom: 2px solid #21a038;
+      border-right: 2px solid #21a038;
+      bottom: 3px;
+      right: 3px;
+    }
+
     .s1-scan-row {
       display: flex;
       align-items: center;
@@ -438,6 +491,37 @@
       cursor: pointer;
     }
 
+    .s1-scan-row .scan-icon-sm {
+      width: 22px;
+      height: 22px;
+      border: 2px solid #21a038;
+      border-radius: 4px;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .s1-scan-row .scan-icon-sm::before {
+      content: '';
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      border-top: 2px solid #21a038;
+      border-left: 2px solid #21a038;
+      top: 2px;
+      left: 2px;
+    }
+
+    .s1-scan-row .scan-icon-sm::after {
+      content: '';
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      border-bottom: 2px solid #21a038;
+      border-right: 2px solid #21a038;
+      bottom: 2px;
+      right: 2px;
+    }
+
     .s1-hint {
       text-align: center;
       font-size: 13px;
@@ -446,18 +530,16 @@
       padding: 0 30px;
       margin-top: auto;
       margin-bottom: 20px;
-      position: absolute;
-      top: 50%;
     }
 
+    /* Нижняя панель — клавиатура + продолжить */
     .s1-bottom {
       position: absolute;
       bottom: 0;
       left: 0;
       right: 0;
-      background: #c8c8cc;
-      padding-bottom: 40px;
-      /* НЕТ padding-bottom здесь — home bar теперь отдельный фиксированный элемент */
+      background: #cacdd4;
+      padding-bottom: 55px;
     }
 
     .s1-continue-row {
@@ -466,6 +548,22 @@
       justify-content: space-between;
       padding: 10px 16px 6px;
       background-color: white;
+    }
+
+    .s1-dots-icon {
+      width: 30px;
+      height: 22px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 3px;
+      align-content: center;
+    }
+
+    .s1-dot {
+      width: 5px;
+      height: 5px;
+      background: #aaa;
+      border-radius: 50%;
     }
 
     .s1-continue-btn {
@@ -548,7 +646,7 @@
     }
 
     .nk-empty {
-      background: #c8c8cc;
+      background: #cacdd4;
       height: 54px;
     }
 
@@ -572,7 +670,7 @@
     }
 
     .nk-del {
-      background: #c8c8cc;
+      background: #cacdd4;
       height: 54px;
       display: flex;
       align-items: center;
@@ -586,10 +684,24 @@
       background: #9a9fa8;
     }
 
+    /* Home bar */
+    .home-bar {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 134px;
+      height: 4px;
+      background: #000;
+      border-radius: 2.5px;
+      margin: 6px auto 8px;
+      opacity: 0.2;
+      bottom: 0;
+    }
+
     /* ═══ ЭКРАНЫ 2+ ═══ */
     .screen-slide {
       position: absolute;
-      top: 0;
+      top: 44px;
       left: 0;
       right: 0;
       bottom: 0;
@@ -636,6 +748,8 @@
       animation: spin 0.8s linear infinite;
     }
 
+
+
     @keyframes spin {
       to {
         transform: rotate(360deg);
@@ -646,7 +760,7 @@
     .s3-nav {
       display: flex;
       align-items: center;
-      padding: 56px 16px 8px;
+      padding: 12px 16px 8px;
       position: relative;
     }
 
@@ -665,7 +779,6 @@
       font-size: 17px;
       font-weight: 600;
       color: #000;
-      top: 60px;
     }
 
     .s3-bank-label {
@@ -728,8 +841,9 @@
 
     /* ═══ ЭКРАН 5 — ВВОД СУММЫ ═══ */
     .s5-header {
-      background: #1e952a;
-      padding: 56px 0 16px;
+      background: #21a038;
+      padding: 12px 16px 16px;
+      margin-top: 0;
     }
 
     .s5-header-top {
@@ -739,23 +853,21 @@
     }
 
     .s5-back {
-      font-size: 32px;
+      font-size: 24px;
       color: rgba(255, 255, 255, 0.8);
       font-weight: 300;
       width: 32px;
-      margin-left: 20px;
     }
 
     .s5-card-info {
       text-align: center;
-      width: 250px;
+      flex: 1;
     }
 
     .s5-card-last {
       font-size: 14px;
       font-weight: 500;
       color: rgba(255, 255, 255, 0.9);
-      margin-bottom: 3px;
     }
 
     .s5-card-name {
@@ -775,22 +887,20 @@
     }
 
     .s5-amount-display {
-      font-size: 20px;
+      font-size: 36px;
       font-weight: 300;
       color: #fff;
       letter-spacing: -1px;
       display: flex;
       align-items: baseline;
       justify-content: center;
-      gap: 2px;
-      background-color: #186e22;
-      padding: 13px 0;
+      gap: 6px;
     }
 
     .s5-amount-cursor {
       display: inline-block;
-      width: 1.5px;
-      height: 20px;
+      width: 2px;
+      height: 38px;
       background: rgba(255, 255, 255, 0.8);
       border-radius: 1px;
       animation: blink 1s step-end infinite;
@@ -811,10 +921,10 @@
     }
 
     .s5-msg-row {
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.15);
       border-radius: 10px;
       margin: 0 16px;
-      padding: 17px 14px;
+      padding: 10px 14px;
       font-size: 14px;
       color: rgba(255, 255, 255, 0.6);
     }
@@ -834,6 +944,8 @@
       justify-content: space-between;
     }
 
+    .s5-account-left {}
+
     .s5-account-amount {
       font-size: 15px;
       font-weight: 600;
@@ -847,43 +959,16 @@
     }
 
     .s5-p-icon {
-      width: 25px;
-      height: 25px;
+      width: 34px;
+      height: 34px;
       background: #21a038;
-      border-radius: 7px;
+      border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 11px;
+      font-size: 16px;
       font-weight: 700;
       color: #fff;
-      position: absolute;
-      right: 15px;
-      top: 130px;
-    }
-
-    .s3-p-icon {
-      width: 25px;
-      height: 25px;
-      background: #21a038;
-      border-radius: 7px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 11px;
-      font-weight: 700;
-      color: #fff;
-    }
-
-    .s5-account-icon-row {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .s5-chevron {
-      font-size: 14px;
-      color: #aaa;
     }
 
     .s5-keyboard-wrap {
@@ -893,9 +978,6 @@
       right: 0;
       transform: translateY(100%);
       transition: transform 0.35s cubic-bezier(0.25, 0.1, 0.25, 1);
-      /* НЕТ padding-bottom — home bar теперь отдельный фиксированный элемент */
-      background-color: #c8c8cc;
-      padding-bottom: 40px;
     }
 
     .s5-keyboard-wrap.visible {
@@ -912,9 +994,9 @@
     .s6-nav {
       display: flex;
       align-items: center;
-      padding: 56px 16px 8px;
+      padding: 12px 16px 8px;
       position: relative;
-      margin-bottom: 10px;
+      border-bottom: 1px solid #f0f0f0;
     }
 
     .s6-back {
@@ -932,8 +1014,6 @@
       font-size: 17px;
       font-weight: 600;
       color: #000;
-      top: 60px;
-      min-width: 225px;
     }
 
     .s6-rows {
@@ -959,11 +1039,10 @@
       font-size: 15px;
       font-weight: 600;
       color: #000;
-      margin: 5px 0;
     }
 
     .s6-row-val.green {
-      color: #cf7b5a;
+      color: #21a038;
     }
 
     .s6-limit-note {
@@ -989,8 +1068,8 @@
       border-radius: 16px;
       padding: 16px;
       text-align: center;
-      font-size: 15px;
-      font-weight: 500;
+      font-size: 16px;
+      font-weight: 600;
       color: #fff;
       cursor: pointer;
     }
@@ -1114,6 +1193,7 @@
       font-family: inherit;
     }
 
+    /* анимированное появление дочерних элементов */
     .success-card.revealed .success-title,
     .success-card.revealed .success-amount,
     .success-card.revealed .success-sub,
@@ -1128,13 +1208,13 @@
       top: 50px;
       left: 10px;
       right: 10px;
-      background: #4f4d4f;
+      background: rgba(235, 235, 240, 0.97);
       border-radius: 14px;
       padding: 10px 12px;
       display: flex;
       align-items: flex-start;
       gap: 10px;
-      z-index: 9998;
+      z-index: 999;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
       transform: translateY(-120px);
       opacity: 0;
@@ -1175,7 +1255,7 @@
     .push-notif-app {
       font-size: 12px;
       font-weight: 600;
-      color: #e9e9e9;
+      color: #555;
     }
 
     .push-notif-time {
@@ -1185,7 +1265,7 @@
 
     .push-notif-text {
       font-size: 13px;
-      color: #d8d8d8;
+      color: #111;
       line-height: 1.4;
       overflow: hidden;
       display: -webkit-box;
@@ -1193,144 +1273,16 @@
       -webkit-box-orient: vertical;
     }
 
-
-    .inp-group {
-      position: relative;
+    #screen6 {
+      top: 0;
     }
 
-    .save-btn {
-      position: absolute;
-      right: 6px;
-      bottom: 7px;
-      background: #219a48;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      padding: 3px 8px;
-      font-size: 10px;
-      font-weight: 600;
-      cursor: pointer;
-      font-family: inherit;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.15s;
-      z-index: 10;
+    #screen6 .s6-nav {
+      margin-top: 44px;
     }
 
-    .save-btn.visible {
-      opacity: 1;
-      pointer-events: all;
-    }
-
-    .inp-group input[type="text"] {
-      padding-right: 70px;
-    }
-
-    .saved-dropdown {
-      position: absolute;
-      top: calc(100% + 4px);
-      left: 0;
-      right: 0;
-      background: #1e1e2e;
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      border-radius: 10px;
-      z-index: 9999;
-      overflow: hidden;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-      display: none;
-    }
-
-    .saved-dropdown.open {
-      display: block;
-    }
-
-    .saved-dropdown-empty {
-      padding: 10px 12px;
-      font-size: 12px;
-      color: #666;
-    }
-
-    .saved-item {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 10px;
-      cursor: pointer;
-      transition: background 0.1s;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-    }
-
-    .saved-item:last-child {
-      border-bottom: none;
-    }
-
-    .saved-item:hover {
-      background: rgba(255, 255, 255, 0.07);
-    }
-
-    .saved-item-text {
-      flex: 1;
-      font-size: 12px;
-      color: #ddd;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .saved-star {
-      font-size: 14px;
-      line-height: 1;
-      cursor: pointer;
-      flex-shrink: 0;
-      opacity: 0.4;
-      transition: opacity 0.15s;
-    }
-
-    .saved-star.active {
-      opacity: 1;
-      color: #ffd700;
-    }
-
-    .saved-star:hover {
-      opacity: 0.8;
-    }
-
-    .saved-del {
-      font-size: 14px;
-      line-height: 1;
-      cursor: pointer;
-      flex-shrink: 0;
-      color: #ff5555;
-      opacity: 0.5;
-      transition: opacity 0.15s;
-    }
-
-    .saved-del:hover {
-      opacity: 1;
-    }
-
-    .autoload-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 10px;
-      margin-top: 2px;
-      padding: 8px 10px;
-      background: rgba(33, 154, 72, 0.1);
-      border: 1px solid rgba(33, 154, 72, 0.25);
-      border-radius: 10px;
-    }
-
-    .autoload-row input[type="checkbox"] {
-      accent-color: #219a48;
-      width: 14px;
-      height: 14px;
-    }
-
-    .autoload-row label {
-      font-size: 12px;
-      color: #bbb;
-      cursor: pointer;
+    .screen-success {
+      z-index: 1001;
     }
   </style>
 </head>
@@ -1340,6 +1292,7 @@
   <!-- ПАНЕЛЬ УПРАВЛЕНИЯ -->
   <div class="input-panel">
     <div class="panel-title">Данные перевода</div>
+
     <div class="checkbox-row">
       <input type="checkbox" id="customTimeCheck">
       <label for="customTimeCheck">Своё время</label>
@@ -1347,47 +1300,52 @@
     <div class="time-wrap" id="timeWrap">
       <input type="text" id="customTimeInput" maxlength="5" placeholder="16:11">
     </div>
-    <!-- НОВЫЙ ЧЕКБОКС УВЕДОМЛЕНИЕ -->
-    <div class="checkbox-row" style="margin-top:6px;">
-      <input type="checkbox" id="showPushCheck" checked>
-      <label for="showPushCheck">Уведомление</label>
-    </div>
+
     <div class="inp-group" style="margin-top:10px;">
       <label>Номер карты</label>
       <input type="text" id="cardInput" placeholder="2202 2062 1423 4804" maxlength="19" inputmode="numeric">
     </div>
+
     <div class="inp-group">
       <label>Получатель (ФИО)</label>
       <input type="text" id="recipientInput" placeholder="Малик Рамзанович А.">
     </div>
+
     <div class="inp-group">
       <label>Сумма перевода</label>
       <input type="text" id="amountInput" placeholder="20">
     </div>
+
     <div class="inp-group">
       <label>Баланс счёта</label>
       <input type="text" id="balanceInput" value="88,08">
     </div>
+
     <div class="inp-group">
       <label>Номер счёта (последние 4)</label>
       <input type="text" id="accountInput" placeholder="1471" value="1471">
     </div>
+
     <div class="inp-group">
       <label>Банк получателя</label>
       <input type="text" id="bankNameInput" placeholder="СберБанк" value="СберБанк">
     </div>
+
     <div class="inp-group">
       <label>Комиссия</label>
       <input type="text" id="commissionInput" placeholder="0" value="0">
     </div>
+
     <div class="inp-group">
       <label>Лимит</label>
       <input type="text" id="limitInput" placeholder="996 000" value="996 000">
     </div>
+
     <div class="inp-group">
       <label>Текст уведомления</label>
       <input type="text" id="pushTextInput" value="СЧЁТ1471 16:11 перевод 20р  Баланс: 68.08р">
     </div>
+
     <div class="section-lbl" style="margin-top:6px;">Батарея</div>
     <div class="bmode-row">
       <button class="bmode-btn active" id="bmodeSimple" onclick="setBatteryMode('simple')">Без %</button>
@@ -1397,6 +1355,7 @@
       <label>Заряд</label>
       <input type="range" min="1" max="100" value="80" id="batterySlider">
     </div>
+
     <div class="controls" style="margin-top:14px;">
       <button class="btn-animate" onclick="startAnimation()">▶ Запустить</button>
       <button class="btn-download" onclick="downloadVideo()">⬇ Скачать</button>
@@ -1408,51 +1367,56 @@
     <div class="phone-container">
       <div class="phone-screen" id="phoneScreen">
 
-        <!-- СТАТУС БАР — прозрачный, всегда поверх, не двигается -->
+        <!-- Статус бар (T-Bank style) -->
         <div class="status-bar">
           <div class="status-left">
             <span id="statusTime" style="font-size:15px;font-weight:600;color:#000;"></span>
           </div>
-          <img style="width:180px;position:absolute;left:60px;" src="./source/Screenshot_8-removebg-preview.png" alt=""
-            class="rec-image">
+          <img style="width: 180px;
+    position: absolute;
+    left: 60px;" src="./source/Screenshot_8-removebg-preview.png" alt="" class="rec-image">
           <div class="status-right">
-            <img style="width: 50px;" src="./source/blackwifis-removebg-preview.png" alt="" class="svyaz">
+            <img style="filter: invert(1);
+" src="./source/svyz.png" alt="" class="svyaz">
             <div id="batteryContainer"></div>
           </div>
         </div>
 
-        <!-- HOME BAR — фиксированный, всегда внизу, поверх всего -->
-        <div class="home-bar-fixed"></div>
-
         <!-- ЭКРАН 1 — ВВОД КАРТЫ -->
         <div class="screen-1" id="screen1">
           <div class="s1-nav">
-            <img style="width:25px;" src="./source/backarrow.png" alt="">
+            <img style="width: 25px;" src="./source/backarrow.png" alt="">
             <span class="s1-title">Новый перевод</span>
           </div>
+
           <div class="s1-tabs">
             <div class="s1-tab active">По России</div>
             <div class="s1-tab">В другую страну</div>
           </div>
+
           <div class="s1-card-input-wrap" id="cardInputWrap">
             <div class="s1-card-label">По карте</div>
             <div class="s1-card-row">
-              <div class="s1-card-number" id="cardDisplay"></div>
-              <img style="width:30px;position:absolute;right:10px;top:10px;" src="./source/scan.png" alt="">
+              <div class="s1-card-number" id="cardDisplay">5443534543</div>
+              <img style="width: 30px; position: absolute; right: 10px; top: 10px;" src="./source/scan.png" alt="">
             </div>
           </div>
+
           <div class="s1-scan-row">
-            <img style="width:25px;" src="./source/cardd.png" alt="">
+            <img style="width: 25px;" src="./source/cardd.png" alt="">
             <span>Сканировать карту</span>
           </div>
+
           <div class="s1-hint">
             Переводите клиентам Сбербанка или на карты МИР, Visa, MasterCard других банков
           </div>
+
           <div class="s1-bottom" id="s1Bottom">
             <div class="s1-continue-row">
-              <img style="width:25px;" src="./source/9dots.png" alt="">
+              <img style="width: 25px;" src="./source/9dots.png" alt="">
               <div class="s1-continue-btn" id="continueBtn" onclick="onContinueCard()">ПРОДОЛЖИТЬ</div>
             </div>
+
             <div class="num-keyboard" id="numKeyboard">
               <div class="num-key" data-val="1"><span class="nk-num">1</span><span class="nk-letters"></span></div>
               <div class="num-key" data-val="2"><span class="nk-num">2</span><span class="nk-letters">А Б В Г</span>
@@ -1477,11 +1441,12 @@
               <div class="nk-zero num-key" data-val="0"><span class="nk-num">0</span></div>
               <div class="nk-del num-key" data-val="backspace"><span class="nk-backspace">⌫</span></div>
             </div>
-            <!-- home-bar УБРАН ОТСЮДА — теперь он отдельный фиксированный элемент -->
+
+            <div class="home-bar"></div>
           </div>
         </div>
 
-        <!-- ЛОАДЕР 1 -->
+        <!-- ЛОАДЕР 1 (после ввода карты) -->
         <div class="loader-screen" id="loader1">
           <div class="sber-spinner"></div>
         </div>
@@ -1489,12 +1454,17 @@
         <!-- ЭКРАН 3 — ПОЛУЧАТЕЛЬ -->
         <div class="screen-slide" id="screen3">
           <div class="s3-nav">
-            <img style=" width:25px" src="./source/backarrow.png" alt="">
+            <span class="s3-back">‹</span>
             <span class="s3-title">Перевод на карту</span>
           </div>
           <div class="s3-bank-label" id="s3BankLabel">В СберБанк</div>
           <div class="s3-recipient-card">
-            <img style="width: 35px;" src="./source/sberIcon.png" alt="">
+            <div class="s3-check-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#21a038" stroke-width="2.5" stroke-linecap="round"
+                stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
             <div class="s3-recipient-info">
               <div class="s3-recipient-name" id="s3RecipientName">Малик Рамзанович А.</div>
               <div class="s3-recipient-card-num" id="s3CardNum">2202 2062 1423 4804</div>
@@ -1503,13 +1473,15 @@
           </div>
         </div>
 
-        <!-- ЛОАДЕР 2 -->
+        <!-- ЛОАДЕР 2 (после получателя) -->
         <div class="loader-screen" id="loader2" style="z-index:25;">
           <div class="sber-spinner"></div>
         </div>
 
         <!-- ЭКРАН 5 — ВВОД СУММЫ -->
-        <div class="screen-slide" id="screen5" style="display:flex;flex-direction:column;">
+        <div class="screen-slide" id="screen5" style="display:flex; flex-direction:column;">
+          <div style="height:44px;background:#21a038;display:flex;align-items:center;padding:0 20px;flex-shrink:0;">
+          </div>
           <div class="s5-header">
             <div class="s5-header-top">
               <span class="s5-back">‹</span>
@@ -1524,11 +1496,12 @@
               <div class="s5-amount-display">
                 <span id="s5AmountDisplay">0</span>
                 <span id="s5Cursor" class="s5-amount-cursor"></span>
-                <span style="font-size:20px;font-weight:500;color:rgba(255,255,255,0.8);">₽</span>
+                <span style="font-size:28px;font-weight:300;color:rgba(255,255,255,0.8);">₽</span>
               </div>
             </div>
             <div class="s5-msg-row">Сообщение получателю</div>
           </div>
+
           <div class="s5-body">
             <div class="s5-account-row">
               <div class="s5-account-left">
@@ -1536,15 +1509,15 @@
                 <div class="s5-account-sub" id="s5AccountSub">Платёжный счёт •• 1471</div>
               </div>
               <div class="s5-account-icon-row">
-                <div class="s3-p-icon">P</div>
+                <div class="s5-p-icon">P</div>
                 <span class="s5-chevron">›</span>
               </div>
             </div>
           </div>
+
+          <!-- Клавиатура суммы -->
           <div class="s5-keyboard-wrap" id="s5KeyboardWrap">
-            <div style="display: flex; justify-content: space-between; align-items: center;"
-              class="s5-continue-btn-row">
-              <img style="width:25px;" src="./source/9dots.png" alt="">
+            <div class="s5-continue-btn-row">
               <div class="s1-continue-btn" id="s5ContinueBtn" onclick="onContinueAmount()" style="text-align:center;">
                 ПРОДОЛЖИТЬ</div>
             </div>
@@ -1572,11 +1545,11 @@
               <div class="nk-zero num-key" data-val="0"><span class="nk-num">0</span></div>
               <div class="nk-del num-key" data-val="backspace"><span class="nk-backspace">⌫</span></div>
             </div>
-            <!-- home-bar УБРАН ОТСЮДА тоже -->
+            <div class="home-bar"></div>
           </div>
         </div>
 
-        <!-- ЛОАДЕР 3 -->
+        <!-- ЛОАДЕР 3 (после суммы) -->
         <div class="loader-screen" id="loader3" style="z-index:35;">
           <div class="sber-spinner"></div>
         </div>
@@ -1587,6 +1560,7 @@
             <span class="s6-back">‹</span>
             <span class="s6-title">Подтверждение перевода</span>
           </div>
+
           <div class="s6-rows">
             <div class="s6-row">
               <div class="s6-row-label">Счёт списания</div>
@@ -1620,19 +1594,34 @@
               <div class="s6-row-val green" id="s6Commission">0 ₽</div>
             </div>
           </div>
-          <div class="s6-limit-note" id="s6LimitNote">Доступный лимит для совершения операции составляет 996 000 ₽</div>
+
+          <div class="s6-limit-note" id="s6LimitNote">
+            Доступный лимит для совершения операции составляет 996 000 ₽
+          </div>
+
           <div class="s6-action">
             <div class="s6-btn" id="s6Btn">Перевести 20 ₽</div>
           </div>
         </div>
 
-        <!-- ЛОАДЕР 4 -->
+        <!-- ЛОАДЕР 4 (после нажатия Перевести) -->
         <div class="loader-screen" id="loader4" style="z-index:50;">
           <div class="sber-spinner"></div>
         </div>
 
         <!-- ЭКРАН УСПЕХА -->
         <div class="screen-success" id="screenSuccess">
+          <div
+            style="position:absolute;top:0;left:0;right:0;height:44px;background:linear-gradient(160deg,#e8f8ee,#f0faf5);display:flex;justify-content:space-between;align-items:center;padding:0 20px;">
+            <span id="successStatusTime" style="font-size:15px;font-weight:600;color:#333;"></span>
+            <img style="width:180px;position:absolute;left:60px;" src="./source/Screenshot_8-removebg-preview.png"
+              alt="">
+            <div style="display:flex;align-items:center;">
+              <img style="filter:invert(1);width:60px;margin-bottom:1px;" src="./source/svyz.png" alt="">
+              <div id="successBatteryContainer"
+                style="display:flex;align-items:center;margin-right:5px;margin-bottom:2px;"></div>
+            </div>
+          </div>
           <div class="success-card" id="successCard">
             <div class="success-video-wrap">
               <video id="successVideo" src="./source/transf.mp4" muted playsinline></video>
@@ -1657,8 +1646,8 @@
         </div>
 
         <!-- PUSH УВЕДОМЛЕНИЕ -->
-        <div style="align-items: center;" class="push-notif" id="pushNotif">
-          <img style="width: 45px;" src="./source/operatorIcon.png" alt="">
+        <div class="push-notif" id="pushNotif">
+          <div class="push-notif-icon">О</div>
           <div class="push-notif-body">
             <div class="push-notif-header">
               <span class="push-notif-app">Оператор</span>
@@ -1678,212 +1667,7 @@
   </div>
 
   <script>
-
-    const SAVE_KEY = 'sber_saved_v1';
-    const AUTO_KEY = 'sber_autoload';
-
-    function getAllSaved() {
-      try { return JSON.parse(localStorage.getItem(SAVE_KEY)) || {}; } catch { return {}; }
-    }
-    function setAllSaved(data) { localStorage.setItem(SAVE_KEY, JSON.stringify(data)); }
-
-    function getSaved(fieldId) {
-      return getAllSaved()[fieldId] || { items: [], defaultVal: null };
-    }
-    function setSaved(fieldId, data) {
-      const all = getAllSaved();
-      all[fieldId] = data;
-      setAllSaved(all);
-    }
-
-    function saveValue(fieldId, value) {
-      if (!value.trim()) return;
-      const data = getSaved(fieldId);
-      if (!data.items.includes(value)) {
-        data.items.unshift(value);
-        if (data.items.length > 8) data.items = data.items.slice(0, 8);
-      }
-      setSaved(fieldId, data);
-    }
-
-    function setDefault(fieldId, value) {
-      const data = getSaved(fieldId);
-      data.defaultVal = data.defaultVal === value ? null : value;
-      setSaved(fieldId, data);
-    }
-
-    function deleteValue(fieldId, value) {
-      const data = getSaved(fieldId);
-      data.items = data.items.filter(v => v !== value);
-      if (data.defaultVal === value) data.defaultVal = null;
-      setSaved(fieldId, data);
-    }
-
-    /* ══ Дропдаун ══ */
-    let activeDropdown = null;
-
-    function closeAllDropdowns() {
-      document.querySelectorAll('.saved-dropdown.open').forEach(d => d.classList.remove('open'));
-      activeDropdown = null;
-    }
-
-    function renderDropdown(fieldId, dropdown, inputEl) {
-      const data = getSaved(fieldId);
-      dropdown.innerHTML = '';
-      if (!data.items.length) {
-        dropdown.innerHTML = '<div class="saved-dropdown-empty">Нет сохранений</div>';
-        return;
-      }
-      data.items.forEach(val => {
-        const item = document.createElement('div');
-        item.className = 'saved-item';
-
-        const star = document.createElement('span');
-        star.className = 'saved-star' + (data.defaultVal === val ? ' active' : '');
-        star.textContent = '★';
-        star.title = 'По умолчанию';
-        star.addEventListener('click', e => {
-          e.stopPropagation();
-          setDefault(fieldId, val);
-          renderDropdown(fieldId, dropdown, inputEl);
-        });
-
-        const text = document.createElement('span');
-        text.className = 'saved-item-text';
-        text.textContent = val;
-        text.title = val;
-        text.addEventListener('click', () => {
-          inputEl.value = val;
-          inputEl.dispatchEvent(new Event('input'));
-          closeAllDropdowns();
-          hideSaveBtn(inputEl);
-        });
-
-        const del = document.createElement('span');
-        del.className = 'saved-del';
-        del.textContent = '✕';
-        del.title = 'Удалить';
-        del.addEventListener('click', e => {
-          e.stopPropagation();
-          deleteValue(fieldId, val);
-          renderDropdown(fieldId, dropdown, inputEl);
-        });
-
-        item.appendChild(star);
-        item.appendChild(text);
-        item.appendChild(del);
-        dropdown.appendChild(item);
-      });
-    }
-
-    function showSaveBtn(inputEl) {
-      const btn = inputEl.parentElement.querySelector('.save-btn');
-      if (btn) btn.classList.add('visible');
-    }
-    function hideSaveBtn(inputEl) {
-      const btn = inputEl.parentElement.querySelector('.save-btn');
-      if (btn) btn.classList.remove('visible');
-    }
-
-    /* ══ Инициализация полей ══ */
-    function initSaveable(inputEl) {
-      const fieldId = inputEl.id;
-      if (!fieldId) return;
-      const group = inputEl.parentElement;
-
-      // Кнопка сохранить
-      const saveBtn = document.createElement('button');
-      saveBtn.className = 'save-btn';
-      saveBtn.textContent = 'Сохранить';
-      saveBtn.addEventListener('click', e => {
-        e.stopPropagation();
-        const val = inputEl.value.trim();
-        if (!val) return;
-        saveValue(fieldId, val);
-        hideSaveBtn(inputEl);
-        // обновить дропдаун если открыт
-        const dd = group.querySelector('.saved-dropdown');
-        if (dd && dd.classList.contains('open')) renderDropdown(fieldId, dd, inputEl);
-      });
-      group.appendChild(saveBtn);
-
-      // Дропдаун
-      const dropdown = document.createElement('div');
-      dropdown.className = 'saved-dropdown';
-      group.appendChild(dropdown);
-
-      // Показывать кнопку при изменении
-      inputEl.addEventListener('input', () => {
-        const saved = getSaved(fieldId);
-        const originalVal = inputEl.getAttribute('data-original') || '';
-        const val = inputEl.value.trim();
-        if (val && inputEl.value !== originalVal && !saved.items.includes(val)) {
-          showSaveBtn(inputEl);
-        } else {
-          hideSaveBtn(inputEl);
-        }
-      });
-
-      // Открыть дропдаун при фокусе
-      inputEl.addEventListener('focus', () => {
-        const data = getSaved(fieldId);
-        if (!data.items.length) return;
-        closeAllDropdowns();
-        renderDropdown(fieldId, dropdown, inputEl);
-        dropdown.classList.add('open');
-        activeDropdown = dropdown;
-      });
-
-      // Сохранить оригинальное значение
-      inputEl.setAttribute('data-original', inputEl.value);
-
-      // Скрыть кнопку если текущее значение уже есть в сохранениях
-      const existingData = getSaved(fieldId);
-      if (existingData.items.includes(inputEl.value.trim())) {
-        hideSaveBtn(inputEl);
-      }
-    }
-
-    /* ══ Автозагрузка ══ */
-    function addAutoloadCheckbox() {
-      const panel = document.querySelector('.input-panel');
-      const title = panel.querySelector('.panel-title');
-
-      const row = document.createElement('div');
-      row.className = 'autoload-row';
-      row.innerHTML = `
-      <input type="checkbox" id="autoloadCheck">
-      <label for="autoloadCheck">Автозаполнение по умолчанию при загрузке</label>
-    `;
-      title.after(row);
-
-      const chk = document.getElementById('autoloadCheck');
-      chk.checked = localStorage.getItem(AUTO_KEY) === '1';
-      chk.addEventListener('change', () => {
-        localStorage.setItem(AUTO_KEY, chk.checked ? '1' : '0');
-      });
-    }
-
-    function applyDefaults() {
-      if (localStorage.getItem(AUTO_KEY) !== '1') return;
-      const all = getAllSaved();
-      Object.entries(all).forEach(([fieldId, data]) => {
-        if (data.defaultVal) {
-          const el = document.getElementById(fieldId);
-          if (el && el.type === 'text') {
-            el.value = data.defaultVal;
-            el.dispatchEvent(new Event('input'));
-          }
-        }
-      });
-    }
-
-    /* ══ Закрытие по клику вне ══ */
-    document.addEventListener('click', e => {
-      if (!e.target.closest('.inp-group')) closeAllDropdowns();
-    });
-
-    /* ══ УТИЛИТЫ ══ */
+    /* ═══ УТИЛИТЫ ═══ */
     function tween(duration, onProgress, easing) {
       easing = easing || easeOutCubic;
       return new Promise(resolve => {
@@ -1901,6 +1685,7 @@
     function easeInOutCubic(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
     function wait(ms) { return new Promise(r => setTimeout(r, ms)); }
 
+    /* ═══ ВРЕМЯ ═══ */
     function getCurrentTime() {
       const now = new Date();
       return String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
@@ -1923,6 +1708,17 @@
     updateStatusTime();
     setInterval(updateStatusTime, 10000);
 
+    function updateS5Time() {
+      const t = document.getElementById('statusTime').textContent;
+      const s5t = document.getElementById('s5StatusTime');
+      const sst = document.getElementById('successStatusTime');
+      if (s5t) s5t.textContent = t;
+      if (sst) sst.textContent = t;
+    }
+    updateS5Time();
+    setInterval(updateS5Time, 10000);
+
+    /* ═══ БАТАРЕЯ (T-Bank style) ═══ */
     let batteryMode = 'simple';
     function setBatteryMode(mode) {
       batteryMode = mode;
@@ -1935,25 +1731,20 @@
       const level = parseInt(document.getElementById('batterySlider').value);
       const color = level < 20 ? '#ff3b30' : '#000';
       if (batteryMode === 'simple') {
-        container.innerHTML = `<svg style="width:25px;" viewBox="0 0 100 50">
-    <rect x="1" y="1" width="90" height="48" rx="12" fill="none" stroke="#8e8e93" stroke-width="2"/>
-    <rect x="92" y="15" width="6" height="20" rx="3" fill="#8e8e93"/>
-    <clipPath id="bclip"><rect x="4" y="4" width="84" height="42" rx="10"/></clipPath>
-    <rect x="4" y="4" width="${(level / 100) * 84}" height="42" rx="10" fill="${color}" clip-path="url(#bclip)"/>
-  </svg>`;
+        container.innerHTML = `<svg width="25" height="14" viewBox="0 0 100 50"><rect x="1" y="1" width="88" height="48" rx="10" fill="none" stroke="#000" stroke-width="3"/><rect x="90" y="16" width="7" height="18" rx="3" fill="#818181"/><clipPath id="bclip"><rect x="4" y="4" width="82" height="42" rx="8"/></clipPath><rect x="4" y="4" width="${(level / 100) * 82}" height="42" rx="8" fill="${color}" clip-path="url(#bclip)"/></svg>`;
       } else {
-        container.innerHTML = `<div class="battery-detailed">
-    <div class="battery-body-2">
-      <div class="battery-fill" style="width:${level}%;background:${color};"></div>
-      <span class="battery-text" style="color:#fff">${level}</span>
-    </div>
-    <div class="battery-cap"></div>
-  </div>`;
+        container.innerHTML = `<div class="battery-detailed"><div class="battery-body-2"><div class="battery-fill" style="width:${level}%;background:${color};"></div><span class="battery-text" style="color:${level < 20 ? '#fff' : '#000'}">${level}</span></div><div class="battery-cap"></div></div>`;
+      }
+
+      const successBC = document.getElementById('successBatteryContainer');
+      if (successBC && successBC.innerHTML !== container.innerHTML) {
+        successBC.innerHTML = container.innerHTML;
       }
     }
     document.getElementById('batterySlider').addEventListener('input', renderBattery);
     renderBattery();
 
+    /* ═══ ФОРМАТИРОВАНИЕ КАРТЫ ═══ */
     function formatCard(digits) {
       let r = '';
       for (let i = 0; i < digits.length && i < 16; i++) {
@@ -1963,40 +1754,72 @@
       return r;
     }
 
+    /* ═══ АНИМАЦИЯ ВВОДА КАРТЫ ═══ */
     let currentStep = 'idle';
 
     async function animateCardInput(cardRaw) {
       const digits = cardRaw.replace(/\D/g, '').substring(0, 16);
       const display = document.getElementById('cardDisplay');
       const continueBtn = document.getElementById('continueBtn');
+      const clearBtn = document.getElementById('clearBtn');
       display.textContent = '';
+
       for (let i = 0; i < digits.length; i++) {
         const d = digits[i];
+        // Подсветка клавиши
         const keyEl = document.querySelector(`#numKeyboard [data-val="${d}"], #s1Bottom .nk-zero[data-val="${d}"]`);
-        if (keyEl) { keyEl.classList.add('pressed'); await wait(60 + Math.random() * 60); keyEl.classList.remove('pressed'); }
-        display.textContent = formatCard(digits.slice(0, i + 1));
+        if (keyEl) {
+          keyEl.classList.add('pressed');
+          await wait(60 + Math.random() * 60);
+          keyEl.classList.remove('pressed');
+        }
+        const typed = digits.slice(0, i + 1);
+        display.textContent = formatCard(typed);
         if ((i + 1) % 4 === 0 && i < 15) {
           await wait(500 + Math.random() * 600);
         } else {
           const rand = Math.random();
-          if (rand < 0.15) await wait(400 + Math.random() * 300);
-          else if (rand < 0.35) await wait(200 + Math.random() * 150);
-          else await wait(120 + Math.random() * 100);
+          if (rand < 0.15) {
+            await wait(400 + Math.random() * 300);
+          } else if (rand < 0.35) {
+            await wait(200 + Math.random() * 150);
+          } else {
+            await wait(120 + Math.random() * 100);
+          }
         }
       }
+
+      // Карта введена — кнопка продолжить становится зеленой
       continueBtn.classList.add('active');
     }
 
-    async function onContinueCard() { if (currentStep !== 'idle') return; }
-    async function onContinueRecipient() { }
-    async function onContinueAmount() { }
+    async function onContinueCard() {
+      if (currentStep !== 'idle') return;
+    }
 
+    async function onContinueRecipient() {
+      // handled in animation
+    }
+
+    async function onContinueAmount() {
+      // handled in animation
+    }
+
+    /* ═══ АНИМАЦИЯ КЛАВИАТУРЫ ═══ */
     async function hideKeyboard() {
       const bottom = document.getElementById('s1Bottom');
       const h = bottom.offsetHeight;
-      return tween(380, p => { bottom.style.transform = `translateY(${p * (h + 10)}px)`; }, easeOutCubic);
+      return tween(380, p => {
+        bottom.style.transform = `translateY(${p * (h + 10)}px)`;
+      }, easeOutCubic);
     }
 
+    async function showKeyboard() {
+      const bottom = document.getElementById('s1Bottom');
+      bottom.style.transform = 'translateY(0)';
+    }
+
+    /* ═══ ПОКАЗАТЬ ЛОАДЕР ═══ */
     async function showLoader(id, ms) {
       const el = document.getElementById(id);
       el.classList.add('active');
@@ -2004,32 +1827,44 @@
       el.classList.remove('active');
     }
 
+    /* ═══ АНИМАЦИЯ ЭКРАНА (slide in) ═══ */
     async function slideIn(id) {
       const el = document.getElementById(id);
       el.style.transition = 'none';
       el.style.transform = 'translateX(100%)';
       el.classList.add('show');
+      // Force reflow
       el.getBoundingClientRect();
       el.style.transition = 'transform 0.28s cubic-bezier(0.25,0.1,0.25,1)';
       el.style.transform = 'translateX(0)';
       return wait(280);
     }
 
+    /* ═══ АНИМАЦИЯ ВВОДА СУММЫ ═══ */
     async function animateAmountInput(rawAmount) {
       const display = document.getElementById('s5AmountDisplay');
       const continueBtn = document.getElementById('s5ContinueBtn');
       display.textContent = '0';
+
       const digits = String(rawAmount).replace(/[^\d]/g, '');
+
       for (let i = 0; i < digits.length; i++) {
         const d = digits[i];
         const keyEl = document.querySelector(`#s5NumKb [data-val="${d}"], #screen5 .nk-zero[data-val="${d}"]`);
-        if (keyEl) { keyEl.classList.add('pressed'); await wait(70); keyEl.classList.remove('pressed'); }
-        display.textContent = parseInt(digits.slice(0, i + 1)).toLocaleString('ru-RU');
+        if (keyEl) {
+          keyEl.classList.add('pressed');
+          await wait(70);
+          keyEl.classList.remove('pressed');
+        }
+        const typed = digits.slice(0, i + 1);
+        display.textContent = parseInt(typed).toLocaleString('ru-RU');
         await wait(120 + Math.random() * 60);
       }
+
       continueBtn.classList.add('active');
     }
 
+    /* ═══ ОБНОВИТЬ ДАННЫЕ НА ЭКРАНАХ ═══ */
     function updateScreenData() {
       const recipient = document.getElementById('recipientInput').value || 'Малик Рамзанович А.';
       const cardRaw = document.getElementById('cardInput').value || '2202206214234804';
@@ -2045,10 +1880,12 @@
       document.getElementById('s3BankLabel').textContent = 'В ' + bank;
       document.getElementById('s3RecipientName').textContent = recipient;
       document.getElementById('s3CardNum').textContent = cardFmt;
+
       document.getElementById('s5CardLast').textContent = cardLast;
       document.getElementById('s5RecipientName').textContent = recipient;
       document.getElementById('s5Balance').textContent = balance + ' ₽';
       document.getElementById('s5AccountSub').textContent = 'Платёжный счёт •• ' + account;
+
       document.getElementById('s6Balance').textContent = balance + ' ₽';
       document.getElementById('s6AccountSub').textContent = 'Платёжный счёт •• ' + account;
       document.getElementById('s6RecipientName').textContent = recipient;
@@ -2057,112 +1894,152 @@
       document.getElementById('s6Commission').textContent = commission + ' ₽';
       document.getElementById('s6LimitNote').textContent = 'Доступный лимит для совершения операции составляет ' + limit + ' ₽';
       document.getElementById('s6Btn').textContent = 'Перевести ' + amount + ' ₽';
+
+      // Экран успеха
       document.getElementById('successAmount').textContent = amount + ' ₽';
       document.getElementById('successSub').innerHTML = 'Комиссия ' + commission + ' ₽<br>' + recipient;
+
+      // Пуш
       document.getElementById('pushNotifText').textContent = document.getElementById('pushTextInput').value;
     }
 
+    /* ═══ АВТОФОРМАТ КАРТЫ В ПАНЕЛИ ═══ */
     document.getElementById('cardInput').addEventListener('input', function () {
       let digits = this.value.replace(/\D/g, '').substring(0, 16);
       let formatted = '';
-      for (let i = 0; i < digits.length; i++) { if (i > 0 && i % 4 === 0) formatted += ' '; formatted += digits[i]; }
+      for (let i = 0; i < digits.length; i++) {
+        if (i > 0 && i % 4 === 0) formatted += ' ';
+        formatted += digits[i];
+      }
       this.value = formatted;
     });
 
+    /* ═══ ГЛАВНАЯ АНИМАЦИЯ ═══ */
     async function startAnimation() {
       if (currentStep === 'running') return;
       currentStep = 'running';
 
+      // Получаем элементы один раз
       const screenSuccess = document.getElementById('screenSuccess');
       const successCard = document.getElementById('successCard');
       const sv = document.getElementById('successVideo');
       const s1Bottom = document.getElementById('s1Bottom');
       const s5Kb = document.getElementById('s5KeyboardWrap');
 
+      // Сброс состояния
       document.getElementById('cardDisplay').textContent = '';
       document.getElementById('continueBtn').classList.remove('active');
       document.getElementById('s5AmountDisplay').textContent = '0';
       document.getElementById('s5ContinueBtn').classList.remove('active');
+
       s1Bottom.style.transform = 'translateY(0)';
       s1Bottom.style.transition = 'none';
+
       document.getElementById('loader1').classList.remove('active');
       document.getElementById('loader2').classList.remove('active');
       document.getElementById('loader3').classList.remove('active');
       document.getElementById('loader4').classList.remove('active');
+
       document.getElementById('screen3').classList.remove('show');
       document.getElementById('screen3').style.transform = 'translateX(100%)';
       document.getElementById('screen5').classList.remove('show');
       document.getElementById('screen5').style.transform = 'translateX(100%)';
       document.getElementById('screen6').classList.remove('show');
       document.getElementById('screen6').style.transform = 'translateX(100%)';
+
+      // Сброс экрана успеха
       screenSuccess.classList.remove('active');
       successCard.classList.remove('revealed');
       sv.pause(); sv.currentTime = 0;
+
+      // Сброс пуша
       document.getElementById('pushNotif').classList.remove('show');
+
       s5Kb.classList.remove('visible');
 
       updateScreenData();
+
       await wait(400);
 
+      // 1. Ввод карты
       const cardRaw = document.getElementById('cardInput').value || '2202206214234804';
       await animateCardInput(cardRaw);
+
       await wait(600);
+
+      // 2. Скрыть клавиатуру
       await hideKeyboard();
       await wait(200);
+
+      // 3. Лоадер 1
       await showLoader('loader1', 1200);
+
+      // 4. Экран получателя
       await slideIn('screen3');
+      await wait(1800);
 
-      await wait(1000);
-
+      // 5. Лоадер 2 (поверх экрана 3)
       document.getElementById('loader2').classList.add('active');
       document.querySelector('.s3-recipient-card').style.opacity = '0.4';
       await wait(1200);
       document.getElementById('loader2').classList.remove('active');
       document.querySelector('.s3-recipient-card').style.opacity = '1';
 
+      // 6. Экран суммы
       await slideIn('screen5');
-
       await wait(600);
-      s5Kb.classList.add('visible');
 
+      // 7. Клавиатура выезжает снизу
+      s5Kb.classList.add('visible');
       await wait(700);
 
+      // 8. Ввод суммы
       const amount = document.getElementById('amountInput').value || '20';
       await animateAmountInput(amount);
       await wait(700);
+
+      // 9. Клавиатура уезжает вниз
       s5Kb.classList.remove('visible');
       await wait(500);
-      await showLoader('loader3', 1200);
-      await slideIn('screen6');
 
+      // 10. Лоадер 3
+      await showLoader('loader3', 1200);
+
+      // 11. Экран подтверждения
+      await slideIn('screen6');
       await wait(2000);
 
+      // 12. Лоадер 4 (поверх экрана подтверждения)
       document.getElementById('loader4').classList.add('active');
       await wait(1400);
       document.getElementById('loader4').classList.remove('active');
 
+      // 13. Экран успеха
       screenSuccess.classList.add('active');
       sv.currentTime = 0;
+      await wait(300);
       sv.play().catch(() => { });
       await wait(400);
       successCard.classList.add('revealed');
 
+      // 14. Пуш через 3 секунды
       await wait(3000);
-      if (document.getElementById('showPushCheck').checked) {
-        document.getElementById('pushNotif').classList.add('show');
-      }
+      document.getElementById('pushNotif').classList.add('show');
 
       currentStep = 'idle';
     }
 
+    /* ═══ ЗАПИСЬ ВИДЕО ═══ */
     async function downloadVideo() {
       const btn = document.querySelector('.btn-download');
       try {
         const phoneScreen = document.getElementById('phoneScreen');
         const stream = await navigator.mediaDevices.getDisplayMedia({
           video: { frameRate: 60, width: { ideal: 1920 }, height: { ideal: 1080 }, displaySurface: 'browser' },
-          audio: false, preferCurrentTab: true
+          audio: false,
+          preferCurrentTab: true
         });
+
         if ('CropTarget' in window) {
           try {
             const cropTarget = await CropTarget.fromElement(phoneScreen);
@@ -2170,6 +2047,7 @@
             await videoTrack.cropTo(cropTarget);
           } catch (e) { console.warn('CropTarget:', e); }
         }
+
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
@@ -2180,9 +2058,11 @@
         osc.start();
         const audioTrack = audioDst.stream.getAudioTracks()[0];
         const combined = new MediaStream([...stream.getVideoTracks(), audioTrack]);
+
         const types = ['video/webm;codecs=vp9,opus', 'video/webm;codecs=vp8,opus', 'video/webm'];
         const mime = types.find(t => MediaRecorder.isTypeSupported(t));
         if (!mime) throw new Error('Нет поддерживаемого формата');
+
         const mr = new MediaRecorder(combined, { mimeType: mime, videoBitsPerSecond: 20_000_000 });
         const chunks = [];
         mr.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
@@ -2198,12 +2078,14 @@
           btn.textContent = '⬇ Скачать'; btn.disabled = false;
         };
         mr.onerror = e => { console.error(e); btn.textContent = '⬇ Скачать'; btn.disabled = false; };
+
         btn.textContent = '● Запись...'; btn.disabled = true;
         mr.start();
         await wait(500);
         await startAnimation();
         await wait(1500);
         mr.stop();
+
       } catch (e) {
         console.error(e);
         btn.textContent = '⬇ Скачать'; btn.disabled = false;
@@ -2211,11 +2093,6 @@
         else alert('Ошибка: ' + e.message);
       }
     }
-
-    /* ══ ЗАПУСК ══ */
-    addAutoloadCheckbox();
-    document.querySelectorAll('.inp-group input[type="text"]').forEach(initSaveable);
-    applyDefaults();
   </script>
 </body>
 
