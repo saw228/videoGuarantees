@@ -108,6 +108,7 @@
       width: 100%;
     }
 
+    /* Кнопка сохранить */
     .save-btn {
       display: none;
       position: absolute;
@@ -136,6 +137,7 @@
       display: block;
     }
 
+    /* Дропдаун сохранённых значений */
     .saved-dropdown {
       position: absolute;
       left: 0;
@@ -333,6 +335,7 @@
       position: relative;
     }
 
+    /* СТАТУС БАР */
     .status-bar {
       position: absolute;
       top: 0;
@@ -421,6 +424,7 @@
       pointer-events: none;
     }
 
+    /* ЛОАДЕР */
     .loader-screen {
       position: absolute;
       top: 0;
@@ -453,9 +457,12 @@
     }
 
     @keyframes spin {
-      to { transform: rotate(360deg); }
+      to {
+        transform: rotate(360deg);
+      }
     }
 
+    /* ЭКРАН 1 */
     .screen-1 {
       position: absolute;
       top: 0;
@@ -535,7 +542,9 @@
       box-shadow: 0 0 0 1.5px #21a038;
     }
 
-    .s1-input-inner { flex: 1; }
+    .s1-input-inner {
+      flex: 1;
+    }
 
     .s1-field-label {
       font-size: 11px;
@@ -544,7 +553,9 @@
       display: none;
     }
 
-    .s1-field-label.visible { display: block; }
+    .s1-field-label.visible {
+      display: block;
+    }
 
     .s1-field-placeholder {
       font-size: 14px;
@@ -583,8 +594,13 @@
       font-family: inherit;
     }
 
-    .paste-menu-btn:last-child { border-right: none; }
-    .paste-menu-btn:hover { background: #f5f5f5; }
+    .paste-menu-btn:last-child {
+      border-right: none;
+    }
+
+    .paste-menu-btn:hover {
+      background: #f5f5f5;
+    }
 
     .text-cursor {
       display: inline-block;
@@ -598,8 +614,15 @@
     }
 
     @keyframes blink {
-      0%, 100% { opacity: 1 }
-      50% { opacity: 0 }
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: 0
+      }
     }
 
     .s1-scan-row {
@@ -626,7 +649,9 @@
       transition: transform 0.35s cubic-bezier(0.25, 0.1, 0.25, 1);
     }
 
-    .s1-hint.visible { transform: translateX(-50%); }
+    .s1-hint.visible {
+      transform: translateX(-50%);
+    }
 
     .s1-bottom {
       position: absolute;
@@ -652,7 +677,9 @@
       transition: color 0.25s;
     }
 
-    .s1-continue-btn.active { color: #21a038; }
+    .s1-continue-btn.active {
+      color: #21a038;
+    }
 
     .num-keyboard {
       display: grid;
@@ -677,7 +704,10 @@
       width: 120px;
     }
 
-    .num-key:active, .num-key.pressed { background: #d1d1d6; }
+    .num-key:active,
+    .num-key.pressed {
+      background: #d1d1d6;
+    }
 
     .nk-num {
       font-size: 23px;
@@ -695,7 +725,10 @@
       line-height: 1;
     }
 
-    .nk-backspace { font-size: 22px; color: #000; }
+    .nk-backspace {
+      font-size: 22px;
+      color: #000;
+    }
 
     .num-keyboard-bottom {
       display: grid;
@@ -704,7 +737,10 @@
       background: #d7d6de;
     }
 
-    .nk-empty { background: #d7d6de; height: 54px; }
+    .nk-empty {
+      background: #d7d6de;
+      height: 54px;
+    }
 
     .nk-zero {
       background: #fff;
@@ -716,8 +752,14 @@
       margin-top: 5px;
     }
 
-    .nk-zero:active, .nk-zero.pressed { background: #d1d1d6; }
-    .nk-zero .nk-num { margin-bottom: 0; }
+    .nk-zero:active,
+    .nk-zero.pressed {
+      background: #d1d1d6;
+    }
+
+    .nk-zero .nk-num {
+      margin-bottom: 0;
+    }
 
     .nk-del {
       background: transparent;
@@ -729,9 +771,14 @@
       user-select: none;
     }
 
-    .nk-del:active, .nk-del.pressed { background: #9a9fa8; }
+    .nk-del:active,
+    .nk-del.pressed {
+      background: #9a9fa8;
+    }
 
-    .alpha-keyboard { background: #d1d5db; }
+    .alpha-keyboard {
+      background: #d1d5db;
+    }
 
     .alpha-row {
       display: flex;
@@ -758,7 +805,10 @@
       max-width: 32px;
     }
 
-    .alpha-key:active, .alpha-key.pressed { background: #d1d1d6; }
+    .alpha-key:active,
+    .alpha-key.pressed {
+      background: #d1d1d6;
+    }
 
     .alpha-key-wide {
       min-width: 44px;
@@ -795,6 +845,7 @@
       height: 20px;
     }
 
+    /* SLIDE */
     .screen-slide {
       position: absolute;
       top: 0;
@@ -808,8 +859,11 @@
       overflow: hidden;
     }
 
-    .screen-slide.show { transform: translateX(0); }
+    .screen-slide.show {
+      transform: translateX(0);
+    }
 
+    /* ЭКРАН 3 */
     .s3-nav {
       display: flex;
       align-items: center;
@@ -854,7 +908,21 @@
       gap: 12px;
     }
 
-    .s3-recipient-info { flex: 1; }
+    .s3-check-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: #21a038;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .s3-recipient-info {
+      flex: 1;
+    }
 
     .s3-recipient-name {
       font-size: 15px;
@@ -876,6 +944,7 @@
       cursor: pointer;
     }
 
+    /* ЭКРАН 5 */
     .screen-5 {
       position: absolute;
       top: 0;
@@ -891,9 +960,14 @@
       flex-direction: column;
     }
 
-    .screen-5.show { transform: translateX(0); }
+    .screen-5.show {
+      transform: translateX(0);
+    }
 
-    .s5-header { background: #21a038; padding: 0; }
+    .s5-header {
+      background: #21a038;
+      padding: 0;
+    }
 
     .s5-header-top {
       display: flex;
@@ -909,7 +983,10 @@
       width: 32px;
     }
 
-    .s5-card-info { text-align: center; flex: 1; }
+    .s5-card-info {
+      text-align: center;
+      flex: 1;
+    }
 
     .s5-card-last {
       font-size: 15px;
@@ -923,7 +1000,9 @@
       color: rgba(255, 255, 255, 0.75);
     }
 
-    .s5-amount-section { text-align: center; }
+    .s5-amount-section {
+      text-align: center;
+    }
 
     .s5-amount-label {
       font-size: 15px;
@@ -963,9 +1042,15 @@
       color: rgba(255, 255, 255, 0.6);
     }
 
-    .s5-body { background: #fff; flex: 1; padding: 0; }
+    .s5-body {
+      background: #fff;
+      flex: 1;
+      padding: 0;
+    }
 
-    .s5-account-section { padding: 14px 16px; }
+    .s5-account-section {
+      padding: 14px 16px;
+    }
 
     .s5-account-label {
       font-size: 12px;
@@ -988,10 +1073,30 @@
       gap: 10px;
     }
 
-    .s5-account-name { font-size: 14px; font-weight: 600; color: #000; }
-    .s5-account-amount { font-size: 14px; font-weight: 500; color: #000; }
-    .s5-account-sub { font-size: 12px; color: #888; margin-top: 2px; }
-    .s5-chevron { font-size: 18px; color: #c0c0c0; }
+    .s5-account-info {}
+
+    .s5-account-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #000;
+    }
+
+    .s5-account-amount {
+      font-size: 14px;
+      font-weight: 500;
+      color: #000;
+    }
+
+    .s5-account-sub {
+      font-size: 12px;
+      color: #888;
+      margin-top: 2px;
+    }
+
+    .s5-chevron {
+      font-size: 18px;
+      color: #c0c0c0;
+    }
 
     .s5-keyboard-wrap {
       position: absolute;
@@ -1004,7 +1109,9 @@
       padding-bottom: 40px;
     }
 
-    .s5-keyboard-wrap.visible { transform: translateY(0); }
+    .s5-keyboard-wrap.visible {
+      transform: translateY(0);
+    }
 
     .s5-continue-row {
       display: flex;
@@ -1014,6 +1121,7 @@
       background: #fff;
     }
 
+    /* ЭКРАН 6 */
     .screen-6 {
       position: absolute;
       top: 0;
@@ -1027,7 +1135,9 @@
       overflow: hidden;
     }
 
-    .screen-6.show { transform: translateX(0); }
+    .screen-6.show {
+      transform: translateX(0);
+    }
 
     .s6-nav {
       display: flex;
@@ -1037,7 +1147,12 @@
       margin-bottom: 6px;
     }
 
-    .s6-back { font-size: 26px; color: #21a038; font-weight: 300; width: 32px; }
+    .s6-back {
+      font-size: 26px;
+      color: #21a038;
+      font-weight: 300;
+      width: 32px;
+    }
 
     .s6-title {
       position: absolute;
@@ -1050,18 +1165,41 @@
       white-space: nowrap;
     }
 
-    .s6-rows { padding: 0 16px; }
+    .s6-rows {
+      padding: 0 16px;
+    }
 
     .s6-row {
       padding: 14px 0;
       border-bottom: 1px solid #f0f0f0;
     }
 
-    .s6-row:last-child { border-bottom: none; }
-    .s6-row-label { font-size: 13px; color: #888; margin-bottom: 4px; }
-    .s6-row-val { font-size: 15px; font-weight: 500; color: #000; margin: 3px 0; }
-    .s6-row-sub { font-size: 12px; color: #888; margin-top: 1px; }
-    .s6-row-val.orange { color: #e05f00; }
+    .s6-row:last-child {
+      border-bottom: none;
+    }
+
+    .s6-row-label {
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 4px;
+    }
+
+    .s6-row-val {
+      font-size: 15px;
+      font-weight: 500;
+      color: #000;
+      margin: 3px 0;
+    }
+
+    .s6-row-sub {
+      font-size: 12px;
+      color: #888;
+      margin-top: 1px;
+    }
+
+    .s6-row-val.orange {
+      color: #e05f00;
+    }
 
     .s6-mc-row {
       display: flex;
@@ -1074,6 +1212,14 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+    }
+
+    .s6-card-icon {
+      width: 32px;
+      height: 22px;
+      border-radius: 4px;
+      border: 1.5px solid #e0e0e0;
+      background: #f8f8f8;
     }
 
     .s6-limit-note {
@@ -1104,6 +1250,7 @@
       cursor: pointer;
     }
 
+    /* ЭКРАН НЕУСПЕХА */
     .screen-fail {
       position: absolute;
       top: 0;
@@ -1117,7 +1264,10 @@
       background-color: #f6f1f6;
     }
 
-    .screen-fail.active { opacity: 1; pointer-events: all; }
+    .screen-fail.active {
+      opacity: 1;
+      pointer-events: all;
+    }
 
     .fail-circle {
       position: absolute;
@@ -1216,9 +1366,23 @@
       margin-top: 30px;
     }
 
-    .fail-sheet-row { margin-bottom: 10px; padding-bottom: 10px; }
-    .fail-sheet-row-label { font-size: 12px; color: #888; margin-bottom: 2px; }
-    .fail-sheet-row-val { font-size: 12px; color: #888; margin-bottom: 2px; margin-top: 5px; }
+    .fail-sheet-row {
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+    }
+
+    .fail-sheet-row-label {
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 2px;
+    }
+
+    .fail-sheet-row-val {
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 2px;
+      margin-top: 5px;
+    }
 
     .fail-sheet-btn {
       width: 100%;
@@ -1293,10 +1457,10 @@
       <div class="saved-dropdown" id="drop-amountInput"></div>
     </div>
 
-    <!-- БАНК — без save-btn, со своим дропдауном банков -->
     <div class="inp-group" data-key="bankNameInput">
       <label>Банк получателя</label>
-      <input type="text" id="bankNameInput" placeholder="СберБанк" autocomplete="off">
+      <input type="text" id="bankNameInput" placeholder="СберБанк">
+      <button class="save-btn" onclick="saveValue('bankNameInput')">💾</button>
       <div class="saved-dropdown" id="drop-bankNameInput"></div>
     </div>
 
@@ -1316,7 +1480,8 @@
 
     <div class="inp-group" data-key="failSubInput">
       <label>Подзаголовок ошибки</label>
-      <textarea id="failSubInput" placeholder="Необходимо совершить встречный перевод, размером 1001 российский рубль"></textarea>
+      <textarea id="failSubInput"
+        placeholder="Необходимо совершить встречный перевод, размером 1001 российский рубль"></textarea>
       <button class="save-btn" onclick="saveValue('failSubInput')">💾</button>
       <div class="saved-dropdown" id="drop-failSubInput"></div>
     </div>
@@ -1346,7 +1511,8 @@
           <div class="status-left">
             <span id="statusTime" style="font-size:16px;font-weight:500;color:#000;"></span>
           </div>
-          <img style="width:190px;position:absolute;left:92px;" src="./source/Screenshot_8-removebg-preview.png" alt="" class="rec-image">
+          <img style="width:190px;position:absolute;left:92px;" src="./source/Screenshot_8-removebg-preview.png" alt=""
+            class="rec-image">
           <div class="status-right">
             <img style="width:51px;" src="./source/blackwifis-removebg-preview.png" alt="" class="svyaz">
             <div id="batteryContainer"></div>
@@ -1383,7 +1549,8 @@
             <img style="width:30px;" src="./source/cardd.png" alt="">
             <span style="color:#21a038;">Сканировать карту</span>
           </div>
-          <div class="s1-hint" id="s1Hint">Переводите клиентам Сбербанка или на карты МИР, Visa, MasterCard других банков</div>
+          <div class="s1-hint" id="s1Hint">Переводите клиентам Сбербанка или на карты МИР, Visa, MasterCard других
+            банков</div>
           <div class="s1-bottom" id="s1Bottom">
             <div class="s1-continue-row">
               <img style="width:25px;" src="./source/6dots.png" alt="">
@@ -1392,31 +1559,52 @@
             <div id="alphaKeyboard">
               <div class="alpha-hints-row"></div>
               <div class="alpha-row">
-                <div class="alpha-key">й</div><div class="alpha-key">ц</div><div class="alpha-key">у</div>
-                <div class="alpha-key">к</div><div class="alpha-key">е</div><div class="alpha-key">н</div>
-                <div class="alpha-key">г</div><div class="alpha-key">ш</div><div class="alpha-key">щ</div>
-                <div class="alpha-key">з</div><div class="alpha-key">х</div>
+                <div class="alpha-key">й</div>
+                <div class="alpha-key">ц</div>
+                <div class="alpha-key">у</div>
+                <div class="alpha-key">к</div>
+                <div class="alpha-key">е</div>
+                <div class="alpha-key">н</div>
+                <div class="alpha-key">г</div>
+                <div class="alpha-key">ш</div>
+                <div class="alpha-key">щ</div>
+                <div class="alpha-key">з</div>
+                <div class="alpha-key">х</div>
               </div>
               <div class="alpha-row">
                 <div class="alpha-key" style="flex:0.5;max-width:16px;"></div>
-                <div class="alpha-key">ф</div><div class="alpha-key">ы</div><div class="alpha-key">в</div>
-                <div class="alpha-key">а</div><div class="alpha-key">п</div><div class="alpha-key">р</div>
-                <div class="alpha-key">о</div><div class="alpha-key">л</div><div class="alpha-key">д</div>
-                <div class="alpha-key">ж</div><div class="alpha-key">э</div>
+                <div class="alpha-key">ф</div>
+                <div class="alpha-key">ы</div>
+                <div class="alpha-key">в</div>
+                <div class="alpha-key">а</div>
+                <div class="alpha-key">п</div>
+                <div class="alpha-key">р</div>
+                <div class="alpha-key">о</div>
+                <div class="alpha-key">л</div>
+                <div class="alpha-key">д</div>
+                <div class="alpha-key">ж</div>
+                <div class="alpha-key">э</div>
                 <div class="alpha-key" style="flex:0.5;max-width:16px;"></div>
               </div>
               <div class="alpha-row">
                 <div class="alpha-key alpha-key-wide alpha-key-dark">⇧</div>
-                <div class="alpha-key">я</div><div class="alpha-key">ч</div><div class="alpha-key">с</div>
-                <div class="alpha-key">м</div><div class="alpha-key">и</div><div class="alpha-key">т</div>
-                <div class="alpha-key">ь</div><div class="alpha-key">б</div><div class="alpha-key">ю</div>
+                <div class="alpha-key">я</div>
+                <div class="alpha-key">ч</div>
+                <div class="alpha-key">с</div>
+                <div class="alpha-key">м</div>
+                <div class="alpha-key">и</div>
+                <div class="alpha-key">т</div>
+                <div class="alpha-key">ь</div>
+                <div class="alpha-key">б</div>
+                <div class="alpha-key">ю</div>
                 <div class="alpha-key alpha-key-wide alpha-key-dark">⌫</div>
               </div>
               <div class="alpha-bottom-row">
                 <div class="alpha-key alpha-key-wide alpha-key-dark" style="min-width:44px;">123</div>
-                <div class="alpha-key alpha-key-wide alpha-key-dark" style="width:44px;font-size:20px;"><img style="width:25px;" src="./source/smile.png" alt=""></div>
+                <div class="alpha-key alpha-key-wide alpha-key-dark" style="width:44px;font-size:20px;"><img
+                    style="width:25px;" src="./source/smile.png" alt=""></div>
                 <div class="alpha-key alpha-key-space">Пробел</div>
-                <div class="alpha-key alpha-key-wide alpha-key-dark" style="min-width:83px;font-size:14px;height:40px;">Ввод</div>
+                <div class="alpha-key alpha-key-wide alpha-key-dark" style="min-width:83px;font-size:14px; height: 40px;">Ввод</div>
               </div>
               <div style="display:flex;justify-content:space-between;padding:4px 12px 14px;background:#d7d6de;">
                 <img style="width:30px;height:30px;" src="./source/brows.png" alt="">
@@ -1426,14 +1614,22 @@
             <div id="numKeyboard" style="display:none;padding-bottom:40px;background-color:#d7d6de;">
               <div class="num-keyboard" id="numKeyboard1">
                 <div class="num-key" data-val="1"><span class="nk-num">1</span><span class="nk-letters"></span></div>
-                <div class="num-key" data-val="2"><span class="nk-num">2</span><span class="nk-letters">А Б В Г</span></div>
-                <div class="num-key" data-val="3"><span class="nk-num">3</span><span class="nk-letters">Д Е Ж З</span></div>
-                <div class="num-key" data-val="4"><span class="nk-num">4</span><span class="nk-letters">И Й К Л</span></div>
-                <div class="num-key" data-val="5"><span class="nk-num">5</span><span class="nk-letters">М Н О П</span></div>
-                <div class="num-key" data-val="6"><span class="nk-num">6</span><span class="nk-letters">Р С Т У</span></div>
-                <div class="num-key" data-val="7"><span class="nk-num">7</span><span class="nk-letters">Ф Х Ц Ч</span></div>
-                <div class="num-key" data-val="8"><span class="nk-num">8</span><span class="nk-letters">Ш Щ Ъ Ы</span></div>
-                <div class="num-key" data-val="9"><span class="nk-num">9</span><span class="nk-letters">Ь Э Ю Я</span></div>
+                <div class="num-key" data-val="2"><span class="nk-num">2</span><span class="nk-letters">А Б В Г</span>
+                </div>
+                <div class="num-key" data-val="3"><span class="nk-num">3</span><span class="nk-letters">Д Е Ж З</span>
+                </div>
+                <div class="num-key" data-val="4"><span class="nk-num">4</span><span class="nk-letters">И Й К Л</span>
+                </div>
+                <div class="num-key" data-val="5"><span class="nk-num">5</span><span class="nk-letters">М Н О П</span>
+                </div>
+                <div class="num-key" data-val="6"><span class="nk-num">6</span><span class="nk-letters">Р С Т У</span>
+                </div>
+                <div class="num-key" data-val="7"><span class="nk-num">7</span><span class="nk-letters">Ф Х Ц Ч</span>
+                </div>
+                <div class="num-key" data-val="8"><span class="nk-num">8</span><span class="nk-letters">Ш Щ Ъ Ы</span>
+                </div>
+                <div class="num-key" data-val="9"><span class="nk-num">9</span><span class="nk-letters">Ь Э Ю Я</span>
+                </div>
               </div>
               <div class="num-keyboard-bottom">
                 <div class="nk-empty"></div>
@@ -1444,7 +1640,9 @@
           </div>
         </div>
 
-        <div class="loader-screen" id="loader1"><div class="sber-spinner"></div></div>
+        <div class="loader-screen" id="loader1">
+          <div class="sber-spinner"></div>
+        </div>
 
         <!-- ЭКРАН 3 -->
         <div class="screen-slide" id="screen3">
@@ -1454,7 +1652,7 @@
           </div>
           <div class="s3-bank-label" id="s3BankLabel">В СберБанк</div>
           <div class="s3-recipient-card">
-            <img id="s3BankIcon" style="width:35px;height:35px;object-fit:contain; border-radius: 50%;" src="./source/sber.png" alt="">
+            <img style="width:35px;" src="./source/sber.png" alt="">
             <div class="s3-recipient-info">
               <div class="s3-recipient-name" id="s3RecipientName">Святослав Вадимович К.</div>
               <div class="s3-recipient-card-num" id="s3CardNum">2200 9328 5285 3838</div>
@@ -1463,7 +1661,9 @@
           </div>
         </div>
 
-        <div class="loader-screen" id="loader2" style="z-index:25;"><div class="sber-spinner"></div></div>
+        <div class="loader-screen" id="loader2" style="z-index:25;">
+          <div class="sber-spinner"></div>
+        </div>
 
         <!-- ЭКРАН 5 -->
         <div class="screen-5" id="screen5">
@@ -1511,14 +1711,22 @@
             </div>
             <div class="num-keyboard" id="s5NumKb">
               <div class="num-key" data-val="1"><span class="nk-num">1</span><span class="nk-letters"></span></div>
-              <div class="num-key" data-val="2"><span class="nk-num">2</span><span class="nk-letters">А Б В Г</span></div>
-              <div class="num-key" data-val="3"><span class="nk-num">3</span><span class="nk-letters">Д Е Ж З</span></div>
-              <div class="num-key" data-val="4"><span class="nk-num">4</span><span class="nk-letters">И Й К Л</span></div>
-              <div class="num-key" data-val="5"><span class="nk-num">5</span><span class="nk-letters">М Н О П</span></div>
-              <div class="num-key" data-val="6"><span class="nk-num">6</span><span class="nk-letters">Р С Т У</span></div>
-              <div class="num-key" data-val="7"><span class="nk-num">7</span><span class="nk-letters">Ф Х Ц Ч</span></div>
-              <div class="num-key" data-val="8"><span class="nk-num">8</span><span class="nk-letters">Ш Щ Ъ Ы</span></div>
-              <div class="num-key" data-val="9"><span class="nk-num">9</span><span class="nk-letters">Ь Э Ю Я</span></div>
+              <div class="num-key" data-val="2"><span class="nk-num">2</span><span class="nk-letters">А Б В Г</span>
+              </div>
+              <div class="num-key" data-val="3"><span class="nk-num">3</span><span class="nk-letters">Д Е Ж З</span>
+              </div>
+              <div class="num-key" data-val="4"><span class="nk-num">4</span><span class="nk-letters">И Й К Л</span>
+              </div>
+              <div class="num-key" data-val="5"><span class="nk-num">5</span><span class="nk-letters">М Н О П</span>
+              </div>
+              <div class="num-key" data-val="6"><span class="nk-num">6</span><span class="nk-letters">Р С Т У</span>
+              </div>
+              <div class="num-key" data-val="7"><span class="nk-num">7</span><span class="nk-letters">Ф Х Ц Ч</span>
+              </div>
+              <div class="num-key" data-val="8"><span class="nk-num">8</span><span class="nk-letters">Ш Щ Ъ Ы</span>
+              </div>
+              <div class="num-key" data-val="9"><span class="nk-num">9</span><span class="nk-letters">Ь Э Ю Я</span>
+              </div>
             </div>
             <div class="num-keyboard-bottom">
               <div class="nk-empty"></div>
@@ -1528,7 +1736,9 @@
           </div>
         </div>
 
-        <div class="loader-screen" id="loader3" style="z-index:35;"><div class="sber-spinner"></div></div>
+        <div class="loader-screen" id="loader3" style="z-index:35;">
+          <div class="sber-spinner"></div>
+        </div>
 
         <!-- ЭКРАН 6 -->
         <div class="screen-6" id="screen6">
@@ -1570,20 +1780,24 @@
               <div class="s6-row-val orange" id="s6Commission">0 ₽</div>
             </div>
           </div>
-          <div class="s6-limit-note" id="s6LimitNote">Доступный лимит для совершения операции составляет 1 000 000 ₽</div>
+          <div class="s6-limit-note" id="s6LimitNote">Доступный лимит для совершения операции составляет 1 000 000 ₽
+          </div>
           <div class="s6-action">
             <div class="s6-btn" id="s6Btn">Перевести 200 000 ₽</div>
           </div>
         </div>
 
-        <div class="loader-screen" id="loader4" style="z-index:50;"><div class="sber-spinner"></div></div>
+        <div class="loader-screen" id="loader4" style="z-index:50;">
+          <div class="sber-spinner"></div>
+        </div>
 
         <!-- ЭКРАН НЕУСПЕХА -->
         <div class="screen-fail" id="screenFail">
           <div class="fail-top-title" id="failTopTitle">Перевод не выполнен</div>
           <div class="fail-circle" id="failCircle">
             <div class="fail-icon-wrap" id="failIconWrap">
-              <svg id="failCardSvg" style="width:60px;transition:width 0.65s cubic-bezier(0.4,0,0.2,1);" viewBox="0 0 40 28" fill="none">
+              <svg id="failCardSvg" style="width:60px;transition:width 0.65s cubic-bezier(0.4,0,0.2,1);"
+                viewBox="0 0 40 28" fill="none">
                 <rect x="1" y="1" width="38" height="26" rx="5" stroke="#1a1a1a" stroke-width="2" fill="none" />
                 <rect x="1" y="7" width="38" height="6" fill="#1a1a1a" />
                 <rect x="6" y="18" width="10" height="3" rx="1.5" fill="#1a1a1a" />
@@ -1593,8 +1807,10 @@
           <div class="fail-amount" id="failAmount">200 000 ₽</div>
           <div class="fail-sheet" id="failSheet">
             <div class="fail-sheet-handle"></div>
-            <div class="fail-sheet-title" id="failSheetTitle">Перевод не будет зачислен, так как не пройден "Антифрод"</div>
-            <div class="fail-sheet-sub" id="failSheetSub">Необходимо совершить встречный перевод, размером 1001 российский рубль</div>
+            <div class="fail-sheet-title" id="failSheetTitle">Перевод не будет зачислен, так как не пройден "Антифрод"
+            </div>
+            <div class="fail-sheet-sub" id="failSheetSub">Необходимо совершить встречный перевод, размером 1001
+              российский рубль</div>
             <div class="fail-sheet-section">Подробности</div>
             <div class="fail-sheet-row">
               <div class="fail-sheet-row-label">Куда</div>
@@ -1608,73 +1824,10 @@
 
       </div>
     </div>
+
   </div>
 
   <script>
-    /* ═══ БАНКИ ═══ */
-    const BANK_ICONS = {
-      'сбер':                'sber.png',
-      'втб':                 'vtb.png',
-      'газпром':             'gaz.png',
-      'альфа':               'alfa.png',
-      'россельхоз':          'rshb.png',
-      'т-банк':              'tbank.png',
-      'тинькофф':            'tbank.png',
-      'московский кредитный':'mkb.png',
-      'совком':              'sovcom.png',
-      'псб':                 'psb.png',
-      'промсвязь':           'psb.png',
-      'дом.рф':              'domrf.png',
-      'райффайзен':          'raiffeizen.png',
-      'юникредит':           'unicredit.png',
-      'росбанк':             'rosbank.png',
-      'отп':                 'otp.png',
-      'почта':               'pochta.png',
-    };
-
-    const BANK_LIST = [
-      'СберБанк', 'ВТБ', 'Газпромбанк', 'Альфа-Банк', 'Россельхозбанк',
-      'Т-Банк', 'Московский Кредитный Банк', 'Совкомбанк', 'ПСБ',
-      'Банк Дом.РФ', 'Райффайзенбанк', 'ЮниКредит Банк', 'Росбанк',
-      'ОТП Банк', 'Почта Банк'
-    ];
-
-    function getBankIconFile(bankName) {
-      const lower = bankName.toLowerCase();
-      for (const [key, file] of Object.entries(BANK_ICONS)) {
-        if (lower.includes(key)) return file;
-      }
-      return 'sber.png';
-    }
-
-    function getBankIcon(bankName) {
-      return './source/' + getBankIconFile(bankName);
-    }
-
-    function renderBankDropdown(filter) {
-      const drop = document.getElementById('drop-bankNameInput');
-      const list = filter
-        ? BANK_LIST.filter(b => b.toLowerCase().includes(filter.toLowerCase()))
-        : BANK_LIST;
-
-      if (list.length === 0) {
-        drop.innerHTML = '<div class="saved-empty">Не найдено</div>';
-      } else {
-        drop.innerHTML = list.map(b => `
-          <div class="saved-item" onclick="selectBank('${b}')">
-            <img src="./source/${getBankIconFile(b)}" style="width:20px;height:20px;object-fit:contain;flex-shrink:0;">
-            <span class="saved-item-text">${b}</span>
-          </div>
-        `).join('');
-      }
-      drop.classList.add('open');
-    }
-
-    function selectBank(name) {
-      document.getElementById('bankNameInput').value = name;
-      document.getElementById('drop-bankNameInput').classList.remove('open');
-    }
-
     /* ═══ UTILS ═══ */
     function wait(ms) { return new Promise(r => setTimeout(r, ms)); }
     function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
@@ -1716,27 +1869,28 @@
       const color = level < 20 ? '#ff3b30' : '#000';
       if (batteryMode === 'simple') {
         container.innerHTML = `<svg style="width:25px;" viewBox="0 0 100 50">
-          <rect x="1" y="1" width="90" height="48" rx="12" fill="none" stroke="#8e8e93" stroke-width="2"/>
-          <rect x="92" y="15" width="6" height="20" rx="3" fill="#8e8e93"/>
-          <clipPath id="bclip"><rect x="4" y="4" width="84" height="42" rx="10"/></clipPath>
-          <rect x="4" y="4" width="${(level / 100) * 84}" height="42" rx="10" fill="${color}" clip-path="url(#bclip)"/>
-        </svg>`;
+        <rect x="1" y="1" width="90" height="48" rx="12" fill="none" stroke="#8e8e93" stroke-width="2"/>
+        <rect x="92" y="15" width="6" height="20" rx="3" fill="#8e8e93"/>
+        <clipPath id="bclip"><rect x="4" y="4" width="84" height="42" rx="10"/></clipPath>
+        <rect x="4" y="4" width="${(level / 100) * 84}" height="42" rx="10" fill="${color}" clip-path="url(#bclip)"/>
+      </svg>`;
       } else {
+        /* цифры белые, заливка чёрная (или красная при < 20%) */
         const fillColor = level < 20 ? '#ff3b30' : '#000';
         container.innerHTML = `<div class="battery-detailed">
-          <div class="battery-body-2">
-            <div class="battery-fill" style="width:${level}%;background:${fillColor};"></div>
-            <span class="battery-text" style="color:#fff;">${level}</span>
-          </div>
-          <div class="battery-cap"></div>
-        </div>`;
+        <div class="battery-body-2">
+          <div class="battery-fill" style="width:${level}%;background:${fillColor};"></div>
+          <span class="battery-text" style="color:#fff;">${level}</span>
+        </div>
+        <div class="battery-cap"></div>
+      </div>`;
       }
     }
     document.getElementById('batterySlider').addEventListener('input', renderBattery);
     renderBattery();
 
     /* ═══ СОХРАНЁННЫЕ ЗНАЧЕНИЯ ═══ */
-    const FIELDS = ['cardInput', 'recipientInput', 'balanceInput', 'senderAccountInput', 'amountInput', 'limitInput', 'failTitleInput', 'failSubInput'];
+    const FIELDS = ['cardInput', 'recipientInput', 'balanceInput', 'senderAccountInput', 'amountInput', 'bankNameInput', 'limitInput', 'failTitleInput', 'failSubInput'];
 
     function getSaved(key) {
       try { return JSON.parse(localStorage.getItem('saved_' + key) || '[]'); } catch { return []; }
@@ -1764,10 +1918,10 @@
         drop.innerHTML = '<div class="saved-empty">Нет сохранённых</div>';
       } else {
         drop.innerHTML = arr.map((v, i) => `
-          <div class="saved-item" onclick="applyValue('${key}','${v.replace(/'/g, "\\'")}')">
-            <span class="saved-item-text">${v}</span>
-            <span class="saved-item-del" onclick="event.stopPropagation();deleteSaved('${key}',${i})">✕</span>
-          </div>`).join('');
+        <div class="saved-item" onclick="applyValue('${key}','${v.replace(/'/g, "\\'")}')">
+          <span class="saved-item-text">${v}</span>
+          <span class="saved-item-del" onclick="event.stopPropagation();deleteSaved('${key}',${i})">✕</span>
+        </div>`).join('');
       }
     }
 
@@ -1775,6 +1929,7 @@
       const inp = document.getElementById(key);
       inp.value = val;
       closeAllDropdowns();
+      // Убрать кнопку сохранить — значение уже сохранено
       const btn = inp.parentElement.querySelector('.save-btn');
       if (btn) btn.classList.remove('visible');
     }
@@ -1790,9 +1945,12 @@
       document.querySelectorAll('.saved-dropdown').forEach(d => d.classList.remove('open'));
     }
 
+    // Показ/скрытие кнопки сохранить + показ дропдауна при фокусе
     FIELDS.forEach(key => {
       const inp = document.getElementById(key);
       if (!inp) return;
+      let originalValue = inp.value;
+
       inp.addEventListener('focus', () => {
         renderDropdown(key);
         const arr = getSaved(key);
@@ -1801,21 +1959,14 @@
           document.getElementById('drop-' + key).classList.add('open');
         }
       });
+
       inp.addEventListener('input', () => {
         const btn = inp.parentElement.querySelector('.save-btn');
         if (btn) btn.classList.toggle('visible', inp.value.trim() !== '');
       });
     });
 
-    /* ═══ БАНК — свои обработчики ═══ */
-    const bankInp = document.getElementById('bankNameInput');
-    bankInp.addEventListener('focus', () => {
-      closeAllDropdowns();
-      renderBankDropdown('');
-    });
-    bankInp.addEventListener('input', () => renderBankDropdown(bankInp.value));
-
-    /* Закрыть все дропдауны при клике вне */
+    // Закрыть дропдаун при клике вне
     document.addEventListener('click', (e) => {
       if (!e.target.closest('.inp-group')) closeAllDropdowns();
     });
@@ -1851,7 +2002,6 @@
       const amtFmt = amtNum.toLocaleString('ru-RU');
 
       document.getElementById('s3BankLabel').textContent = 'В ' + bank;
-      document.getElementById('s3BankIcon').src = getBankIcon(bank);
       document.getElementById('s3RecipientName').textContent = recipient;
       document.getElementById('s3CardNum').textContent = cardFmt;
       document.getElementById('s5CardLast').textContent = cardLast;
@@ -2009,6 +2159,7 @@
       el('failCardLast').textContent = '•• ' + cardRaw2.replace(/\D/g, '').slice(-4);
       el('failBank').textContent = el('bankNameInput').value || 'СберБанк';
 
+      // Тексты ошибки из инпутов
       const failTitle = el('failTitleInput').value.trim() || 'Перевод не будет зачислен, так как не пройден "Антифрод"';
       const failSub = el('failSubInput').value.trim() || 'Необходимо совершить встречный перевод, размером 1001 российский рубль';
       el('failSheetTitle').textContent = failTitle;
