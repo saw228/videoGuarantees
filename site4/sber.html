@@ -1,0 +1,2115 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Сбербанк — Перевод</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      font-size: 16px;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      background:
+      radial-gradient(900px circle at 20% 10%, rgba(150, 100, 200, 0.12), transparent 55%),
+      radial-gradient(800px circle at 80% 25%, rgba(180, 120, 160, 0.08), transparent 60%),
+      radial-gradient(700px circle at 50% 90%, rgba(255, 255, 255, 0.04), transparent 60%),
+      linear-gradient(180deg, #0f0f12 0%, #131318 45%, #0c0c10 100%);
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    /* ═══ ПАНЕЛЬ УПРАВЛЕНИЯ ═══ */
+    .input-panel {
+      width: 290px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 20px;
+      padding: 20px;
+      color: #fff;
+      margin-top: 30px;
+      margin-right: 40px;
+      flex-shrink: 0;
+      max-height: 95vh;
+      overflow-y: auto;
+      backdrop-filter: blur(20px);
+    }
+
+    .input-panel::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .input-panel::-webkit-scrollbar-thumb {
+      background: #444;
+      border-radius: 2px;
+    }
+
+    .panel-title {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .inp-group {
+      margin-bottom: 12px;
+      position: relative;
+    }
+
+    .inp-group label {
+      font-size: 11px;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .inp-group input[type="text"],
+    .inp-group textarea {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      padding: 9px 12px;
+      color: #fff;
+      font-size: 13px;
+      outline: none;
+      font-family: inherit;
+    }
+
+    .inp-group textarea {
+      resize: none;
+      min-height: 60px;
+      line-height: 1.4;
+    }
+
+    .inp-group input:focus,
+    .inp-group textarea:focus {
+      border-color: rgba(33, 154, 72, 0.6);
+    }
+
+    .inp-group input[type="range"] {
+      accent-color: #21a038;
+      width: 100%;
+    }
+
+    .save-btn {
+      display: none;
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-15%);
+      background: rgba(33, 154, 72, 0.15);
+      border: 1px solid rgba(33, 154, 72, 0.35);
+      border-radius: 6px;
+      padding: 3px 8px;
+      color: #21a038;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+      white-space: nowrap;
+      z-index: 10;
+    }
+
+    .save-btn:hover {
+      background: rgba(33, 154, 72, 0.28);
+    }
+
+    .save-btn.visible {
+      display: block;
+    }
+
+    .saved-dropdown {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 100%;
+      margin-top: 2px;
+      background: #1e2a3a;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      z-index: 1000;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      display: none;
+    }
+
+    .saved-dropdown.open {
+      display: block;
+    }
+
+    .saved-item {
+      padding: 9px 12px;
+      font-size: 13px;
+      color: #ddd;
+      cursor: pointer;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .saved-item:last-child {
+      border-bottom: none;
+    }
+
+    .saved-item:hover {
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .saved-item-text {
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .saved-item-del {
+      color: #555;
+      font-size: 14px;
+      flex-shrink: 0;
+      padding: 0 2px;
+      cursor: pointer;
+    }
+
+    .saved-item-del:hover {
+      color: #ff453a;
+    }
+
+    .saved-empty {
+      padding: 10px 12px;
+      font-size: 12px;
+      color: #555;
+      text-align: center;
+    }
+
+    .section-lbl {
+      font-size: 11px;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 7px;
+      margin-top: 4px;
+    }
+
+    .bmode-row {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .bmode-btn {
+      flex: 1;
+      padding: 7px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.06);
+      color: #aaa;
+      font-size: 11px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+    }
+
+    .bmode-btn.active {
+      border-color: #21a038;
+      color: #21a038;
+      background: rgba(33, 154, 72, 0.1);
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .checkbox-row input[type="checkbox"] {
+      accent-color: #21a038;
+      width: 14px;
+      height: 14px;
+    }
+
+    .checkbox-row label {
+      font-size: 12px;
+      color: #bbb;
+    }
+
+    .time-wrap {
+      display: none;
+    }
+
+    .time-wrap.visible {
+      display: flex;
+    }
+
+    .time-wrap input {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      padding: 7px 10px;
+      color: #fff;
+      font-size: 13px;
+      outline: none;
+      width: 80px;
+      font-family: inherit;
+    }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .controls button {
+      padding: 12px 18px;
+      font-size: 14px;
+      font-weight: 600;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+
+    .btn-animate {
+      background: #1a73e8;
+      color: #fff;
+    }
+
+    .btn-download {
+      background: #21a038;
+      color: #fff;
+    }
+
+    .controls button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    /* ═══ ТЕЛЕФОН ═══ */
+    .phone-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      padding-top: 30px;
+    }
+
+    .phone-container {
+      width: 375px;
+      height: 812px;
+      background: #f2f2f7;
+      padding: 0;
+      box-shadow: 0 40px 100px rgba(0, 0, 0, 0.7), inset 0 0 0 1px #333;
+      flex-shrink: 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .phone-screen {
+      width: 100%;
+      height: 100%;
+      background: #f2f2f7;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .status-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 44px;
+      background: transparent;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+      z-index: 9999;
+      pointer-events: none;
+    }
+
+    .status-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .status-right {
+      display: flex;
+      align-items: center;
+      position: absolute;
+      right: 10px;
+      top: 9px;
+    }
+
+    #batteryContainer {
+      display: flex;
+      align-items: center;
+      margin-right: 5px;
+      margin-bottom: 1px;
+      margin-top: 3px;
+    }
+
+    .battery-detailed {
+      display: flex;
+      align-items: center;
+      gap: 1px;
+    }
+
+    .battery-body-2 {
+      position: relative;
+      width: 24px;
+      height: 13px;
+      border-radius: 4px;
+      overflow: hidden;
+      background: #818181;
+    }
+
+    .battery-fill {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 87%;
+      transition: width 0.3s;
+      z-index: 1;
+    }
+
+    .battery-text {
+      position: absolute;
+      top: 45%;
+      left: 50%;
+      transform: translate(-50%, -45%);
+      font-size: 11.5px;
+      font-weight: 500;
+      z-index: 2;
+      pointer-events: none;
+      padding-top: 1px;
+    }
+
+    .home-bar-fixed {
+      position: absolute;
+      bottom: 6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 134px;
+      height: 4px;
+      background: #000;
+      border-radius: 2.5px;
+      opacity: 0.2;
+      z-index: 99999;
+      pointer-events: none;
+    }
+
+    .loader-screen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(255, 255, 255, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.18s;
+      backdrop-filter: blur(2px);
+    }
+
+    .loader-screen.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .sber-spinner {
+      width: 44px;
+      height: 44px;
+      border: 3px solid #e0e0e0;
+      border-top-color: #21a038;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .screen-1 {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .s1-nav {
+      display: flex;
+      align-items: center;
+      padding: 50px 16px 10px;
+      position: relative;
+    }
+
+    .s1-back {
+      font-size: 35px;
+      color: #21a038;
+      font-weight: 300;
+      line-height: 1;
+      width: 32px;
+      cursor: pointer;
+      position: absolute;
+      top: 50px;
+    }
+
+    .s1-title {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 17px;
+      font-weight: 600;
+      color: #000;
+      top: 64px;
+    }
+
+    .s1-tabs {
+      display: flex;
+      margin: 4px 16px 14px;
+      border-bottom: 1px solid #e8e8e8;
+      margin-top: 35px;
+    }
+
+    .s1-tab {
+      padding: 10px 0;
+      margin-right: 28px;
+      font-size: 15px;
+      font-weight: 500;
+      color: #888;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+    }
+
+    .s1-tab.active {
+      color: #21a038;
+      border-bottom-color: #21a038;
+    }
+
+    .s1-input-wrap {
+      margin: 0 16px;
+      background: #f7f7f7;
+      border-radius: 12px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      min-height: 50px;
+    }
+
+    .s1-input-wrap.focused {
+      background: #fff;
+      box-shadow: 0 0 0 1.5px #21a038;
+    }
+
+    .s1-input-inner { flex: 1; }
+
+    .s1-field-label {
+      font-size: 11px;
+      color: #21a038;
+      margin-bottom: 3px;
+      display: none;
+    }
+
+    .s1-field-label.visible { display: block; }
+
+    .s1-field-placeholder {
+      font-size: 14px;
+      color: #aaa;
+    }
+
+    .paste-menu {
+      position: absolute;
+      top: -44px;
+      left: 10px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
+      display: flex;
+      overflow: hidden;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(6px) scale(0.95);
+      transition: opacity 0.18s, transform 0.18s;
+      z-index: 200;
+    }
+
+    .paste-menu.show {
+      opacity: 1;
+      pointer-events: all;
+      transform: translateY(0) scale(1);
+    }
+
+    .paste-menu-btn {
+      padding: 8px 14px;
+      font-size: 12px;
+      color: #000;
+      cursor: pointer;
+      white-space: nowrap;
+      border-right: 1px solid #f0f0f0;
+      font-family: inherit;
+    }
+
+    .paste-menu-btn:last-child { border-right: none; }
+    .paste-menu-btn:hover { background: #f5f5f5; }
+
+    .text-cursor {
+      display: inline-block;
+      width: 1.5px;
+      height: 18px;
+      background: #000;
+      border-radius: 1px;
+      animation: blink 1s step-end infinite;
+      vertical-align: middle;
+      margin-left: 1px;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1 }
+      50% { opacity: 0 }
+    }
+
+    .s1-scan-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 12px 16px 0;
+      color: #21a038;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .s1-hint {
+      position: absolute;
+      left: 50%;
+      transform: translateX(200%);
+      width: calc(100% - 60px);
+      text-align: center;
+      font-size: 14px;
+      color: #888;
+      line-height: 1.6;
+      top: 55%;
+      transition: transform 0.35s cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+
+    .s1-hint.visible { transform: translateX(-50%); }
+
+    .s1-bottom {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
+
+    .s1-continue-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px 8px;
+      background: #fff;
+    }
+
+    .s1-continue-btn {
+      font-size: 13px;
+      font-weight: 500;
+      color: #c0c0c0;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      transition: color 0.25s;
+    }
+
+    .s1-continue-btn.active { color: #21a038; }
+
+    .num-keyboard {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 5px;
+      padding-top: 10px;
+      background-color: #d7d6de;
+    }
+
+    .num-key {
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 40px;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.08s;
+      position: relative;
+      border-radius: 5px;
+      width: 120px;
+    }
+
+    .num-key:active, .num-key.pressed { background: #d1d1d6; }
+
+    .nk-num {
+      font-size: 23px;
+      font-weight: 400;
+      color: #000;
+      line-height: 1;
+      margin-bottom: 1px;
+    }
+
+    .nk-letters {
+      font-size: 9px;
+      font-weight: 600;
+      color: #000;
+      letter-spacing: 1px;
+      line-height: 1;
+    }
+
+    .nk-backspace { font-size: 22px; color: #000; }
+
+    .num-keyboard-bottom {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1px;
+      background: #d7d6de;
+    }
+
+    .nk-empty { background: #d7d6de; height: 54px; }
+
+    .nk-zero {
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      user-select: none;
+      margin-top: 5px;
+    }
+
+    .nk-zero:active, .nk-zero.pressed { background: #d1d1d6; }
+    .nk-zero .nk-num { margin-bottom: 0; }
+
+    .nk-del {
+      background: transparent;
+      height: 54px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .nk-del:active, .nk-del.pressed { background: #9a9fa8; }
+
+    .alpha-keyboard { background: #d1d5db; }
+
+    .alpha-row {
+      display: flex;
+      padding: 6px 4px 0;
+      gap: 5px;
+      justify-content: center;
+      background-color: #d7d6de;
+    }
+
+    .alpha-key {
+      flex: 1;
+      background: #fff;
+      border-radius: 5px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+      font-weight: 400;
+      color: #000;
+      box-shadow: 0 1px 0 rgba(0, 0, 0, 0.35);
+      cursor: pointer;
+      user-select: none;
+      max-width: 32px;
+    }
+
+    .alpha-key:active, .alpha-key.pressed { background: #d1d1d6; }
+
+    .alpha-key-wide {
+      min-width: 44px;
+      max-width: 44px;
+      font-size: 14px;
+      flex: none;
+    }
+
+    .alpha-key-space {
+      flex: 1;
+      max-width: 180px;
+      font-size: 15px;
+      font-weight: 400;
+    }
+
+    .alpha-key-dark {
+      background: #adb5bd;
+      box-shadow: 0 1px 0 rgba(0, 0, 0, 0.35);
+    }
+
+    .alpha-bottom-row {
+      display: flex;
+      padding: 6px 4px 8px;
+      gap: 5px;
+      align-items: center;
+      background-color: #d7d6de;
+    }
+
+    .alpha-hints-row {
+      background: #d7d6de;
+      display: flex;
+      padding: 6px 14px;
+      justify-content: space-between;
+      height: 20px;
+    }
+
+    .screen-slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #fff;
+      transform: translateX(100%);
+      transition: transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+      z-index: 10;
+      overflow: hidden;
+    }
+
+    .screen-slide.show { transform: translateX(0); }
+
+    .s3-nav {
+      display: flex;
+      align-items: center;
+      padding: 60px 16px 10px;
+      position: relative;
+    }
+
+    .s3-back {
+      position: absolute;
+      font-size: 35px;
+      color: #21a038;
+      font-weight: 300;
+      width: 32px;
+      top: 50px;
+    }
+
+    .s3-title {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 17px;
+      font-weight: 600;
+      color: #000;
+      top: 64px;
+    }
+
+    .s3-bank-label {
+      padding: 4px 16px 14px;
+      font-size: 20px;
+      font-weight: 700;
+      color: #000;
+      margin-top: 30px;
+    }
+
+    .s3-recipient-card {
+      margin: 0 16px;
+      background: #f5f5f5;
+      border-radius: 14px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .s3-recipient-info { flex: 1; }
+
+    .s3-recipient-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: #000;
+      margin-bottom: 3px;
+    }
+
+    .s3-recipient-card-num {
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 8px;
+    }
+
+    .s3-continue-link {
+      font-size: 14px;
+      color: #21a038;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .screen-5 {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #fff;
+      transform: translateX(100%);
+      transition: transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+      z-index: 20;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .screen-5.show { transform: translateX(0); }
+
+    .s5-header { background: #21a038; padding: 0; }
+
+    .s5-header-top {
+      display: flex;
+      align-items: center;
+      padding: 60px 16px 10px;
+      position: relative;
+    }
+
+    .s5-back {
+      font-size: 30px;
+      color: rgba(255, 255, 255, 0.85);
+      font-weight: 300;
+      width: 32px;
+    }
+
+    .s5-card-info { text-align: center; flex: 1; }
+
+    .s5-card-last {
+      font-size: 15px;
+      font-weight: 400;
+      color: #fff;
+      margin-bottom: 2px;
+    }
+
+    .s5-card-name {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.75);
+    }
+
+    .s5-amount-section { text-align: center; }
+
+    .s5-amount-label {
+      font-size: 15px;
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: 400;
+      padding: 8px 0 4px;
+    }
+
+    .s5-amount-display {
+      background: #258232;
+      font-size: 32px;
+      font-weight: 300;
+      color: #fff;
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 4px;
+      padding: 14px 0;
+    }
+
+    .s5-amount-cursor {
+      display: inline-block;
+      width: 1.5px;
+      height: 20px;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 1px;
+      animation: blink 1s step-end infinite;
+      vertical-align: bottom;
+    }
+
+    .s5-msg-row {
+      background: rgba(255, 255, 255, 0.15);
+      margin: 10px 16px;
+      border-radius: 10px;
+      padding: 14px;
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .s5-body { background: #fff; flex: 1; padding: 0; }
+
+    .s5-account-section { padding: 14px 16px; }
+
+    .s5-account-label {
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 6px;
+      margin-left: 45px;
+    }
+
+    .s5-account-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #f0f0f0;
+      padding-bottom: 14px;
+    }
+
+    .s5-account-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .s5-account-name { font-size: 14px; font-weight: 600; color: #000; }
+    .s5-account-amount { font-size: 14px; font-weight: 500; color: #000; }
+    .s5-account-sub { font-size: 12px; color: #888; margin-top: 2px; }
+    .s5-chevron { font-size: 18px; color: #c0c0c0; }
+
+    .s5-keyboard-wrap {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      transform: translateY(100%);
+      transition: transform 0.38s cubic-bezier(0.25, 0.1, 0.25, 1);
+      background: #d7d6de;
+      padding-bottom: 40px;
+    }
+
+    .s5-keyboard-wrap.visible { transform: translateY(0); }
+
+    .s5-continue-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px 8px;
+      background: #fff;
+    }
+
+    .screen-6 {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #fff;
+      transform: translateX(100%);
+      transition: transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+      z-index: 30;
+      overflow: hidden;
+    }
+
+    .screen-6.show { transform: translateX(0); }
+
+    .s6-nav {
+      display: flex;
+      align-items: center;
+      padding: 60px 16px 10px;
+      position: relative;
+      margin-bottom: 6px;
+    }
+
+    .s6-back { font-size: 26px; color: #21a038; font-weight: 300; width: 32px; }
+
+    .s6-title {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 17px;
+      font-weight: 600;
+      color: #000;
+      top: 64px;
+      white-space: nowrap;
+    }
+
+    .s6-rows { padding: 0 16px; }
+
+    .s6-row {
+      padding: 14px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .s6-row:last-child { border-bottom: none; }
+    .s6-row-label { font-size: 13px; color: #888; margin-bottom: 4px; }
+    .s6-row-val { font-size: 15px; font-weight: 500; color: #000; margin: 3px 0; }
+    .s6-row-sub { font-size: 12px; color: #888; margin-top: 1px; }
+    .s6-row-val.orange { color: #e05f00; }
+
+    .s6-mc-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 2px;
+    }
+
+    .s6-card-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .s6-limit-note {
+      margin: 0 16px;
+      font-size: 12px;
+      color: #888;
+      line-height: 1.5;
+    }
+
+    .s6-action {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 0 16px 40px;
+      background: #fff;
+    }
+
+    .s6-btn {
+      width: 100%;
+      background: #21a038;
+      border-radius: 16px;
+      padding: 17px;
+      text-align: center;
+      font-size: 16px;
+      font-weight: 400;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .screen-fail {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 60;
+      overflow: hidden;
+      opacity: 0;
+      pointer-events: none;
+      background-color: #f6f1f6;
+    }
+
+    .screen-fail.active { opacity: 1; pointer-events: all; }
+
+    .fail-circle {
+      position: absolute;
+      left: 50%;
+      top: 38%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      background: #8b2a20;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 0;
+      height: 0;
+      overflow: hidden;
+    }
+
+    .fail-icon-wrap {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: #e05040;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 0 30px 12px rgba(220, 70, 50, 0.5);
+    }
+
+    .fail-top-title {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 56px;
+      text-align: center;
+      font-size: 15px;
+      font-weight: 600;
+      color: #000;
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+
+    .fail-amount {
+      position: absolute;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-size: 26px;
+      font-weight: 600;
+      color: #fff;
+      opacity: 0;
+      transition: top 0.6s cubic-bezier(0.4, 0, 0.2, 1), color 0.4s, opacity 0.45s;
+    }
+
+    .fail-sheet {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #fffcff;
+      border-radius: 18px 18px 0 0;
+      padding: 12px 16px 36px;
+      transform: translateY(100%);
+      top: 55%;
+    }
+
+    .fail-sheet-handle {
+      width: 36px;
+      height: 4px;
+      background: #ccc;
+      border-radius: 2px;
+      margin: 0 auto 14px;
+    }
+
+    .fail-sheet-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #000;
+      margin-bottom: 4px;
+      line-height: 1.4;
+      height: 35px;
+    }
+
+    .fail-sheet-sub {
+      font-size: 13px;
+      color: #888;
+      line-height: 1.5;
+      margin-bottom: 16px;
+      height: 35px;
+    }
+
+    .fail-sheet-section {
+      font-size: 16px;
+      font-weight: 700;
+      color: #000;
+      margin-bottom: 20px;
+      margin-top: 30px;
+    }
+
+    .fail-sheet-row { margin-bottom: 10px; padding-bottom: 10px; }
+    .fail-sheet-row-label { font-size: 12px; color: #888; margin-bottom: 2px; }
+    .fail-sheet-row-val { font-size: 12px; color: #888; margin-bottom: 2px; margin-top: 5px; }
+
+    .fail-sheet-btn {
+      width: 100%;
+      background: #21a038;
+      border-radius: 16px;
+      padding: 17px;
+      text-align: center;
+      font-size: 16px;
+      font-weight: 500;
+      color: #fff;
+      margin-top: 30px;
+      cursor: pointer;
+    }
+
+    .fail-sheet-divider {
+      background-color: #f6f1f6;
+      width: 375px;
+      height: 8px;
+      position: absolute;
+      bottom: 240px;
+      left: 0;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ПАНЕЛЬ УПРАВЛЕНИЯ -->
+  <div class="input-panel">
+    <div class="panel-title">Данные перевода</div>
+
+    <div class="checkbox-row">
+      <input type="checkbox" id="customTimeCheck">
+      <label for="customTimeCheck">Своё время</label>
+    </div>
+    <div class="time-wrap" id="timeWrap">
+      <input type="text" id="customTimeInput" maxlength="5" placeholder="18:35">
+    </div>
+
+    <div class="inp-group" style="margin-top:10px;" data-key="cardInput">
+      <label>Номер карты</label>
+      <input type="text" id="cardInput" placeholder="2200 9328 5285 3838" maxlength="19">
+      <button class="save-btn" onclick="saveValue('cardInput')">💾</button>
+      <div class="saved-dropdown" id="drop-cardInput"></div>
+    </div>
+
+    <div class="inp-group" data-key="recipientInput">
+      <label>Получатель (ФИО)</label>
+      <input type="text" id="recipientInput" placeholder="Святослав Вадимович К.">
+      <button class="save-btn" onclick="saveValue('recipientInput')">💾</button>
+      <div class="saved-dropdown" id="drop-recipientInput"></div>
+    </div>
+
+    <div class="inp-group" data-key="balanceInput">
+      <label>Баланс отправителя</label>
+      <input type="text" id="balanceInput" placeholder="27 353 995,39">
+      <button class="save-btn" onclick="saveValue('balanceInput')">💾</button>
+      <div class="saved-dropdown" id="drop-balanceInput"></div>
+    </div>
+
+    <div class="inp-group" data-key="senderAccountInput">
+      <label>Счёт отправителя (последние 4)</label>
+      <input type="text" id="senderAccountInput" placeholder="3692">
+      <button class="save-btn" onclick="saveValue('senderAccountInput')">💾</button>
+      <div class="saved-dropdown" id="drop-senderAccountInput"></div>
+    </div>
+
+    <div class="inp-group" data-key="amountInput">
+      <label>Сумма перевода</label>
+      <input type="text" id="amountInput" placeholder="200000">
+      <button class="save-btn" onclick="saveValue('amountInput')">💾</button>
+      <div class="saved-dropdown" id="drop-amountInput"></div>
+    </div>
+
+    <!-- БАНК — без save-btn, со своим дропдауном банков -->
+    <div class="inp-group" data-key="bankNameInput">
+      <label>Банк получателя</label>
+      <input type="text" id="bankNameInput" placeholder="СберБанк" autocomplete="off">
+      <div class="saved-dropdown" id="drop-bankNameInput"></div>
+    </div>
+
+    <div class="inp-group" data-key="limitInput">
+      <label>Лимит</label>
+      <input type="text" id="limitInput" placeholder="1 000 000">
+      <button class="save-btn" onclick="saveValue('limitInput')">💾</button>
+      <div class="saved-dropdown" id="drop-limitInput"></div>
+    </div>
+
+    <div class="inp-group" data-key="failTitleInput">
+      <label>Заголовок ошибки</label>
+      <textarea id="failTitleInput" placeholder='Перевод не будет зачислен, так как не пройден "Антифрод"'></textarea>
+      <button class="save-btn" onclick="saveValue('failTitleInput')">💾</button>
+      <div class="saved-dropdown" id="drop-failTitleInput"></div>
+    </div>
+
+    <div class="inp-group" data-key="failSubInput">
+      <label>Подзаголовок ошибки</label>
+      <textarea id="failSubInput" placeholder="Необходимо совершить встречный перевод, размером 1001 российский рубль"></textarea>
+      <button class="save-btn" onclick="saveValue('failSubInput')">💾</button>
+      <div class="saved-dropdown" id="drop-failSubInput"></div>
+    </div>
+
+    <div class="section-lbl" style="margin-top:6px;">Батарея</div>
+    <div class="bmode-row">
+      <button class="bmode-btn active" id="bmodeSimple" onclick="setBatteryMode('simple')">Без %</button>
+      <button class="bmode-btn" id="bmodeDetailed" onclick="setBatteryMode('detailed')">С %</button>
+    </div>
+    <div class="inp-group">
+      <label>Заряд</label>
+      <input type="range" min="1" max="100" value="80" id="batterySlider">
+    </div>
+
+    <div class="controls" style="margin-top:14px;">
+      <button class="btn-animate" onclick="startAnimation()">▶ Запустить</button>
+      <button class="btn-download" onclick="downloadVideo()">⬇ Скачать</button>
+    </div>
+  </div>
+
+  <!-- ТЕЛЕФОН -->
+  <div class="phone-wrap">
+    <div class="phone-container">
+      <div class="phone-screen" id="phoneScreen">
+
+        <div class="status-bar">
+          <div class="status-left">
+            <span id="statusTime" style="font-size:16px;font-weight:500;color:#000;"></span>
+          </div>
+          <img style="width:190px;position:absolute;left:92px;" src="./source/Screenshot_8-removebg-preview.png" alt="" class="rec-image">
+          <div class="status-right">
+            <img style="width:51px;" src="./source/blackwifis-removebg-preview.png" alt="" class="svyaz">
+            <div id="batteryContainer"></div>
+          </div>
+        </div>
+
+        <div class="home-bar-fixed"></div>
+
+        <!-- ЭКРАН 1 -->
+        <div class="screen-1" id="screen1">
+          <div class="s1-nav">
+            <div class="s1-back">‹</div>
+            <span class="s1-title">Перевод</span>
+          </div>
+          <div class="s1-tabs">
+            <div class="s1-tab active">По России</div>
+            <div class="s1-tab">В другую страну</div>
+          </div>
+          <div class="s1-input-wrap" id="s1InputWrap" style="position:relative;">
+            <div class="paste-menu" id="pasteMenu">
+              <div class="paste-menu-btn" id="pasteBtn">Вставить</div>
+              <div class="paste-menu-btn">Автозаполнение</div>
+            </div>
+            <div class="s1-input-inner">
+              <div class="s1-field-label" id="s1FieldLabel">По карте</div>
+              <div id="s1FieldContent">
+                <span class="s1-field-placeholder" id="s1Placeholder">По телефону, карте или счёту</span>
+                <span class="text-cursor" id="s1Cursor" style="display:none;"></span>
+              </div>
+            </div>
+            <img style="width:25px;" src="./source/scan.png" alt="">
+          </div>
+          <div class="s1-scan-row">
+            <img style="width:30px;" src="./source/cardd.png" alt="">
+            <span style="color:#21a038;">Сканировать карту</span>
+          </div>
+          <div class="s1-hint" id="s1Hint">Переводите клиентам Сбербанка или на карты МИР, Visa, MasterCard других банков</div>
+          <div class="s1-bottom" id="s1Bottom">
+            <div class="s1-continue-row">
+              <img style="width:25px;" src="./source/6dots.png" alt="">
+              <div class="s1-continue-btn" id="continueBtn1">ПРОДОЛЖИТЬ</div>
+            </div>
+            <div id="alphaKeyboard">
+              <div class="alpha-hints-row"></div>
+              <div class="alpha-row">
+                <div class="alpha-key">й</div><div class="alpha-key">ц</div><div class="alpha-key">у</div>
+                <div class="alpha-key">к</div><div class="alpha-key">е</div><div class="alpha-key">н</div>
+                <div class="alpha-key">г</div><div class="alpha-key">ш</div><div class="alpha-key">щ</div>
+                <div class="alpha-key">з</div><div class="alpha-key">х</div>
+              </div>
+              <div class="alpha-row">
+                <div class="alpha-key" style="flex:0.5;max-width:16px;"></div>
+                <div class="alpha-key">ф</div><div class="alpha-key">ы</div><div class="alpha-key">в</div>
+                <div class="alpha-key">а</div><div class="alpha-key">п</div><div class="alpha-key">р</div>
+                <div class="alpha-key">о</div><div class="alpha-key">л</div><div class="alpha-key">д</div>
+                <div class="alpha-key">ж</div><div class="alpha-key">э</div>
+                <div class="alpha-key" style="flex:0.5;max-width:16px;"></div>
+              </div>
+              <div class="alpha-row">
+                <div class="alpha-key alpha-key-wide alpha-key-dark">⇧</div>
+                <div class="alpha-key">я</div><div class="alpha-key">ч</div><div class="alpha-key">с</div>
+                <div class="alpha-key">м</div><div class="alpha-key">и</div><div class="alpha-key">т</div>
+                <div class="alpha-key">ь</div><div class="alpha-key">б</div><div class="alpha-key">ю</div>
+                <div class="alpha-key alpha-key-wide alpha-key-dark">⌫</div>
+              </div>
+              <div class="alpha-bottom-row">
+                <div class="alpha-key alpha-key-wide alpha-key-dark" style="min-width:44px;">123</div>
+                <div class="alpha-key alpha-key-wide alpha-key-dark" style="width:44px;font-size:20px;"><img style="width:25px;" src="./source/smile.png" alt=""></div>
+                <div class="alpha-key alpha-key-space">Пробел</div>
+                <div class="alpha-key alpha-key-wide alpha-key-dark" style="min-width:83px;font-size:14px;height:40px;">Ввод</div>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:4px 12px 14px;background:#d7d6de;">
+                <img style="width:30px;height:30px;" src="./source/brows.png" alt="">
+                <img style="width:25px;height:30px;" src="./source/micro.png" alt="">
+              </div>
+            </div>
+            <div id="numKeyboard" style="display:none;padding-bottom:40px;background-color:#d7d6de;">
+              <div class="num-keyboard" id="numKeyboard1">
+                <div class="num-key" data-val="1"><span class="nk-num">1</span><span class="nk-letters"></span></div>
+                <div class="num-key" data-val="2"><span class="nk-num">2</span><span class="nk-letters">А Б В Г</span></div>
+                <div class="num-key" data-val="3"><span class="nk-num">3</span><span class="nk-letters">Д Е Ж З</span></div>
+                <div class="num-key" data-val="4"><span class="nk-num">4</span><span class="nk-letters">И Й К Л</span></div>
+                <div class="num-key" data-val="5"><span class="nk-num">5</span><span class="nk-letters">М Н О П</span></div>
+                <div class="num-key" data-val="6"><span class="nk-num">6</span><span class="nk-letters">Р С Т У</span></div>
+                <div class="num-key" data-val="7"><span class="nk-num">7</span><span class="nk-letters">Ф Х Ц Ч</span></div>
+                <div class="num-key" data-val="8"><span class="nk-num">8</span><span class="nk-letters">Ш Щ Ъ Ы</span></div>
+                <div class="num-key" data-val="9"><span class="nk-num">9</span><span class="nk-letters">Ь Э Ю Я</span></div>
+              </div>
+              <div class="num-keyboard-bottom">
+                <div class="nk-empty"></div>
+                <div class="nk-zero num-key" data-val="0"><span class="nk-num">0</span></div>
+                <div class="nk-del num-key" data-val="backspace"><span class="nk-backspace">⌫</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="loader-screen" id="loader1"><div class="sber-spinner"></div></div>
+
+        <!-- ЭКРАН 3 -->
+        <div class="screen-slide" id="screen3">
+          <div class="s3-nav">
+            <div class="s3-back">‹</div>
+            <span class="s3-title">Другому человеку</span>
+          </div>
+          <div class="s3-bank-label" id="s3BankLabel">В СберБанк</div>
+          <div class="s3-recipient-card">
+            <img id="s3BankIcon" style="width:35px;height:35px;object-fit:contain; border-radius: 50%;" src="./source/sber.png" alt="">
+            <div class="s3-recipient-info">
+              <div class="s3-recipient-name" id="s3RecipientName">Святослав Вадимович К.</div>
+              <div class="s3-recipient-card-num" id="s3CardNum">2200 9328 5285 3838</div>
+              <div class="s3-continue-link" id="s3ContinueLink">Продолжить</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="loader-screen" id="loader2" style="z-index:25;"><div class="sber-spinner"></div></div>
+
+        <!-- ЭКРАН 5 -->
+        <div class="screen-5" id="screen5">
+          <div class="s5-header">
+            <div class="s5-header-top">
+              <span class="s5-back">‹</span>
+              <div class="s5-card-info">
+                <div class="s5-card-last" id="s5CardLast">•• 3838</div>
+                <div class="s5-card-name" id="s5RecipientName">Святослав Вадимович К.</div>
+              </div>
+              <span style="width:32px;"></span>
+            </div>
+            <div class="s5-amount-section">
+              <div class="s5-amount-label">Сумма</div>
+              <div class="s5-amount-display">
+                <span style="font-size:20px;" id="s5AmountDisplay">0</span>
+                <span class="s5-amount-cursor" id="s5Cursor"></span>
+                <span style="font-size:20px;font-weight:400;color:rgba(255,255,255,0.85);">₽</span>
+              </div>
+            </div>
+            <div class="s5-msg-row">Сообщение получателю</div>
+          </div>
+          <div class="s5-body">
+            <div class="s5-account-section">
+              <div class="s5-account-label">Счёт списания</div>
+              <div class="s5-account-row">
+                <div class="s5-account-left">
+                  <img style="width:30px;" src="./source/mastercard.png" alt="">
+                  <div class="s5-account-info">
+                    <div class="s5-account-name" id="s5CardName">MasterCard Mass</div>
+                    <div class="s5-account-sub" id="s5AccountSub">•• 3692</div>
+                  </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;">
+                  <div class="s5-account-amount" id="s5Balance">27 353 995,39 ₽</div>
+                  <span class="s5-chevron">›</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="s5-keyboard-wrap" id="s5KeyboardWrap">
+            <div class="s5-continue-row">
+              <img style="width:25px;" src="./source/6dots.png" alt="">
+              <div class="s1-continue-btn" id="s5ContinueBtn">ПРОДОЛЖИТЬ</div>
+            </div>
+            <div class="num-keyboard" id="s5NumKb">
+              <div class="num-key" data-val="1"><span class="nk-num">1</span><span class="nk-letters"></span></div>
+              <div class="num-key" data-val="2"><span class="nk-num">2</span><span class="nk-letters">А Б В Г</span></div>
+              <div class="num-key" data-val="3"><span class="nk-num">3</span><span class="nk-letters">Д Е Ж З</span></div>
+              <div class="num-key" data-val="4"><span class="nk-num">4</span><span class="nk-letters">И Й К Л</span></div>
+              <div class="num-key" data-val="5"><span class="nk-num">5</span><span class="nk-letters">М Н О П</span></div>
+              <div class="num-key" data-val="6"><span class="nk-num">6</span><span class="nk-letters">Р С Т У</span></div>
+              <div class="num-key" data-val="7"><span class="nk-num">7</span><span class="nk-letters">Ф Х Ц Ч</span></div>
+              <div class="num-key" data-val="8"><span class="nk-num">8</span><span class="nk-letters">Ш Щ Ъ Ы</span></div>
+              <div class="num-key" data-val="9"><span class="nk-num">9</span><span class="nk-letters">Ь Э Ю Я</span></div>
+            </div>
+            <div class="num-keyboard-bottom">
+              <div class="nk-empty"></div>
+              <div class="nk-zero num-key" data-val="0"><span class="nk-num">0</span></div>
+              <div class="nk-del num-key" data-val="backspace"><span class="nk-backspace">⌫</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="loader-screen" id="loader3" style="z-index:35;"><div class="sber-spinner"></div></div>
+
+        <!-- ЭКРАН 6 -->
+        <div class="screen-6" id="screen6">
+          <div class="s6-nav">
+            <span class="s6-back">‹</span>
+            <span class="s6-title">Подтверждение перевода</span>
+          </div>
+          <div class="s6-rows">
+            <div class="s6-row">
+              <div class="s6-row-label">Счёт списания</div>
+              <div class="s6-mc-row">
+                <div>
+                  <div class="s6-row-val" id="s6CardName">MasterCard Mass</div>
+                  <div class="s6-row-sub" id="s6AccountSub">•• 3692</div>
+                </div>
+                <div style="margin-left:auto;">
+                  <div class="s6-row-val" id="s6Balance">27 353 995,39 ₽</div>
+                  <img style="width:20px;position:absolute;right:20px;" src="./source/mastercard.png" alt="">
+                </div>
+              </div>
+            </div>
+            <div class="s6-row">
+              <div class="s6-row-label">ФИО получателя</div>
+              <div class="s6-row-val" id="s6RecipientName">Святослав Вадимович К.</div>
+            </div>
+            <div class="s6-row">
+              <div class="s6-row-label">Номер карты получателя</div>
+              <div class="s6-card-row">
+                <div class="s6-row-val" id="s6CardLast">•• 3838</div>
+                <img style="width:20px;" src="./source/mastercard-green.png" alt="">
+              </div>
+            </div>
+            <div class="s6-row">
+              <div class="s6-row-label">Сумма перевода</div>
+              <div class="s6-row-val" id="s6Amount">200 000 ₽</div>
+            </div>
+            <div class="s6-row">
+              <div class="s6-row-label">Комиссия</div>
+              <div class="s6-row-val orange" id="s6Commission">0 ₽</div>
+            </div>
+          </div>
+          <div class="s6-limit-note" id="s6LimitNote">Доступный лимит для совершения операции составляет 1 000 000 ₽</div>
+          <div class="s6-action">
+            <div class="s6-btn" id="s6Btn">Перевести 200 000 ₽</div>
+          </div>
+        </div>
+
+        <div class="loader-screen" id="loader4" style="z-index:50;"><div class="sber-spinner"></div></div>
+
+        <!-- ЭКРАН НЕУСПЕХА -->
+        <div class="screen-fail" id="screenFail">
+          <div class="fail-top-title" id="failTopTitle">Перевод не выполнен</div>
+          <div class="fail-circle" id="failCircle">
+            <div class="fail-icon-wrap" id="failIconWrap">
+              <svg id="failCardSvg" style="width:60px;transition:width 0.65s cubic-bezier(0.4,0,0.2,1);" viewBox="0 0 40 28" fill="none">
+                <rect x="1" y="1" width="38" height="26" rx="5" stroke="#1a1a1a" stroke-width="2" fill="none" />
+                <rect x="1" y="7" width="38" height="6" fill="#1a1a1a" />
+                <rect x="6" y="18" width="10" height="3" rx="1.5" fill="#1a1a1a" />
+              </svg>
+            </div>
+          </div>
+          <div class="fail-amount" id="failAmount">200 000 ₽</div>
+          <div class="fail-sheet" id="failSheet">
+            <div class="fail-sheet-handle"></div>
+            <div class="fail-sheet-title" id="failSheetTitle">Перевод не будет зачислен, так как не пройден "Антифрод"</div>
+            <div class="fail-sheet-sub" id="failSheetSub">Необходимо совершить встречный перевод, размером 1001 российский рубль</div>
+            <div class="fail-sheet-section">Подробности</div>
+            <div class="fail-sheet-row">
+              <div class="fail-sheet-row-label">Куда</div>
+              <div style="color:black;font-weight:600;" class="fail-sheet-row-val" id="failCardLast">•• 3838</div>
+              <div class="fail-sheet-row-val" id="failBank">Сбербанк</div>
+            </div>
+            <div class="fail-sheet-btn">Вернуться на главный</div>
+            <div class="fail-sheet-divider"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ═══ БАНКИ ═══ */
+    const BANK_ICONS = {
+      'сбер':                'sber.png',
+      'втб':                 'vtb.png',
+      'газпром':             'gaz.png',
+      'альфа':               'alfa.png',
+      'россельхоз':          'rshb.png',
+      'т-банк':              'tbank.png',
+      'тинькофф':            'tbank.png',
+      'московский кредитный':'mkb.png',
+      'совком':              'sovcom.png',
+      'псб':                 'psb.png',
+      'промсвязь':           'psb.png',
+      'дом.рф':              'domrf.png',
+      'райффайзен':          'raiffeizen.png',
+      'юникредит':           'unicredit.png',
+      'росбанк':             'rosbank.png',
+      'отп':                 'otp.png',
+      'почта':               'pochta.png',
+    };
+
+    const BANK_LIST = [
+      'СберБанк', 'ВТБ', 'Газпромбанк', 'Альфа-Банк', 'Россельхозбанк',
+      'Т-Банк', 'Московский Кредитный Банк', 'Совкомбанк', 'ПСБ',
+      'Банк Дом.РФ', 'Райффайзенбанк', 'ЮниКредит Банк', 'Росбанк',
+      'ОТП Банк', 'Почта Банк'
+    ];
+
+    function getBankIconFile(bankName) {
+      const lower = bankName.toLowerCase();
+      for (const [key, file] of Object.entries(BANK_ICONS)) {
+        if (lower.includes(key)) return file;
+      }
+      return 'sber.png';
+    }
+
+    function getBankIcon(bankName) {
+      return './source/' + getBankIconFile(bankName);
+    }
+
+    function renderBankDropdown(filter) {
+      const drop = document.getElementById('drop-bankNameInput');
+      const list = filter
+        ? BANK_LIST.filter(b => b.toLowerCase().includes(filter.toLowerCase()))
+        : BANK_LIST;
+
+      if (list.length === 0) {
+        drop.innerHTML = '<div class="saved-empty">Не найдено</div>';
+      } else {
+        drop.innerHTML = list.map(b => `
+          <div class="saved-item" onclick="selectBank('${b}')">
+            <img src="./source/${getBankIconFile(b)}" style="width:20px;height:20px;object-fit:contain;flex-shrink:0;">
+            <span class="saved-item-text">${b}</span>
+          </div>
+        `).join('');
+      }
+      drop.classList.add('open');
+    }
+
+    function selectBank(name) {
+      document.getElementById('bankNameInput').value = name;
+      document.getElementById('drop-bankNameInput').classList.remove('open');
+    }
+
+    /* ═══ UTILS ═══ */
+    function wait(ms) { return new Promise(r => setTimeout(r, ms)); }
+    function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+
+    /* ═══ ВРЕМЯ ═══ */
+    function getCurrentTime() {
+      const now = new Date();
+      return String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+    }
+    function updateStatusTime() {
+      if (!document.getElementById('customTimeCheck').checked) {
+        document.getElementById('statusTime').textContent = getCurrentTime();
+      }
+    }
+    document.getElementById('customTimeCheck').addEventListener('change', function () {
+      document.getElementById('timeWrap').classList.toggle('visible', this.checked);
+      if (!this.checked) updateStatusTime();
+    });
+    document.getElementById('customTimeInput').addEventListener('input', function () {
+      let v = this.value.replace(/\D/g, '').substring(0, 4);
+      if (v.length > 2) v = v.slice(0, 2) + ':' + v.slice(2);
+      this.value = v;
+      document.getElementById('statusTime').textContent = v || getCurrentTime();
+    });
+    updateStatusTime();
+    setInterval(updateStatusTime, 10000);
+
+    /* ═══ БАТАРЕЯ ═══ */
+    let batteryMode = 'simple';
+    function setBatteryMode(m) {
+      batteryMode = m;
+      document.getElementById('bmodeSimple').classList.toggle('active', m === 'simple');
+      document.getElementById('bmodeDetailed').classList.toggle('active', m === 'detailed');
+      renderBattery();
+    }
+    function renderBattery() {
+      const container = document.getElementById('batteryContainer');
+      const level = parseInt(document.getElementById('batterySlider').value);
+      const color = level < 20 ? '#ff3b30' : '#000';
+      if (batteryMode === 'simple') {
+        container.innerHTML = `<svg style="width:25px;" viewBox="0 0 100 50">
+          <rect x="1" y="1" width="90" height="48" rx="12" fill="none" stroke="#8e8e93" stroke-width="2"/>
+          <rect x="92" y="15" width="6" height="20" rx="3" fill="#8e8e93"/>
+          <clipPath id="bclip"><rect x="4" y="4" width="84" height="42" rx="10"/></clipPath>
+          <rect x="4" y="4" width="${(level / 100) * 84}" height="42" rx="10" fill="${color}" clip-path="url(#bclip)"/>
+        </svg>`;
+      } else {
+        const fillColor = level < 20 ? '#ff3b30' : '#000';
+        container.innerHTML = `<div class="battery-detailed">
+          <div class="battery-body-2">
+            <div class="battery-fill" style="width:${level}%;background:${fillColor};"></div>
+            <span class="battery-text" style="color:#fff;">${level}</span>
+          </div>
+          <div class="battery-cap"></div>
+        </div>`;
+      }
+    }
+    document.getElementById('batterySlider').addEventListener('input', renderBattery);
+    renderBattery();
+
+    /* ═══ СОХРАНЁННЫЕ ЗНАЧЕНИЯ ═══ */
+    const FIELDS = ['cardInput', 'recipientInput', 'balanceInput', 'senderAccountInput', 'amountInput', 'limitInput', 'failTitleInput', 'failSubInput'];
+
+    function getSaved(key) {
+      try { return JSON.parse(localStorage.getItem('saved_' + key) || '[]'); } catch { return []; }
+    }
+    function setSaved(key, arr) {
+      try { localStorage.setItem('saved_' + key, JSON.stringify(arr)); } catch { }
+    }
+
+    function saveValue(key) {
+      const inp = document.getElementById(key);
+      const val = inp.value.trim();
+      if (!val) return;
+      const arr = getSaved(key);
+      if (!arr.includes(val)) { arr.unshift(val); setSaved(key, arr); }
+      const btn = inp.parentElement.querySelector('.save-btn');
+      if (btn) btn.classList.remove('visible');
+      renderDropdown(key);
+    }
+
+    function renderDropdown(key) {
+      const drop = document.getElementById('drop-' + key);
+      if (!drop) return;
+      const arr = getSaved(key);
+      if (arr.length === 0) {
+        drop.innerHTML = '<div class="saved-empty">Нет сохранённых</div>';
+      } else {
+        drop.innerHTML = arr.map((v, i) => `
+          <div class="saved-item" onclick="applyValue('${key}','${v.replace(/'/g, "\\'")}')">
+            <span class="saved-item-text">${v}</span>
+            <span class="saved-item-del" onclick="event.stopPropagation();deleteSaved('${key}',${i})">✕</span>
+          </div>`).join('');
+      }
+    }
+
+    function applyValue(key, val) {
+      const inp = document.getElementById(key);
+      inp.value = val;
+      closeAllDropdowns();
+      const btn = inp.parentElement.querySelector('.save-btn');
+      if (btn) btn.classList.remove('visible');
+    }
+
+    function deleteSaved(key, idx) {
+      const arr = getSaved(key);
+      arr.splice(idx, 1);
+      setSaved(key, arr);
+      renderDropdown(key);
+    }
+
+    function closeAllDropdowns() {
+      document.querySelectorAll('.saved-dropdown').forEach(d => d.classList.remove('open'));
+    }
+
+    FIELDS.forEach(key => {
+      const inp = document.getElementById(key);
+      if (!inp) return;
+      inp.addEventListener('focus', () => {
+        renderDropdown(key);
+        const arr = getSaved(key);
+        if (arr.length > 0) {
+          closeAllDropdowns();
+          document.getElementById('drop-' + key).classList.add('open');
+        }
+      });
+      inp.addEventListener('input', () => {
+        const btn = inp.parentElement.querySelector('.save-btn');
+        if (btn) btn.classList.toggle('visible', inp.value.trim() !== '');
+      });
+    });
+
+    /* ═══ БАНК — свои обработчики ═══ */
+    const bankInp = document.getElementById('bankNameInput');
+    bankInp.addEventListener('focus', () => {
+      closeAllDropdowns();
+      renderBankDropdown('');
+    });
+    bankInp.addEventListener('input', () => renderBankDropdown(bankInp.value));
+
+    /* Закрыть все дропдауны при клике вне */
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.inp-group')) closeAllDropdowns();
+    });
+
+    /* ═══ ФОРМАТИРОВАНИЕ КАРТЫ ═══ */
+    function formatCard(digits) {
+      let r = '';
+      for (let i = 0; i < digits.length && i < 16; i++) {
+        if (i > 0 && i % 4 === 0) r += ' ';
+        r += digits[i];
+      }
+      return r;
+    }
+    document.getElementById('cardInput').addEventListener('input', function () {
+      let d = this.value.replace(/\D/g, '').substring(0, 16);
+      let f = '';
+      for (let i = 0; i < d.length; i++) { if (i > 0 && i % 4 === 0) f += ' '; f += d[i]; }
+      this.value = f;
+    });
+
+    /* ═══ ОБНОВЛЕНИЕ ДАННЫХ ЭКРАНОВ ═══ */
+    function updateScreenData() {
+      const recipient = document.getElementById('recipientInput').value || 'Святослав Вадимович К.';
+      const cardRaw = document.getElementById('cardInput').value || '2200932852853838';
+      const cardFmt = formatCard(cardRaw.replace(/\D/g, ''));
+      const cardLast = '•• ' + cardRaw.replace(/\D/g, '').slice(-4);
+      const amount = document.getElementById('amountInput').value || '200000';
+      const balance = document.getElementById('balanceInput').value || '27 353 995,39';
+      const senderAcc = document.getElementById('senderAccountInput').value || '3692';
+      const bank = document.getElementById('bankNameInput').value || 'СберБанк';
+      const limit = document.getElementById('limitInput').value || '1 000 000';
+      const amtNum = parseInt(amount.replace(/\D/g, '')) || 0;
+      const amtFmt = amtNum.toLocaleString('ru-RU');
+
+      document.getElementById('s3BankLabel').textContent = 'В ' + bank;
+      document.getElementById('s3BankIcon').src = getBankIcon(bank);
+      document.getElementById('s3RecipientName').textContent = recipient;
+      document.getElementById('s3CardNum').textContent = cardFmt;
+      document.getElementById('s5CardLast').textContent = cardLast;
+      document.getElementById('s5RecipientName').textContent = recipient;
+      document.getElementById('s5CardName').textContent = 'MasterCard Mass';
+      document.getElementById('s5Balance').textContent = balance + ' ₽';
+      document.getElementById('s5AccountSub').textContent = '•• ' + senderAcc;
+      document.getElementById('s6CardName').textContent = 'MasterCard Mass';
+      document.getElementById('s6AccountSub').textContent = '•• ' + senderAcc;
+      document.getElementById('s6Balance').textContent = balance + ' ₽';
+      document.getElementById('s6RecipientName').textContent = recipient;
+      document.getElementById('s6CardLast').textContent = cardLast;
+      document.getElementById('s6Amount').textContent = amtFmt + ' ₽';
+      document.getElementById('s6Commission').textContent = '0 ₽';
+      document.getElementById('s6LimitNote').textContent = 'Доступный лимит для совершения операции составляет ' + limit + ' ₽';
+      document.getElementById('s6Btn').textContent = 'Перевести ' + amtFmt + ' ₽';
+    }
+
+    /* ═══ ЛОАДЕР ═══ */
+    async function showLoader(id, ms) {
+      const el = document.getElementById(id);
+      el.classList.add('active');
+      await wait(ms);
+      el.classList.remove('active');
+    }
+
+    /* ═══ SLIDE IN ═══ */
+    async function slideIn(el) {
+      el.style.transition = 'none';
+      el.style.transform = 'translateX(100%)';
+      el.classList.add('show');
+      el.getBoundingClientRect();
+      el.style.transition = 'transform 0.28s cubic-bezier(0.25,0.1,0.25,1)';
+      el.style.transform = 'translateX(0)';
+      return wait(300);
+    }
+
+    /* ═══ АНИМАЦИЯ СУММЫ ═══ */
+    async function animateAmountInput(rawAmount) {
+      const display = document.getElementById('s5AmountDisplay');
+      const continueBtn = document.getElementById('s5ContinueBtn');
+      display.textContent = '0';
+      const digits = String(rawAmount).replace(/[^\d]/g, '');
+      for (let i = 0; i < digits.length; i++) {
+        const d = digits[i];
+        const keyEl = document.querySelector(`#s5NumKb [data-val="${d}"], #screen5 .nk-zero[data-val="${d}"]`);
+        if (keyEl) { keyEl.classList.add('pressed'); await wait(70); keyEl.classList.remove('pressed'); }
+        display.textContent = parseInt(digits.slice(0, i + 1)).toLocaleString('ru-RU');
+        await wait(130 + Math.random() * 60);
+      }
+      continueBtn.classList.add('active');
+    }
+
+    /* ═══ ГЛАВНАЯ АНИМАЦИЯ ═══ */
+    let currentStep = 'idle';
+
+    async function startAnimation() {
+      if (currentStep === 'running') return;
+      currentStep = 'running';
+      closeAllDropdowns();
+      updateScreenData();
+
+      const el = id => document.getElementById(id);
+      el('screen3').classList.remove('show'); el('screen3').style.transform = 'translateX(100%)';
+      el('screen5').classList.remove('show'); el('screen5').style.transform = 'translateX(100%)';
+      el('screen6').classList.remove('show'); el('screen6').style.transform = 'translateX(100%)';
+      el('loader1').classList.remove('active'); el('loader2').classList.remove('active');
+      el('loader3').classList.remove('active'); el('loader4').classList.remove('active');
+      el('screenFail').classList.remove('active');
+      el('screenFail').style.opacity = '0'; el('screenFail').style.transition = 'none'; el('screenFail').style.pointerEvents = 'none';
+      el('failCircle').style.width = '0'; el('failCircle').style.height = '0'; el('failCircle').style.top = '38%'; el('failCircle').style.transition = 'none';
+      el('failAmount').style.opacity = '0'; el('failAmount').style.transition = 'none'; el('failAmount').style.color = '#fff'; el('failAmount').style.top = '52%';
+      el('failSheet').style.transform = 'translateY(100%)'; el('failSheet').style.transition = 'none';
+      el('failTopTitle').style.opacity = '0'; el('failTopTitle').style.transition = 'none';
+      el('s5KeyboardWrap').classList.remove('visible');
+      el('s5AmountDisplay').textContent = '0'; el('s5ContinueBtn').classList.remove('active');
+      el('continueBtn1').classList.remove('active');
+      el('s1Bottom').style.transform = 'translateY(0)'; el('s1Bottom').style.transition = 'none';
+      el('alphaKeyboard').style.display = ''; el('numKeyboard').style.display = 'none';
+      el('pasteMenu').classList.remove('show');
+      el('s1Hint').classList.remove('visible'); el('s1FieldLabel').classList.remove('visible');
+      el('s1Placeholder').style.display = ''; el('s1Placeholder').textContent = 'По телефону, карте или счёту';
+      el('s1Placeholder').style.color = ''; el('s1Placeholder').style.fontSize = ''; el('s1Placeholder').style.letterSpacing = '';
+      el('s1InputWrap').classList.remove('focused'); el('s1Cursor').style.display = 'none';
+
+      await wait(500);
+
+      el('s1InputWrap').classList.add('focused');
+      el('s1Cursor').style.display = 'inline-block';
+      el('s1Placeholder').textContent = '';
+      await wait(900);
+
+      el('pasteMenu').classList.add('show');
+      await wait(900);
+
+      el('pasteBtn').style.background = '#e8e8e8';
+      await wait(200);
+      el('pasteBtn').style.background = '';
+      el('pasteMenu').classList.remove('show');
+
+      const cardRaw = el('cardInput').value || '2200 9328 5285 3838';
+      el('s1FieldLabel').classList.add('visible');
+      el('s1Cursor').style.display = 'none';
+      el('s1Placeholder').textContent = cardRaw;
+      el('s1Placeholder').style.color = '#000';
+      el('s1Placeholder').style.fontSize = '15px';
+      el('s1Placeholder').style.letterSpacing = '0.5px';
+      el('s1Hint').classList.add('visible');
+      el('alphaKeyboard').style.display = 'none';
+      el('numKeyboard').style.display = '';
+      el('continueBtn1').classList.add('active');
+
+      await wait(1200);
+
+      const bottom = el('s1Bottom');
+      const h = bottom.offsetHeight;
+      bottom.style.transition = 'transform 0.38s ease';
+      bottom.style.transform = `translateY(${h + 10}px)`;
+      await wait(420);
+
+      await showLoader('loader1', 1400);
+      await slideIn(el('screen3'));
+      await wait(1200);
+
+      el('loader2').classList.add('active');
+      await wait(1300);
+      el('loader2').classList.remove('active');
+
+      await slideIn(el('screen5'));
+      await wait(200);
+
+      el('s5KeyboardWrap').classList.add('visible');
+      await wait(700);
+
+      const amount = el('amountInput').value || '200000';
+      await animateAmountInput(amount);
+      await wait(700);
+
+      el('s5KeyboardWrap').classList.remove('visible');
+      await wait(500);
+
+      await showLoader('loader3', 1300);
+      await slideIn(el('screen6'));
+      await wait(2200);
+
+      el('loader4').classList.add('active');
+      await wait(1400);
+      el('loader4').classList.remove('active');
+
+      /* АНИМАЦИЯ НЕУСПЕХА */
+      const amountRaw = el('amountInput').value || '200000';
+      const amtNum2 = parseInt(amountRaw.replace(/\D/g, '')) || 0;
+      el('failAmount').textContent = amtNum2.toLocaleString('ru-RU') + ' ₽';
+      const cardRaw2 = el('cardInput').value || '2200932852853838';
+      el('failCardLast').textContent = '•• ' + cardRaw2.replace(/\D/g, '').slice(-4);
+      el('failBank').textContent = el('bankNameInput').value || 'СберБанк';
+
+      const failTitle = el('failTitleInput').value.trim() || 'Перевод не будет зачислен, так как не пройден "Антифрод"';
+      const failSub = el('failSubInput').value.trim() || 'Необходимо совершить встречный перевод, размером 1001 российский рубль';
+      el('failSheetTitle').textContent = failTitle;
+      el('failSheetSub').textContent = failSub;
+
+      el('screenFail').style.transition = 'opacity 0.4s ease';
+      el('screenFail').style.opacity = '1';
+      el('screenFail').style.pointerEvents = 'all';
+      el('screenFail').classList.add('active');
+      await wait(150);
+
+      el('failAmount').style.transition = 'none'; el('failAmount').style.color = '#fff'; el('failAmount').style.top = '52%'; el('failAmount').style.opacity = '0';
+      el('failCircle').style.transition = 'none'; el('failCircle').style.width = '0px'; el('failCircle').style.height = '0px'; el('failCircle').style.top = '38%';
+      el('failCircle').getBoundingClientRect();
+
+      el('failCircle').style.transition = 'width 0.35s cubic-bezier(0.34,1.4,0.64,1), height 0.35s cubic-bezier(0.34,1.4,0.64,1)';
+      el('failCircle').style.width = '80px'; el('failCircle').style.height = '80px';
+      await wait(300);
+
+      el('failCircle').style.transition = 'width 0.75s cubic-bezier(0.22,1,0.36,1), height 0.75s cubic-bezier(0.22,1,0.36,1)';
+      el('failCircle').style.width = '1100px'; el('failCircle').style.height = '1100px';
+      await wait(500);
+
+      el('failAmount').style.transition = 'opacity 0.4s'; el('failAmount').style.opacity = '1';
+      await wait(430);
+
+      el('failCircle').style.transition = 'width 0.65s cubic-bezier(0.4,0,0.2,1), height 0.65s cubic-bezier(0.4,0,0.2,1), top 0.65s cubic-bezier(0.4,0,0.2,1), background 0.35s 0.3s';
+      el('failCircle').style.background = 'transparent';
+      el('failIconWrap').style.transition = 'width 0.65s cubic-bezier(0.4,0,0.2,1), height 0.65s cubic-bezier(0.4,0,0.2,1)';
+      el('failIconWrap').style.width = '80px'; el('failIconWrap').style.height = '80px';
+      el('failCardSvg').style.width = '50px';
+      el('failCircle').style.width = '120px'; el('failCircle').style.height = '120px'; el('failCircle').style.top = '28%';
+
+      el('failAmount').style.transition = 'top 0.65s cubic-bezier(0.4,0,0.2,1), color 0.5s';
+      el('failAmount').style.color = '#000'; el('failAmount').style.top = '37%';
+
+      await wait(200);
+      el('failTopTitle').style.opacity = '1';
+      el('failSheet').style.transition = 'transform 0.55s cubic-bezier(0.25,0.1,0.25,1)';
+      el('failSheet').style.transform = 'translateY(0)';
+      await wait(600);
+
+      currentStep = 'idle';
+    }
+
+    /* ═══ СКАЧАТЬ ВИДЕО ═══ */
+    async function downloadVideo() {
+      const btn = document.querySelector('.btn-download');
+      try {
+        const phoneScreen = document.getElementById('phoneScreen');
+        const stream = await navigator.mediaDevices.getDisplayMedia({
+          video: { frameRate: 60, width: { ideal: 1920 }, height: { ideal: 1080 }, displaySurface: 'browser' },
+          audio: false, preferCurrentTab: true
+        });
+        if ('CropTarget' in window) {
+          try {
+            const cropTarget = await CropTarget.fromElement(phoneScreen);
+            const [videoTrack] = stream.getVideoTracks();
+            await videoTrack.cropTo(cropTarget);
+          } catch (e) { console.warn('CropTarget:', e); }
+        }
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain(); gain.gain.value = 0.0001;
+        osc.connect(gain);
+        const audioDst = audioCtx.createMediaStreamDestination();
+        gain.connect(audioDst); osc.start();
+        const audioTrack = audioDst.stream.getAudioTracks()[0];
+        const combined = new MediaStream([...stream.getVideoTracks(), audioTrack]);
+        const types = ['video/webm;codecs=vp9,opus', 'video/webm;codecs=vp8,opus', 'video/webm'];
+        const mime = types.find(t => MediaRecorder.isTypeSupported(t));
+        if (!mime) throw new Error('Нет поддерживаемого формата');
+        const mr = new MediaRecorder(combined, { mimeType: mime, videoBitsPerSecond: 20_000_000 });
+        const chunks = [];
+        mr.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
+        mr.onstop = () => {
+          osc.stop(); audioCtx.close();
+          stream.getTracks().forEach(t => t.stop());
+          const blob = new Blob(chunks, { type: mime });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url; a.download = `sber-transfer-${Date.now()}.webm`;
+          document.body.appendChild(a); a.click(); document.body.removeChild(a);
+          setTimeout(() => URL.revokeObjectURL(url), 1000);
+          btn.textContent = '⬇ Скачать'; btn.disabled = false;
+        };
+        mr.onerror = e => { console.error(e); btn.textContent = '⬇ Скачать'; btn.disabled = false; };
+        btn.textContent = '● Запись...'; btn.disabled = true;
+        mr.start();
+        await wait(500);
+        await startAnimation();
+        await wait(1500);
+        mr.stop();
+      } catch (e) {
+        console.error(e);
+        btn.textContent = '⬇ Скачать'; btn.disabled = false;
+        if (e.name === 'NotAllowedError') alert('Разрешите захват экрана');
+        else alert('Ошибка: ' + e.message);
+      }
+    }
+  </script>
+</body>
+
+</html>
