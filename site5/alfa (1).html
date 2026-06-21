@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Альфа-Банк Перевод</title>
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { font-size: 16px; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+
+        /* ═══════════ ТЕМА ═══════════ */
+        :root {
+            --bg-body-from: rgba(239, 51, 36, 0.10);
+            --bg-body-gradient: linear-gradient(160deg, #0d0d0d 0%, #111 100%);
+            --panel-bg: #1a1a1a;
+            --panel-border: #2a2a2a;
+            --panel-title: #fff;
+            --input-bg: #252525;
+            --input-border: #333;
+            --input-color: #fff;
+            --label-color: #888;
+            --checkbox-label: #ccc;
+            --section-label: #888;
+            --bmode-btn-bg: #252525;
+            --bmode-btn-border: #333;
+            --bmode-btn-color: #aaa;
+            --tpl-block-bg: #202020;
+            --tpl-block-border: #2e2e2e;
+            --tpl-tab-bg: #252525;
+            --tpl-tab-border: #333;
+            --tpl-tab-color: #aaa;
+            --tpl-item-bg: #252525;
+            --tpl-item-border: #333;
+            --tpl-item-hover: #2a2a2a;
+            --tpl-item-color: #ccc;
+            --tpl-del-color: #555;
+            --tpl-add-bg: #252525;
+            --tpl-add-border: #333;
+            --tpl-toggle-border: #333;
+            --tpl-toggle-color: #666;
+            --notif-label: #888;
+            --toggle-track-bg: #333;
+            --toggle-thumb-bg: #888;
+            --accent: #ef3324;
+        }
+        html.theme-light {
+            --bg-body-gradient: linear-gradient(160deg, #f0f0f0 0%, #e8e8e8 100%);
+            --panel-bg: #ffffff;
+            --panel-border: #d0d0d0;
+            --panel-title: #111;
+            --input-bg: #f5f5f5;
+            --input-border: #c8c8c8;
+            --input-color: #111;
+            --label-color: #666;
+            --checkbox-label: #333;
+            --section-label: #666;
+            --bmode-btn-bg: #f5f5f5;
+            --bmode-btn-border: #c8c8c8;
+            --bmode-btn-color: #555;
+            --tpl-block-bg: #f9f9f9;
+            --tpl-block-border: #d8d8d8;
+            --tpl-tab-bg: #f5f5f5;
+            --tpl-tab-border: #c8c8c8;
+            --tpl-tab-color: #555;
+            --tpl-item-bg: #f5f5f5;
+            --tpl-item-border: #c8c8c8;
+            --tpl-item-hover: #ebebeb;
+            --tpl-item-color: #333;
+            --tpl-del-color: #bbb;
+            --tpl-add-bg: #f5f5f5;
+            --tpl-add-border: #c8c8c8;
+            --tpl-toggle-border: #c8c8c8;
+            --tpl-toggle-color: #aaa;
+            --notif-label: #666;
+            --toggle-track-bg: #d0d0d0;
+            --toggle-thumb-bg: #aaa;
+        }
+
+        body {
+            background: radial-gradient(800px circle at 20% 20%, var(--bg-body-from), transparent 55%), var(--bg-body-gradient);
+            display: flex; align-items: flex-start; justify-content: center;
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+            transition: background 0.3s;
+        }
+
+        /* ═══════════ ПАНЕЛЬ УПРАВЛЕНИЯ ═══════════ */
+        .input-panel {
+            width: 320px; background: var(--panel-bg); border-radius: 20px; padding: 20px;
+            color: var(--panel-title); box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            border: 1px solid var(--panel-border); flex-shrink: 0;
+            max-height: 95vh; overflow-y: auto; margin-right: 50px; margin-top: 30px;
+            transition: background 0.3s, border-color 0.3s, color 0.3s;
+        }
+        .panel-title { font-size: 16px; font-weight: 600; margin-bottom: 18px; color: var(--panel-title); }
+        .input-group { margin-bottom: 14px; display: flex; flex-direction: column; }
+        .input-group label { font-size: 11px; color: var(--label-color); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .input-group input[type="text"], .input-group textarea {
+            background: var(--input-bg); border: 1px solid var(--input-border); border-radius: 10px;
+            padding: 10px 12px; color: var(--input-color); font-size: 14px; outline: none;
+            font-family: 'Inter', sans-serif; transition: border-color 0.2s, background 0.3s, color 0.3s;
+        }
+        .input-group textarea { line-height: 1.5; resize: none; min-height: 80px; width: 100%; }
+        .input-group input[type="text"]:focus, .input-group textarea:focus { border-color: var(--accent); }
+
+        .checkbox-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+        .checkbox-row input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--accent); cursor: pointer; }
+        .checkbox-row label { font-size: 13px; color: var(--checkbox-label); cursor: pointer; margin: 0; text-transform: none; letter-spacing: 0; }
+
+        .time-input-wrap { display: none; }
+        .time-input-wrap.visible { display: flex; }
+        .time-input-wrap input {
+            background: var(--input-bg); border: 1px solid var(--input-border); border-radius: 10px;
+            padding: 8px 12px; color: var(--input-color); font-size: 14px; outline: none; width: 90px; font-family: 'Inter', sans-serif;
+        }
+        .time-input-wrap input:focus { border-color: var(--accent); }
+
+        .section-label { font-size: 11px; color: var(--section-label); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; margin-top: 4px; }
+
+        .theme-switcher, .battery-mode-row { display: flex; gap: 8px; margin-bottom: 14px; }
+        .theme-btn, .bmode-btn {
+            flex: 1; padding: 9px 6px; border-radius: 10px; border: 1px solid var(--bmode-btn-border);
+            background: var(--bmode-btn-bg); color: var(--bmode-btn-color); font-size: 12px; font-weight: 500;
+            cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s;
+            display: flex; align-items: center; justify-content: center; gap: 5px;
+        }
+        .theme-btn.active, .bmode-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(239,51,36,0.08); }
+        input[type="range"] { accent-color: var(--accent); width: 100%; }
+
+        /* Шаблоны */
+        .templates-block { background: var(--tpl-block-bg); border: 1px solid var(--tpl-block-border); border-radius: 14px; padding: 14px; margin-bottom: 14px; transition: background 0.3s, border-color 0.3s; }
+        .tpl-toggle-btn { width: 100%; padding: 7px 0; background: transparent; border: 1px dashed var(--tpl-toggle-border); border-radius: 8px; color: var(--tpl-toggle-color); font-size: 11px; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.15s; margin-top: 4px; letter-spacing: 0.3px; }
+        .tpl-toggle-btn:hover { border-color: rgba(239,51,36,0.3); color: #aaa; }
+        .notif-fields { transition: opacity 0.25s, max-height 0.4s cubic-bezier(0.25,0.1,0.25,1); max-height: 600px; overflow: hidden; }
+        .notif-fields.collapsed { max-height: 0; opacity: 0; pointer-events: none; }
+        .templates-tabs { display: flex; gap: 4px; margin-bottom: 10px; }
+        .tpl-tab { flex: 1; padding: 6px; border-radius: 7px; border: 1px solid var(--tpl-tab-border); background: var(--tpl-tab-bg); color: var(--tpl-tab-color); font-size: 11px; cursor: pointer; text-align: center; transition: all 0.15s; font-family: 'Inter', sans-serif; }
+        .tpl-tab.active { border-color: var(--accent); color: var(--accent); background: rgba(239,51,36,0.08); }
+        .tpl-list { display: flex; flex-direction: column; gap: 5px; }
+        .tpl-item { display: flex; align-items: flex-start; gap: 8px; padding: 9px 10px; background: var(--tpl-item-bg); border: 1px solid var(--tpl-item-border); border-radius: 9px; cursor: pointer; transition: all 0.15s; position: relative; }
+        .tpl-item:hover { background: var(--tpl-item-hover); border-color: rgba(239,51,36,0.3); }
+        .tpl-item-text { font-size: 12px; color: var(--tpl-item-color); line-height: 1.4; flex: 1; min-width: 0; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+        .tpl-item-del { font-size: 14px; color: var(--tpl-del-color); cursor: pointer; flex-shrink: 0; padding: 0 2px; line-height: 1; transition: color 0.15s; background: none; border: none; }
+        .tpl-item-del:hover { color: #ff453a; }
+        .tpl-add-row { display: flex; gap: 6px; margin-top: 8px; }
+        .tpl-add-input { flex: 1; background: var(--tpl-add-bg); border: 1px solid var(--tpl-add-border); border-radius: 8px; padding: 7px 10px; color: var(--input-color); font-size: 12px; outline: none; font-family: 'Inter', sans-serif; min-height: 60px; resize: none; line-height: 1.4; }
+        .tpl-add-input:focus { border-color: rgba(239,51,36,0.5); }
+        .tpl-save-btn { align-self: flex-end; padding: 7px 12px; background: rgba(239,51,36,0.15); border: 1px solid rgba(239,51,36,0.3); border-radius: 8px; color: var(--accent); font-size: 12px; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.15s; white-space: nowrap; }
+        .tpl-save-btn:hover { background: rgba(239,51,36,0.25); }
+        .notif-toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 4px 0 10px; }
+        .notif-toggle-label { font-size: 11px; color: var(--notif-label); text-transform: uppercase; letter-spacing: 0.5px; }
+        .toggle-switch { position: relative; width: 40px; height: 22px; cursor: pointer; flex-shrink: 0; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; position: absolute; }
+        .toggle-track { position: absolute; inset: 0; background: var(--toggle-track-bg); border-radius: 11px; transition: background 0.2s; }
+        .toggle-thumb { position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; background: var(--toggle-thumb-bg); border-radius: 50%; transition: transform 0.2s, background 0.2s; }
+        .toggle-switch input:checked + .toggle-track { background: rgba(239,51,36,0.25); border: 1px solid rgba(239,51,36,0.5); }
+        .toggle-switch input:checked + .toggle-track + .toggle-thumb { transform: translateX(18px); background: var(--accent); }
+
+        .input-panel::-webkit-scrollbar, .input-group textarea::-webkit-scrollbar { width: 4px; }
+        .input-panel::-webkit-scrollbar-thumb, .input-group textarea::-webkit-scrollbar-thumb { background: #444; border-radius: 2px; }
+
+        /* ═══════════ ТЕЛЕФОН ═══════════ */
+        .phone-wrap { display: flex; flex-direction: column; align-items: center; gap: 20px; padding-top: 30px; }
+        .phone-container { width: 375px; height: 812px; background: #1c1c1e; padding: 11px; border-radius: 50px; box-shadow: 0 40px 100px rgba(0,0,0,0.7), inset 0 0 0 1px #333; flex-shrink: 0; }
+        .phone-screen { width: 100%; height: 100%; background: #000; overflow: hidden; position: relative; border-radius: 40px; }
+
+        /* Статус-бар — 1:1 из Сбербанк-проекта */
+        .status-bar {
+            position: absolute; top: 0; left: 0; right: 0; height: 44px;
+            background: transparent;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 20px; z-index: 9999; pointer-events: none;
+        }
+        .status-left { display: flex; align-items: center; gap: 8px; }
+        .status-right { display: flex; align-items: center; position: absolute; right: 10px; top: 9px; }
+        #statusTime { font-size: 16px; font-weight: 500; color: #fff; }
+        .svyaz { width: 51px; }
+        #batteryContainer { display: flex; align-items: center; margin-right: 5px; margin-bottom: 1px; margin-top: 3px; }
+        .battery-detailed { display: flex; align-items: center; gap: 1px; }
+        .battery-body-2 { position: relative; width: 24px; height: 13px; border-radius: 4px; overflow: hidden; background: #818181; }
+        .battery-fill { position: absolute; top: 0; left: 0; height: 100%; width: 87%; transition: width 0.3s; z-index: 1; }
+        .battery-text { position: absolute; top: 45%; left: 50%; transform: translate(-50%, -45%); font-size: 11.5px; font-weight: 500; z-index: 2; pointer-events: none; padding-top: 1px; }
+
+        .phone-screen, .phone-screen * { font-family: 'Inter', -apple-system, sans-serif !important; }
+
+
+        /* ───────── ЭКРАН 1: ГЛАВНЫЙ ───────── */
+        .screen-main { position: absolute; top: 44px; left: 0; right: 0; bottom: 0; background: #000; color: #fff; overflow-y: auto; z-index: 10; }
+        .sm-topbar { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px 14px; }
+        .sm-topbar-left { display: flex; align-items: center; gap: 12px; }
+        .sm-avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; }
+        .sm-avatar img { width: 20px; }
+        .sm-avatar-letter { color: #fff; font-weight: 700; font-size: 18px; font-style: italic; }
+        .sm-username { font-size: 20px; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 4px; }
+        .sm-chev { color: #888; font-size: 16px; }
+        .sm-topbar-right { display: flex; align-items: center; gap: 16px; }
+        .sm-topbar-right .ico { color: #fff; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; }
+        .sm-rec { width: 22px; height: 22px; border-radius: 50%; border: 2px solid #fff; display: flex; align-items: center; justify-content: center; }
+        .sm-rec-dot { width: 11px; height: 11px; border-radius: 50%; background: var(--accent); }
+
+        .sm-product { display: flex; align-items: center; gap: 14px; padding: 11px 16px; }
+        .sm-prod-icon { width: 58px; height: 40px; border-radius: 7px; flex-shrink: 0; display: flex; align-items: flex-end; padding: 5px 6px; position: relative; }
+        .sm-prod-icon.card-mir { background: var(--accent); }
+        .sm-prod-icon.gray { background: #2c2c2e; }
+        .sm-prod-icon .alfa-a { position: absolute; top: 5px; left: 7px; color: #fff; font-weight: 800; font-style: italic; font-size: 15px; }
+        .sm-prod-icon .card-num { color: #fff; font-size: 10px; font-weight: 500; }
+        .sm-prod-icon .card-mir-label { position: absolute; bottom: 5px; right: 6px; color: rgba(255,255,255,0.85); font-size: 8px; font-weight: 700; font-style: italic; }
+        .sm-prod-icon .emoji { font-size: 20px; }
+        .sm-prod-info { flex: 1; min-width: 0; }
+        .sm-prod-amount { font-size: 20px; font-weight: 600; color: #fff; }
+        .sm-prod-amount .kop { font-size: 16px; color: #fff; }
+        .sm-prod-amount .rub { font-size: 16px; }
+        .sm-prod-label { font-size: 14px; color: #8b8b8e; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .sm-prod-arrows { color: #555; font-size: 11px; display: flex; flex-direction: column; line-height: 0.7; }
+
+        .sm-allproducts { margin: 8px 16px 0; background: #161618; border: 1px solid #232325; border-radius: 16px; padding: 17px 18px; display: flex; align-items: center; justify-content: space-between; }
+        .sm-allproducts span { font-size: 16px; color: #fff; }
+        .sm-allproducts .chev { color: #666; font-size: 18px; }
+
+        .sm-banners { display: flex; gap: 12px; padding: 18px 16px 0; }
+        .sm-banner { flex-shrink: 0; width: 270px; border-radius: 18px; padding: 16px; height: 150px; position: relative; overflow: hidden; }
+        .sm-banner.red { background: var(--accent); }
+        .sm-banner.cyan { background: #b8f0e8; width: 140px; }
+        .sm-banner-title { font-size: 19px; font-weight: 700; line-height: 1.15; }
+        .sm-banner.red .sm-banner-title { color: #fff; }
+        .sm-banner.cyan .sm-banner-title { color: #0a3d34; }
+        .sm-banner-1mln { position: absolute; right: 10px; top: 38px; background: #000; color: #fff; font-weight: 800; font-size: 22px; padding: 8px 12px; border-radius: 8px; transform: rotate(-6deg); }
+        .sm-banner-foot { position: absolute; left: 16px; right: 16px; bottom: 13px; display: flex; align-items: center; gap: 10px; }
+        .sm-banner-foot .emoji { font-size: 22px; }
+        .sm-banner-foot .txt { font-size: 13px; line-height: 1.2; }
+        .sm-banner.red .sm-banner-foot .txt { color: #fff; }
+        .sm-section-head { padding: 22px 16px 0; display: flex; align-items: center; justify-content: space-between; }
+        .sm-section-head .t { font-size: 21px; font-weight: 700; color: #fff; }
+        .sm-section-head .chev { color: #666; font-size: 18px; }
+        .sm-pad { height: 90px; }
+
+        /* ───────── ЭКРАН 2: ПЛАТЕЖИ ───────── */
+        .screen-pay { position: absolute; top: 44px; left: 0; right: 0; bottom: 0; background: #000; color: #fff; overflow-y: auto; z-index: 20; display: none; }
+        .screen-pay.show { display: block; }
+        .sp-search { display: flex; align-items: center; justify-content: flex-end; gap: 16px; padding: 8px 24px 0; }
+        .sp-search .ico { color: #fff; }
+        .sp-title-row { display: flex; align-items: center; gap: 12px; padding: 10px 16px 18px; }
+        .sp-title { font-size: 28px; font-weight: 800; color: #fff; }
+        .sp-card { margin: 0 16px 12px; background: #161618; border: 1px solid #232325; border-radius: 16px; padding: 18px; display: flex; align-items: center; justify-content: space-between; }
+        .sp-card .label { font-size: 16px; color: #fff; }
+        .sp-card .right { display: flex; align-items: center; gap: 10px; }
+        .sp-badge { background: var(--accent); color: #fff; font-size: 12px; font-weight: 600; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .sp-card .chev { color: #666; font-size: 18px; }
+        .sp-group-label { font-size: 12px; color: #8b8b8e; text-transform: uppercase; letter-spacing: 0.5px; padding: 14px 16px 10px; }
+        .sp-transfers { display: flex; gap: 14px; padding: 0 16px 6px; overflow-x: auto; }
+        .sp-transfers::-webkit-scrollbar { display: none; }
+        .sp-transfer-item { flex-shrink: 0; width: 66px; display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; }
+        .sp-transfer-circle { width: 66px; height: 66px; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; }
+        .sp-transfer-circle svg { width: 28px; height: 28px; color: #000; }
+        .sp-transfer-label { font-size: 12px; color: #fff; text-align: center; line-height: 1.2; }
+        .sp-payments-label { font-size: 12px; color: #8b8b8e; text-transform: uppercase; letter-spacing: 0.5px; padding: 16px 16px 6px; }
+        .sp-pay-row { display: flex; align-items: center; gap: 14px; padding: 13px 16px; }
+        .sp-pay-row .ico { width: 26px; color: #fff; display: flex; justify-content: center; }
+        .sp-pay-row .t { font-size: 16px; color: #fff; }
+
+        /* ───────── ЭКРАН 3: С КАРТЫ НА КАРТУ ───────── */
+        .screen-c2c { position: absolute; top: 44px; left: 0; right: 0; bottom: 0; background: #000; color: #fff; z-index: 30; transform: translateX(100%); }
+        .screen-c2c.show { transform: translateX(0); }
+        .c2c-header { display: flex; align-items: center; padding: 14px 16px 16px; position: relative; }
+        .c2c-back { color: #fff; font-size: 26px; font-weight: 300; line-height: 1; width: 30px; }
+        .c2c-title { position: absolute; left: 0; right: 0; text-align: center; font-size: 17px; font-weight: 600; color: #fff; pointer-events: none; }
+        .c2c-cards-box { margin: 0 16px; background: #161618; border-radius: 18px; padding: 6px 0; transition: background 0.3s; position: relative; overflow: hidden; }
+        .c2c-cards-box.dimmed { background: #0e0e0f; }
+        .c2c-cards-box.dimmed .c2c-card-row { opacity: 0.25; }
+        .c2c-card-row { display: flex; align-items: center; gap: 14px; padding: 12px 16px; transition: opacity 0.3s; min-height: 60px; }
+        .c2c-card-icon { width: 46px; height: 32px; border-radius: 7px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; position: relative; }
+        .c2c-card-icon.empty { background: #2c2c2e; }
+        .c2c-card-icon.empty span { color: #777; font-size: 22px; font-weight: 300; }
+        .c2c-card-icon.alfa { background: var(--accent); }
+        .c2c-card-icon.alfa .a { color: #fff; font-weight: 800; font-style: italic; font-size: 16px; }
+        .c2c-card-icon.vtb { background: #fff; }
+        .c2c-card-icon.vtb img { width: 30px; }
+        .c2c-card-icon.vtb .vtb-fallback { width: 28px; height: 22px; background: #1a3c8f; border-radius: 3px; display: flex; align-items: center; justify-content: center; }
+        .c2c-card-icon.vtb .vtb-fallback span { color: #fff; font-size: 8px; font-weight: 700; }
+        .c2c-card-info { flex: 1; min-width: 0; }
+        .c2c-card-amount { font-size: 18px; font-weight: 600; color: #fff; }
+        .c2c-card-amount .kop { font-size: 15px; }
+        .c2c-card-sub { font-size: 14px; color: #8b8b8e; margin-top: 2px; }
+        .c2c-card-mir-logo { flex-shrink: 0; font-weight: 800; font-style: italic; font-size: 13px; }
+        .c2c-card-mir-logo .m { color: #fff; } .c2c-card-mir-logo .green { color: #4db84d; }
+        .c2c-card-chev { color: #555; font-size: 16px; flex-shrink: 0; }
+        .c2c-card-placeholder { font-size: 16px; color: #8b8b8e; }
+
+        .c2c-disclaimer { font-size: 13px; color: #8b8b8e; line-height: 1.4; padding: 14px 18px 0; opacity: 0; transition: opacity 0.4s; }
+        .c2c-disclaimer.show { opacity: 1; }
+        .c2c-disclaimer a { color: #6f9eff; text-decoration: underline; }
+
+        .c2c-spinner-wrap { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: none; align-items: center; justify-content: center; z-index: 5; }
+        .c2c-spinner-wrap.visible { display: flex; }
+
+        /* Глобальный оверлей загрузки — по центру всего экрана + затемнение фона */
+        .global-loader { position: absolute; inset: 0; background: rgba(0,0,0,0.55); display: flex; align-items: center; justify-content: center; z-index: 85; opacity: 0; pointer-events: none; transition: opacity 0.25s; border-radius: 40px; }
+        .global-loader.show { opacity: 1; pointer-events: all; }
+        .global-loader .alfa-spinner { width: 48px; height: 48px; border-width: 4px; }
+        .alfa-spinner { width: 42px; height: 42px; border: 4px solid rgba(239,51,36,0.18); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.9s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* нижняя сумма + калькуляторная клавиатура (на c2c) */
+        .c2c-bottom { position: absolute; left: 0; right: 0; bottom: 78px; z-index: 6; }
+        .c2c-amount-bar { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; opacity: 0; transition: opacity 0.3s; }
+        .c2c-amount-bar.show { opacity: 1; }
+        .c2c-amount-left .amt { font-size: 30px; font-weight: 700; color: #fff; }
+        .c2c-amount-left .nocomm { font-size: 13px; color: #8b8b8e; margin-top: 2px; display: flex; align-items: center; gap: 5px; }
+        .c2c-amount-left .nocomm .i { width: 14px; height: 14px; border-radius: 50%; background: #555; color: #000; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+        .c2c-send-btn { width: 52px; height: 52px; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .c2c-send-btn svg { width: 22px; color: #000; }
+
+        /* ───────── BOTTOM SHEET "КУДА" ───────── */
+        .sheet-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.5); z-index: 40; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+        .sheet-overlay.show { opacity: 1; pointer-events: all; }
+        .kuda-sheet { position: absolute; left: 0; right: 0; bottom: 0; top: 70px; background: #1a1a1c; border-radius: 18px 18px 0 0; z-index: 45; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.25,0.1,0.25,1); display: flex; flex-direction: column; }
+        .kuda-sheet.show { transform: translateY(0); }
+        .kuda-grabber { width: 38px; height: 5px; background: #48484a; border-radius: 3px; margin: 10px auto 0; }
+        .kuda-title { text-align: center; font-size: 15px; color: #8b8b8e; padding: 12px 0 16px; }
+        .kuda-search-row { padding: 0 20px 14px; border-bottom: 1px solid #2a2a2c; position: relative; }
+        .kuda-card-label { font-size: 12px; color: #8b8b8e; margin-bottom: 6px; display: none; }
+        .kuda-card-label.show { display: block; }
+        .kuda-input-line { display: flex; align-items: center; gap: 12px; min-height: 28px; }
+        .kuda-input-card-ico { width: 26px; height: 18px; border-radius: 3px; background: #5c8fde; display: none; align-items: center; justify-content: center; flex-shrink: 0; }
+        .kuda-input-card-ico.show { display: flex; }
+        .kuda-input-card-ico img { width: 24px; }
+        .kuda-placeholder { font-size: 17px; color: #8b8b8e; }
+        .kuda-typed { font-size: 17px; color: #fff; letter-spacing: 0.5px; }
+        .kuda-cursor { display: inline-block; width: 2px; height: 20px; background: var(--accent); margin-left: 1px; vertical-align: middle; animation: blink 1s step-end infinite; }
+        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+        .kuda-clear { position: absolute; right: 20px; top: 0; color: #666; font-size: 18px; display: none; }
+        .kuda-clear.show { display: block; }
+
+        .kuda-recognize { display: none; align-items: center; gap: 14px; padding: 18px 20px; }
+        .kuda-recognize.show { display: flex; }
+        .kuda-recognize svg { width: 24px; color: #fff; }
+        .kuda-recognize span { font-size: 16px; color: #fff; }
+        .kuda-save-row { display: none; padding: 8px 20px 0; border-bottom: 1px solid #2a2a2c; }
+        .kuda-save-row.show { display: block; }
+        .kuda-save-row span { font-size: 16px; color: #555; display: block; padding-bottom: 16px; }
+
+        .kuda-result-list { padding-top: 6px; }
+        .kuda-result-row { display: flex; align-items: center; gap: 14px; padding: 14px 20px; }
+        .kuda-result-row .c2c-card-icon { width: 40px; height: 28px; }
+
+        .kuda-continue { display: none; margin: auto 16px 0; }
+        .kuda-continue.show { display: block; }
+        .kuda-continue-btn { width: 100%; padding: 17px; border-radius: 14px; text-align: center; font-size: 17px; font-weight: 600; color: #fff; transition: background 0.3s; background: #3a1512; }
+        .kuda-continue-btn.active { background: var(--accent); }
+
+        /* iOS контекстное меню "Вставить" */
+        .ios-context-menu { position: absolute; z-index: 60; background: #4a4a4c; border-radius: 11px; display: flex; overflow: hidden; box-shadow: 0 6px 20px rgba(0,0,0,0.5); opacity: 0; transform: scale(0.8); transform-origin: bottom left; transition: opacity 0.15s, transform 0.15s; pointer-events: none; }
+        .ios-context-menu.show { opacity: 1; transform: scale(1); }
+        .ios-context-menu .item { padding: 11px 18px; color: #fff; font-size: 15px; cursor: pointer; border-right: 1px solid rgba(255,255,255,0.12); white-space: nowrap; }
+        .ios-context-menu .item:last-child { border-right: none; }
+        .ios-context-menu::after { content: ''; position: absolute; bottom: -6px; left: 24px; width: 12px; height: 12px; background: #4a4a4c; transform: rotate(45deg); }
+
+        /* iOS числовая клавиатура (для номера карты И калькулятор) */
+        .ios-num-kb { position: absolute; left: 0; right: 0; bottom: 0; background: #1c1c1e; padding: 8px 6px 30px; z-index: 50; transform: translateY(100%); transition: transform 0.34s cubic-bezier(0.25,0.1,0.25,1); }
+        .ios-num-kb.show { transform: translateY(0); }
+        .ios-num-kb.hide { transform: translateY(100%); transition: transform 0.28s cubic-bezier(0.4,0,1,1); }
+        .num-calc-row { display: flex; justify-content: space-around; padding: 6px 10px 10px; }
+        .num-calc-row span { color: #fff; font-size: 20px; opacity: 0.9; }
+        .num-calc-row.hidden { display: none; }
+        .num-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+        .num-key { background: #5b5b5e; border-radius: 6px; min-height: 46px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; user-select: none; transition: background 0.08s; }
+        .num-key.dark { background: transparent; }
+        .num-key.pressed { background: #8a8a8e !important; }
+        .num-key .n { font-size: 25px; font-weight: 400; color: #fff; line-height: 1; }
+        .num-key .l { font-size: 9px; color: #fff; opacity: 0.75; letter-spacing: 1px; margin-top: 2px; }
+        .num-key .bk { font-size: 22px; color: #fff; }
+
+        /* ───────── ЭКРАН СЕКРЕТНОГО КОДА ───────── */
+        .screen-pin { position: absolute; top: 44px; left: 0; right: 0; bottom: 0; background: #000; z-index: 70; display: flex; flex-direction: column; align-items: center; transform: translateY(100%); transition: transform 0.38s cubic-bezier(0.25, 0.1, 0.25, 1); }
+        .screen-pin.show { transform: translateY(0); }
+        .pin-cancel { align-self: flex-start; color: #fff; font-size: 16px; padding: 6px 20px; }
+        .pin-prompt { text-align: center; color: #fff; font-size: 17px; line-height: 1.4; margin-top: 26px; }
+        .pin-dots { display: flex; gap: 18px; margin-top: 34px; }
+        .pin-dot { width: 13px; height: 13px; border-radius: 50%; background: #48484a; transition: background 0.15s; }
+        .pin-dot.filled { background: #fff; }
+        .pin-pad { display: grid; grid-template-columns: repeat(3, 78px); gap: 26px; margin-top: 56px; }
+        .pin-key { width: 78px; height: 78px; border-radius: 50%; background: #1c1c1e; display: flex; align-items: center; justify-content: center; font-size: 33px; color: #fff; font-weight: 400; cursor: pointer; transition: background 0.1s; }
+        .pin-key.pressed { background: #3a3a3c; }
+        .pin-key.empty { background: transparent; }
+        .pin-key.forgot { font-size: 14px; color: #fff; text-align: center; line-height: 1.2; background: transparent; }
+
+        /* ───────── ПОПАП ОШИБКИ ───────── */
+        .err-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.45); display: flex; align-items: center; justify-content: center; z-index: 90; opacity: 0; pointer-events: none; transition: opacity 0.25s; }
+        .err-overlay.show { opacity: 1; pointer-events: all; }
+        .err-popup { width: 256px; background: #2a2a2c; border-radius: 14px; overflow: hidden; }
+        .err-body { padding: 18px 16px 16px; text-align: center; }
+        .err-title { font-size: 16px; font-weight: 600; color: #fff; margin-bottom: 5px; }
+        .err-text { font-size: 14px; color: #e0e0e0; line-height: 1.4; }
+        .err-divider { height: 1px; background: rgba(255,255,255,0.12); }
+        .err-btn { width: 100%; padding: 13px; text-align: center; font-size: 17px; color: #4280fb; background: transparent; border: none; cursor: pointer; font-family: 'Inter', sans-serif; }
+
+        /* ───────── НИЖНЕЕ МЕНЮ (tabbar) ───────── */
+        .tabbar { position: absolute; left: 0; right: 0; bottom: 0; height: 78px; background: #0a0a0a; display: flex; align-items: flex-start; padding-top: 9px; z-index: 36; border-top: 1px solid #1a1a1a; border-radius: 0 0 40px 40px; }
+        .tabbar.hidden { display: none; }
+        .tab { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+        .tab svg { width: 22px; height: 22px; color: #7a7a7c; }
+        .tab .lbl { font-size: 10px; color: #7a7a7c; }
+        .tab.active svg { color: var(--accent); }
+        .tab.active .lbl { color: var(--accent); }
+
+        /* Контролы */
+        .controls { display: flex; gap: 12px; margin-top: 6px; }
+        .controls button { padding: 13px 28px; font-size: 15px; font-weight: 600; border: none; border-radius: 12px; cursor: pointer; transition: all 0.2s; font-family: 'Inter', sans-serif; }
+        .btn-animate { background: var(--accent); color: #fff; }
+        .btn-download { background: #34C759; color: #fff; }
+        .controls button:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
+        .controls button:active { transform: translateY(0); }
+
+        /* ───────── СВЕТЛАЯ ТЕМА ЭКРАНА ───────── */
+        .phone-screen.light .status-bar,
+        .phone-screen.light .screen-main,
+        .phone-screen.light .screen-pay { background: #f2f2f7; }
+        .phone-screen.light #statusTime { color: #000; }
+        .phone-screen.light .svyaz { filter: invert(1); }
+        .phone-screen.light .sm-username, .phone-screen.light .sm-prod-amount, .phone-screen.light .sm-allproducts span,
+        .phone-screen.light .sm-section-head .t, .phone-screen.light .sp-title, .phone-screen.light .sp-card .label,
+        .phone-screen.light .sp-pay-row .t, .phone-screen.light .sp-transfer-label, .phone-screen.light .c2c-title,
+        .phone-screen.light .c2c-card-amount { color: #000; }
+        .phone-screen.light .sm-rec { border-color: #000; }
+        .phone-screen.light .sm-allproducts, .phone-screen.light .sp-card { background: #fff; border-color: #e5e5ea; }
+        .phone-screen.light .screen-c2c { background: #f2f2f7; }
+        .phone-screen.light .c2c-cards-box { background: #fff; }
+        .phone-screen.light .c2c-back { color: #000; }
+        .phone-screen.light .sm-topbar-right .ico, .phone-screen.light .sp-search .ico,
+        .phone-screen.light .sp-pay-row .ico { color: #000; }
+        .phone-screen.light .tabbar { background: #fff; border-top-color: #e0e0e0; }
+        .phone-screen.light .c2c-card-mir-logo .m { color: #000; }
+        .phone-screen.light .c2c-amount-left .amt { color: #000; }
+        .phone-screen.light .sp-transfer-circle { background: #000; }
+        .phone-screen.light .sp-transfer-circle svg { color: #fff; }
+    </style>
+</head>
+
+<body>
+    <!-- ════════ ПАНЕЛЬ УПРАВЛЕНИЯ ════════ -->
+    <div class="input-panel">
+        <div class="panel-title">Данные для перевода</div>
+
+        <div class="section-label">Тема оформления</div>
+        <div class="theme-switcher">
+            <button class="theme-btn active" id="themeDark" onclick="setTheme('dark')">🌙 Тёмная</button>
+            <button class="theme-btn" id="themeLight" onclick="setTheme('light')">☀️ Светлая</button>
+        </div>
+
+        <div class="input-group">
+            <div class="checkbox-row">
+                <input type="checkbox" id="customTimeCheck">
+                <label for="customTimeCheck">Своё время</label>
+            </div>
+            <div class="time-input-wrap" id="timeInputWrap">
+                <input type="text" id="customTimeInput" maxlength="5" placeholder="12:00">
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label>Имя владельца</label>
+            <input type="text" id="ownerName" value="Ибрагим">
+        </div>
+
+        <div class="input-group">
+            <label>Баланс / сумма на карте</label>
+            <input type="text" id="balanceAmount" value="2 013,56">
+        </div>
+
+        <div class="input-group">
+            <label>Номер карты получателя</label>
+            <input type="text" id="recipientCard" value="2200 2496 3643 9710">
+        </div>
+
+        <div class="input-group">
+            <label>Банк получателя</label>
+            <input type="text" id="recipientBank" value="Банк ВТБ">
+        </div>
+
+        <div class="input-group">
+            <label>Карта получателя (тип ·· послед.)</label>
+            <input type="text" id="recipientCardSub" value="Карта NSPC ·· 9710">
+        </div>
+
+        <div class="input-group">
+            <label>Сумма перевода</label>
+            <input type="text" id="transferAmount" value="2 005">
+        </div>
+
+        <div class="input-group">
+            <label>Секретный код (4 цифры)</label>
+            <input type="text" id="pinCode" maxlength="4" value="1234">
+        </div>
+
+        <!-- ОШИБКА -->
+        <div class="templates-block">
+            <div class="input-group" style="margin-bottom:6px;">
+                <label>Текст ошибки</label>
+                <textarea id="errorText">Ошибка обращения к банку, попробуйте позже</textarea>
+            </div>
+            <button class="tpl-toggle-btn" id="errorTplToggle" onclick="toggleTpl('error')">▾ Показать шаблоны</button>
+            <div class="notif-fields collapsed" id="errorFields">
+                <div style="height:8px;"></div>
+                <div class="templates-tabs">
+                    <button class="tpl-tab active" onclick="switchTplTab('error','preset')">Готовые</button>
+                    <button class="tpl-tab" onclick="switchTplTab('error','custom')">Мои</button>
+                </div>
+                <div class="tpl-list" id="errorPresetList"></div>
+                <div class="tpl-list" id="errorCustomList" style="display:none;"></div>
+                <div class="tpl-add-row" id="errorAddRow" style="display:none;">
+                    <textarea class="tpl-add-input" id="errorAddInput" placeholder="Введите текст ошибки..."></textarea>
+                    <button class="tpl-save-btn" onclick="saveCustomTemplate('error')">Сохранить</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-label">Батарея</div>
+        <div class="battery-mode-row">
+            <button class="bmode-btn active" id="bmodeSimple" onclick="setBatteryMode('simple')">Без %</button>
+            <button class="bmode-btn" id="bmodeDetailed" onclick="setBatteryMode('detailed')">С %</button>
+        </div>
+        <div class="input-group">
+            <label>Заряд</label>
+            <input type="range" min="1" max="100" value="80" id="batterySlider">
+        </div>
+    </div>
+
+    <!-- ════════ ТЕЛЕФОН ════════ -->
+    <div class="phone-wrap">
+        <div class="phone-container">
+            <div class="phone-screen" id="phoneScreen">
+
+                <!-- СТАТУС-БАР -->
+                <div class="status-bar">
+                    <div class="status-left">
+                        <span id="statusTime" style="font-size:16px;font-weight:500;color:#fff;"></span>
+                    </div>
+                    <div class="status-right">
+                        <img style="width:51px;" src="./source/blackwifis-removebg-preview.png" alt="" class="svyaz">
+                        <div id="batteryContainer"></div>
+                    </div>
+                </div>
+
+                <!-- ЭКРАН 1: ГЛАВНЫЙ -->
+                <div class="screen-main" id="screenMain">
+                    <div class="sm-topbar">
+                        <div class="sm-topbar-left">
+                            <div class="sm-avatar"><span class="sm-avatar-letter">A</span></div>
+                            <div class="sm-username" id="smUsername">Ибрагим <span class="sm-chev">›</span></div>
+                        </div>
+                        <div class="sm-topbar-right">
+                            <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg></div>
+                            <div class="sm-rec"><div class="sm-rec-dot"></div></div>
+                            <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a7 7 0 00-7 7v4l-2 3v1h18v-1l-2-3V9a7 7 0 00-7-7z"/></svg></div>
+                        </div>
+                    </div>
+
+                    <div class="sm-product">
+                        <div class="sm-prod-icon card-mir"><span class="alfa-a">A</span><span class="card-num" id="smCardNum">1032</span><span class="card-mir-label">МИР</span></div>
+                        <div class="sm-prod-info">
+                            <div class="sm-prod-amount" id="smBalance">2 013<span class="kop">,56</span> <span class="rub">₽</span></div>
+                            <div class="sm-prod-label">Текущий счёт</div>
+                        </div>
+                        <div class="sm-prod-arrows">▲<br>▼</div>
+                    </div>
+                    <div class="sm-product">
+                        <div class="sm-prod-icon gray"><span class="emoji">🗄</span></div>
+                        <div class="sm-prod-info">
+                            <div class="sm-prod-amount">0<span class="kop">,04</span> <span class="rub">₽</span></div>
+                            <div class="sm-prod-label">Альфа-Счёт на ежедневный остат…</div>
+                        </div>
+                    </div>
+                    <div class="sm-product">
+                        <div class="sm-prod-icon gray"><span class="emoji">🐷</span></div>
+                        <div class="sm-prod-info">
+                            <div class="sm-prod-amount">0<span class="kop">,03</span> <span class="rub">₽</span></div>
+                            <div class="sm-prod-label">Инвесткопилка</div>
+                        </div>
+                    </div>
+
+                    <div class="sm-allproducts"><span>Все мои продукты</span><span class="chev">›</span></div>
+
+                    <div class="sm-banners">
+                        <div class="sm-banner red">
+                            <div class="sm-banner-title">Вас ждёт<br>1 000 000 ₽</div>
+                            <div class="sm-banner-1mln">1Млн₽</div>
+                            <div class="sm-banner-foot"><span class="emoji">💸</span><span class="txt">Откройте счёт Стань<br>миллионером</span></div>
+                        </div>
+                        <div class="sm-banner cyan">
+                            <div class="sm-banner-title">Защити<br>семью</div>
+                            <div class="sm-banner-foot"><span class="emoji">❤️</span><span class="txt" style="color:#0a3d34">Оф…</span></div>
+                        </div>
+                    </div>
+
+                    <div class="sm-section-head"><span class="t">Альфа-Мобайл</span><span class="chev">›</span></div>
+                    <div class="sm-pad"></div>
+                </div>
+
+                <!-- ЭКРАН 2: ПЛАТЕЖИ -->
+                <div class="screen-pay" id="screenPay">
+                    <div class="sp-search">
+                        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg></div>
+                        <div class="sm-rec"><div class="sm-rec-dot"></div></div>
+                    </div>
+                    <div class="sp-title-row">
+                        <div class="sm-avatar"><span class="sm-avatar-letter">A</span></div>
+                        <div class="sp-title">Платежи</div>
+                    </div>
+                    <div class="sp-card"><span class="label">Предстоящие платежи</span><div class="right"><span class="sp-badge">1</span><span class="chev">›</span></div></div>
+                    <div class="sp-card"><span class="label">Подписки</span><span class="chev">›</span></div>
+                    <div class="sp-card"><span class="label">Шаблоны и автоплатежи</span><span class="chev">›</span></div>
+
+                    <div class="sp-group-label">Переводы</div>
+                    <div class="sp-transfers">
+                        <div class="sp-transfer-item">
+                            <div class="sp-transfer-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h13l-3-3M17 17H4l3 3"/></svg></div>
+                            <div class="sp-transfer-label">Между<br>счетами</div>
+                        </div>
+                        <div class="sp-transfer-item">
+                            <div class="sp-transfer-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="7" y="3" width="10" height="18" rx="2"/><line x1="11" y1="18" x2="13" y2="18"/></svg></div>
+                            <div class="sp-transfer-label">По номеру<br>телефона</div>
+                        </div>
+                        <div class="sp-transfer-item" id="transferC2C">
+                            <div class="sp-transfer-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="14" height="10" rx="2"/><rect x="7" y="9" width="14" height="10" rx="2"/></svg></div>
+                            <div class="sp-transfer-label">По номеру<br>карты</div>
+                        </div>
+                        <div class="sp-transfer-item">
+                            <div class="sp-transfer-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="3" width="14" height="18" rx="2"/><line x1="8" y1="7" x2="16" y2="7"/><line x1="8" y1="11" x2="16" y2="11"/></svg></div>
+                            <div class="sp-transfer-label">По<br>реквизит…</div>
+                        </div>
+                        <div class="sp-transfer-item">
+                            <div class="sp-transfer-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 010 18M12 3a15 15 0 000 18"/></svg></div>
+                            <div class="sp-transfer-label">Переводы<br>за рубеж</div>
+                        </div>
+                    </div>
+
+                    <div class="sp-payments-label">Платежи</div>
+                    <div class="sp-pay-row"><div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></div><span class="t">Оплата по QR</span></div>
+                    <div class="sp-pay-row"><div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="7" y="3" width="10" height="18" rx="2"/></svg></div><span class="t">Мобильная связь</span></div>
+                    <div class="sp-pay-row"><div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 9a15 15 0 0120 0M5 13a10 10 0 0114 0M8 17a5 5 0 018 0"/></svg></div><span class="t">Интернет, телефония, ТВ</span></div>
+                </div>
+
+                <!-- ЭКРАН 3: С КАРТЫ НА КАРТУ -->
+                <div class="screen-c2c" id="screenC2C">
+                    <div class="c2c-header">
+                        <span class="c2c-back">‹</span>
+                        <span class="c2c-title">С карты на карту</span>
+                    </div>
+
+                    <div class="c2c-cards-box" id="c2cCardsBox">
+                        <!-- источник -->
+                        <div class="c2c-card-row" id="c2cSource">
+                            <div class="c2c-card-icon alfa"><span class="a">A</span></div>
+                            <div class="c2c-card-info">
+                                <div class="c2c-card-amount" id="c2cSrcAmount">2 013<span class="kop">,56</span> ₽</div>
+                                <div class="c2c-card-sub" id="c2cSrcSub">Альфа-карта МИР ·· 1032</div>
+                            </div>
+                            <div class="c2c-card-mir-logo"><span class="m">МИ</span><span class="green">Р</span></div>
+                            <div class="c2c-card-chev">⌄</div>
+                        </div>
+                        <!-- получатель -->
+                        <div class="c2c-card-row" id="c2cDest">
+                            <div class="c2c-card-icon empty" id="c2cDestIcon"><span>+</span></div>
+                            <div class="c2c-card-info" id="c2cDestInfo">
+                                <div class="c2c-card-placeholder">Укажите карту</div>
+                            </div>
+                            <div class="c2c-card-chev">⌄</div>
+                        </div>
+
+                        <div class="c2c-spinner-wrap" id="c2cSpinner"><div class="alfa-spinner"></div></div>
+                    </div>
+
+                    <div class="c2c-disclaimer" id="c2cDisclaimer">
+                        Зачисление происходит моментально, в редких случаях до 2-х дней. Продолжая, вы соглашаетесь
+                        <a>с условиями переводов</a>
+                    </div>
+
+                    <!-- нижняя сумма + калькулятор -->
+                    <div class="c2c-bottom">
+                        <div class="c2c-amount-bar" id="c2cAmountBar">
+                            <div class="c2c-amount-left">
+                                <div class="amt" id="c2cAmountVal">0 ₽</div>
+                                <div class="nocomm"><span class="i">i</span> Без комиссии</div>
+                            </div>
+                            <div class="c2c-send-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BOTTOM SHEET "КУДА" -->
+                <div class="sheet-overlay" id="sheetOverlay"></div>
+                <div class="kuda-sheet" id="kudaSheet">
+                    <div class="kuda-grabber"></div>
+                    <div class="kuda-title">Куда</div>
+
+                    <div class="kuda-search-row">
+                        <div class="kuda-card-label" id="kudaCardLabel">Номер карты</div>
+                        <div class="kuda-input-line">
+                            <div class="kuda-input-card-ico" id="kudaInputIco"><div style="width:24px;height:16px;background:#1a3c8f;border-radius:2px;display:flex;align-items:center;justify-content:center;"><span style="color:#fff;font-size:7px;font-weight:700;">≡</span></div></div>
+                            <span class="kuda-placeholder" id="kudaPlaceholder">На другую карту</span>
+                            <span class="kuda-typed" id="kudaTyped" style="display:none;"></span>
+                        </div>
+                        <span class="kuda-clear" id="kudaClear">✕</span>
+                    </div>
+
+                    <div class="kuda-recognize" id="kudaRecognize">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7V4h3M21 7V4h-3M3 17v3h3M21 17v3h-3"/><rect x="7" y="9" width="10" height="6" rx="1"/></svg>
+                        <span>Распознать карту</span>
+                    </div>
+                    <div class="kuda-save-row" id="kudaSaveRow"><span>Назовите, чтобы сохранить карту</span></div>
+
+                    <!-- список результата (карта-источник как в скрине 5) -->
+                    <div class="kuda-result-list" id="kudaResultList">
+                        <div class="kuda-result-row">
+                            <div class="c2c-card-icon alfa"><span class="a">A</span></div>
+                            <div class="c2c-card-info">
+                                <div class="c2c-card-amount" id="kudaResAmount">2 013<span class="kop">,56</span> ₽</div>
+                                <div class="c2c-card-sub">Альфа-карта МИР ·· 1032</div>
+                            </div>
+                            <div class="c2c-card-mir-logo"><span class="m">МИ</span><span class="green">Р</span></div>
+                        </div>
+                    </div>
+
+                    <div class="kuda-continue" id="kudaContinue">
+                        <div class="kuda-continue-btn" id="kudaContinueBtn">Продолжить</div>
+                    </div>
+                </div>
+
+                <!-- iOS контекстное меню "Вставить" -->
+                <div class="ios-context-menu" id="iosCtxMenu">
+                    <div class="item">Вставить</div>
+                    <div class="item">Сканировать текст</div>
+                </div>
+
+                <!-- iOS числовая клавиатура -->
+                <div class="ios-num-kb" id="numKb">
+                    <div class="num-calc-row hidden" id="numCalcRow">
+                        <span>+</span><span>−</span><span>×</span><span>÷</span><span>=</span>
+                    </div>
+                    <div class="num-grid">
+                        <div class="num-key" data-val="1"><span class="n">1</span><span class="l"></span></div>
+                        <div class="num-key" data-val="2"><span class="n">2</span><span class="l">АБВГ</span></div>
+                        <div class="num-key" data-val="3"><span class="n">3</span><span class="l">ДЕЖЗ</span></div>
+                        <div class="num-key" data-val="4"><span class="n">4</span><span class="l">ИЙКЛ</span></div>
+                        <div class="num-key" data-val="5"><span class="n">5</span><span class="l">МНОП</span></div>
+                        <div class="num-key" data-val="6"><span class="n">6</span><span class="l">РСТУ</span></div>
+                        <div class="num-key" data-val="7"><span class="n">7</span><span class="l">ФХЦЧ</span></div>
+                        <div class="num-key" data-val="8"><span class="n">8</span><span class="l">ШЩЪЫ</span></div>
+                        <div class="num-key" data-val="9"><span class="n">9</span><span class="l">ЬЭЮЯ</span></div>
+                        <div class="num-key dark" data-val=","><span class="n">,</span></div>
+                        <div class="num-key" data-val="0"><span class="n">0</span></div>
+                        <div class="num-key dark" data-val="bk"><span class="bk">⌫</span></div>
+                    </div>
+                </div>
+
+                <!-- ЭКРАН СЕКРЕТНОГО КОДА -->
+                <div class="screen-pin" id="screenPin">
+                    <span class="pin-cancel">Отмена</span>
+                    <div class="pin-prompt">Подтвердите операцию<br>секретным кодом</div>
+                    <div class="pin-dots" id="pinDots">
+                        <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
+                    </div>
+                    <div class="pin-pad">
+                        <div class="pin-key" data-val="1">1</div>
+                        <div class="pin-key" data-val="2">2</div>
+                        <div class="pin-key" data-val="3">3</div>
+                        <div class="pin-key" data-val="4">4</div>
+                        <div class="pin-key" data-val="5">5</div>
+                        <div class="pin-key" data-val="6">6</div>
+                        <div class="pin-key" data-val="7">7</div>
+                        <div class="pin-key" data-val="8">8</div>
+                        <div class="pin-key" data-val="9">9</div>
+                        <div class="pin-key forgot">Забыли<br>код?</div>
+                        <div class="pin-key" data-val="0">0</div>
+                        <div class="pin-key empty"></div>
+                    </div>
+                </div>
+
+                <!-- ГЛОБАЛЬНЫЙ ЛОАДЕР -->
+                <div class="global-loader" id="globalLoader"><div class="alfa-spinner"></div></div>
+
+                <!-- ПОПАП ОШИБКИ -->
+                <div class="err-overlay" id="errOverlay">
+                    <div class="err-popup">
+                        <div class="err-body">
+                            <div class="err-title">Ошибка</div>
+                            <div class="err-text" id="errPopupText">Ошибка обращения к банку, попробуйте позже</div>
+                        </div>
+                        <div class="err-divider"></div>
+                        <button class="err-btn">OK</button>
+                    </div>
+                </div>
+
+                <!-- НИЖНЕЕ МЕНЮ -->
+                <div class="tabbar" id="tabbar">
+                    <div class="tab" id="tabHome"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8M5 10v10h14V10"/></svg><span class="lbl">Главный</span></div>
+                    <div class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span class="lbl">История</span></div>
+                    <div class="tab" id="tabPay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 4h9a4 4 0 010 8H6M6 4v16M6 8h9"/></svg><span class="lbl">Платежи</span></div>
+                    <div class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg><span class="lbl">Витрина</span></div>
+                    <div class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg><span class="lbl">Чат</span></div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn-animate" onclick="startAnimation()">▶ Произвести</button>
+            <button class="btn-download" onclick="downloadVideo()">⬇ Скачать</button>
+        </div>
+    </div>
+
+    <script>
+        /* ══ УТИЛИТЫ ══ */
+        function wait(ms){return new Promise(r=>setTimeout(r,ms));}
+        function tween(duration,onProgress,easing){
+            easing=easing||easeOutCubic;
+            return new Promise(resolve=>{
+                const start=performance.now();
+                function tick(now){
+                    const p=Math.min((now-start)/duration,1);
+                    onProgress(easing(p),p);
+                    if(p<1)requestAnimationFrame(tick); else resolve();
+                }
+                requestAnimationFrame(tick);
+            });
+        }
+        function easeOutCubic(t){return 1-Math.pow(1-t,3);}
+        const $=id=>document.getElementById(id);
+
+        function showLoader(){$('globalLoader').classList.add('show');}
+        function hideLoader(){$('globalLoader').classList.remove('show');}
+
+        /* ══ ТЕМА ══ */
+        function setTheme(theme){
+            const html=document.documentElement, ps=$('phoneScreen');
+            if(theme==='light'){html.classList.add('theme-light');ps.classList.add('light');$('themeLight').classList.add('active');$('themeDark').classList.remove('active');}
+            else{html.classList.remove('theme-light');ps.classList.remove('light');$('themeDark').classList.add('active');$('themeLight').classList.remove('active');}
+            renderBattery();
+            try{localStorage.setItem('alfa_theme',theme);}catch(e){}
+        }
+        (function(){try{if(localStorage.getItem('alfa_theme')==='light')setTheme('light');}catch(e){}})();
+
+        /* ══ ВРЕМЯ ══ */
+        function getCurrentTime(){const n=new Date();return String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0');}
+        function updateStatusTime(){if(!$('customTimeCheck').checked)$('statusTime').textContent=getCurrentTime();}
+        $('customTimeCheck').addEventListener('change',function(){$('timeInputWrap').classList.toggle('visible',this.checked);if(!this.checked)updateStatusTime();});
+        $('customTimeInput').addEventListener('input',function(){let v=this.value.replace(/\D/g,'').substring(0,4);if(v.length>2)v=v.slice(0,2)+':'+v.slice(2);this.value=v;$('statusTime').textContent=v||getCurrentTime();});
+
+        /* ══ БАТАРЕЯ — 1:1 из Сбербанк-проекта ══ */
+        let batteryMode='simple';
+        function setBatteryMode(mode){batteryMode=mode;$('bmodeSimple').classList.toggle('active',mode==='simple');$('bmodeDetailed').classList.toggle('active',mode==='detailed');renderBattery();}
+        function renderBattery(){
+            const container=$('batteryContainer');
+            const level=parseInt($('batterySlider').value);
+            const color=level<20?'#ff3b30':'#fff';
+            if(batteryMode==='simple'){
+                container.innerHTML=`<svg style="width:25px;" viewBox="0 0 100 50">
+                    <rect x="1" y="1" width="90" height="48" rx="12" fill="none" stroke="#8e8e93" stroke-width="2"/>
+                    <rect x="92" y="15" width="6" height="20" rx="3" fill="#8e8e93"/>
+                    <clipPath id="bclip"><rect x="4" y="4" width="84" height="42" rx="10"/></clipPath>
+                    <rect x="4" y="4" width="${(level/100)*84}" height="42" rx="10" fill="${color}" clip-path="url(#bclip)"/>
+                </svg>`;
+            }else{
+                const fillColor=level<20?'#ff3b30':'#fff';
+                container.innerHTML=`<div class="battery-detailed">
+                    <div class="battery-body-2">
+                        <div class="battery-fill" style="width:${level}%;background:${fillColor};"></div>
+                        <span class="battery-text" style="color:#fff;">${level}</span>
+                    </div>
+                </div>`;
+            }
+        }
+        $('batterySlider').addEventListener('input',renderBattery);
+
+        /* ══ ДАННЫЕ → ЭКРАН ══ */
+        function syncData(){
+            const owner=$('ownerName').value||'Ибрагим';
+            $('smUsername').innerHTML=owner+' <span class="sm-chev">›</span>';
+            const bal=$('balanceAmount').value||'2 013,56';
+            const parts=bal.split(',');
+            const balHtml=parts.length>1?`${parts[0]}<span class="kop">,${parts[1]}</span> <span class="rub">₽</span>`:`${parts[0]} <span class="rub">₽</span>`;
+            $('smBalance').innerHTML=balHtml;
+            const balHtml2=parts.length>1?`${parts[0]}<span class="kop">,${parts[1]}</span> ₽`:`${parts[0]} ₽`;
+            $('c2cSrcAmount').innerHTML=balHtml2;
+            $('kudaResAmount').innerHTML=balHtml2;
+        }
+        ['ownerName','balanceAmount'].forEach(id=>$(id).addEventListener('input',syncData));
+
+        /* ══ ШАБЛОНЫ ОШИБКИ ══ */
+        const PRESET_ERROR_TEMPLATES=[
+            'Ошибка обращения к банку, попробуйте позже',
+            'Превышен лимит операций. Обратитесь в поддержку',
+            'Перевод временно недоступен',
+            'Карта получателя заблокирована банком-эмитентом',
+            'Операция отклонена. Попробуйте позже',
+        ];
+        const tplTabState={error:'preset'};
+        function toggleTpl(type){
+            const f=$(type+'Fields'),btn=$(type+'TplToggle');
+            const col=f.classList.contains('collapsed');
+            f.classList.toggle('collapsed',!col);
+            btn.textContent=col?'▴ Скрыть шаблоны':'▾ Показать шаблоны';
+        }
+        function switchTplTab(type,tab){
+            tplTabState[type]=tab;
+            const block=$(type+'Fields');
+            block.querySelectorAll('.tpl-tab').forEach((t,i)=>t.classList.toggle('active',(i===0&&tab==='preset')||(i===1&&tab==='custom')));
+            $(type+'PresetList').style.display=tab==='preset'?'flex':'none';
+            $(type+'CustomList').style.display=tab==='custom'?'flex':'none';
+            $(type+'AddRow').style.display=tab==='custom'?'flex':'none';
+            if(tab==='custom')renderCustomList(type);
+        }
+        function applyTemplate(type,text){
+            $('errorText').value=text;
+            const ta=$('errorText');ta.style.borderColor='#ef3324';setTimeout(()=>ta.style.borderColor='',600);
+        }
+        function buildPresetList(type){
+            const list=$(type+'PresetList');list.innerHTML='';
+            PRESET_ERROR_TEMPLATES.forEach(text=>{
+                const item=document.createElement('div');item.className='tpl-item';
+                item.innerHTML=`<span class="tpl-item-text">${text}</span>`;
+                item.addEventListener('click',()=>applyTemplate(type,text));
+                list.appendChild(item);
+            });
+        }
+        function getCustom(type){try{return JSON.parse(localStorage.getItem('alfa_tpl_'+type)||'[]');}catch{return[];}}
+        function setCustom(type,arr){localStorage.setItem('alfa_tpl_'+type,JSON.stringify(arr));}
+        function saveCustomTemplate(type){const inp=$(type+'AddInput');const t=inp.value.trim();if(!t)return;const arr=getCustom(type);arr.unshift(t);setCustom(type,arr);inp.value='';renderCustomList(type);}
+        function deleteCustom(type,i){const arr=getCustom(type);arr.splice(i,1);setCustom(type,arr);renderCustomList(type);}
+        function renderCustomList(type){
+            const list=$(type+'CustomList');const arr=getCustom(type);list.innerHTML='';
+            if(!arr.length){list.innerHTML='<div style="font-size:12px;color:#555;padding:6px 4px;">Нет сохранённых шаблонов</div>';return;}
+            arr.forEach((text,i)=>{
+                const item=document.createElement('div');item.className='tpl-item';
+                item.innerHTML=`<span class="tpl-item-text">${text}</span><button class="tpl-item-del">✕</button>`;
+                item.querySelector('span').addEventListener('click',()=>applyTemplate(type,text));
+                item.querySelector('button').addEventListener('click',e=>{e.stopPropagation();deleteCustom(type,i);});
+                list.appendChild(item);
+            });
+        }
+
+        /* ══════════════════════════════════════════
+           ГЛАВНАЯ АНИМАЦИЯ
+        ══════════════════════════════════════════ */
+        let running=false;
+
+        function resetAll(){
+            // экраны
+            $('screenMain').style.display='block';$('screenMain').style.zIndex='10';
+            $('screenPay').classList.remove('show');
+            const c2c=$('screenC2C');c2c.classList.remove('show');c2c.style.transform='translateX(100%)';
+            $('c2cCardsBox').classList.remove('dimmed');
+            $('c2cSpinner').classList.remove('visible');
+            $('c2cDisclaimer').classList.remove('show');
+            $('c2cAmountBar').classList.remove('show');
+            // получатель сброс
+            const di=$('c2cDestIcon');di.className='c2c-card-icon empty';di.innerHTML='<span>+</span>';
+            $('c2cDestInfo').innerHTML='<div class="c2c-card-placeholder">Укажите карту</div>';
+            $('c2cAmountVal').textContent='0 ₽';
+            // sheet
+            $('kudaSheet').classList.remove('show');$('sheetOverlay').classList.remove('show');
+            $('kudaCardLabel').classList.remove('show');
+            $('kudaInputIco').classList.remove('show');
+            $('kudaRecognize').classList.remove('show');
+            $('kudaSaveRow').classList.remove('show');
+            $('kudaContinue').classList.remove('show');
+            $('kudaClear').classList.remove('show');
+            $('kudaContinueBtn').classList.remove('active');
+            $('kudaPlaceholder').style.display='block';$('kudaPlaceholder').textContent='На другую карту';
+            $('kudaTyped').style.display='none';$('kudaTyped').textContent='';
+            $('kudaResultList').style.display='block';
+            // меню/клава
+            $('iosCtxMenu').classList.remove('show');
+            const kb=$('numKb');kb.classList.remove('show','hide');kb.style.transform='translateY(100%)';
+            $('numCalcRow').classList.add('hidden');
+            // pin
+            const pinEl=$('screenPin');
+            pinEl.style.transition='none';
+            pinEl.classList.remove('show');
+            pinEl.style.transform='translateY(100%)';
+            pinEl.offsetHeight; // force reflow
+            pinEl.style.transition='';
+            $('pinDots').querySelectorAll('.pin-dot').forEach(d=>d.classList.remove('filled'));
+            // ошибка
+            $('errOverlay').classList.remove('show');
+            hideLoader();
+            // tabbar
+            $('tabbar').classList.remove('hidden');
+            $('tabHome').classList.add('active');$('tabPay').classList.remove('active');
+        }
+
+        async function startAnimation(){
+            if(running)return; running=true;
+            syncData();
+            resetAll();
+            $('errPopupText').textContent=$('errorText').value;
+
+            // === 1. Главный экран — пауза ===
+            await wait(1200);
+
+            // === 2. Резкий свитч на Платежи (без анимации) ===
+            $('screenPay').classList.add('show');
+            $('tabHome').classList.remove('active');$('tabPay').classList.add('active');
+            await wait(1100);
+
+            // === 3. Slide-in справа "С карты на карту" + глобальная загрузка ===
+            const c2c=$('screenC2C');
+            c2c.classList.add('show');
+            await tween(340,p=>{c2c.style.transform=`translateX(${(1-p)*100}%)`;});
+            showLoader();
+            await wait(1300);
+
+            // === 4. Загрузка завершилась → карта-источник видна ===
+            hideLoader();
+            await wait(1000);
+
+            // === 5. Bottom-sheet "Куда" выезжает снизу ===
+            $('sheetOverlay').classList.add('show');
+            $('kudaSheet').classList.add('show');
+            await wait(700);
+
+            // === 6. Клавиатура выезжает + появляется инпут карты ===
+            await wait(400);
+            $('numKb').classList.add('show');
+            await wait(150);
+            // трансформируем sheet: появляется "Номер карты", иконка, распознать, сохранить
+            $('kudaResultList').style.display='none';
+            $('kudaCardLabel').classList.add('show');
+            $('kudaInputIco').classList.add('show');
+            $('kudaPlaceholder').style.display='none';
+            $('kudaTyped').style.display='inline';
+            $('kudaTyped').innerHTML='<span class="kuda-cursor"></span>';
+            $('kudaClear').classList.add('show');
+            $('kudaRecognize').classList.add('show');
+            $('kudaSaveRow').classList.add('show');
+            $('kudaContinue').classList.add('show');
+            await wait(900);
+
+            // === 7. iOS меню "Вставить" → вставка номера ===
+            const ctx=$('iosCtxMenu');
+            ctx.style.left='20px';
+            ctx.style.top='150px';
+            ctx.classList.add('show');
+            await wait(1100);
+            // тап "Вставить"
+            ctx.querySelector('.item').style.background='rgba(255,255,255,0.2)';
+            await wait(150);
+            ctx.classList.remove('show');
+            ctx.querySelector('.item').style.background='';
+            // вставляется номер карты
+            const card=$('recipientCard').value||'2200 2496 3643 9710';
+            $('kudaTyped').innerHTML=card;
+            // кнопка краснеет
+            $('kudaContinueBtn').classList.add('active');
+            await wait(1100);
+
+            // === 8. Тап Продолжить → глобальный лоадер → клава вниз → сворачиваем sheet ===
+            $('kudaContinueBtn').style.background='#ef3324';
+            $('numKb').classList.add('hide');
+            showLoader();
+            await wait(1600);
+            hideLoader();
+            // sheet уезжает вниз
+            $('kudaSheet').classList.remove('show');
+            $('sheetOverlay').classList.remove('show');
+            await wait(450);
+
+            // === 9. Экран откуда/куда: заполняем получателя + анимированный ввод суммы ===
+            // получатель ВТБ
+            const di=$('c2cDestIcon');di.className='c2c-card-icon vtb';
+            di.innerHTML='<div class="vtb-fallback"><span>ВТБ</span></div>';
+            const bank=$('recipientBank').value||'Банк ВТБ';
+            const sub=$('recipientCardSub').value||'Карта NSPC ·· 9710';
+            $('c2cDestInfo').innerHTML=`<div class="c2c-card-amount" style="font-size:18px;">${bank}</div><div class="c2c-card-sub">${sub}</div>`;
+            $('c2cDisclaimer').classList.add('show');
+            await wait(600);
+            // показываем нижнюю панель суммы + калькулятор
+            $('c2cAmountBar').classList.add('show');
+            $('numCalcRow').classList.remove('hidden');
+            $('numKb').classList.remove('hide');
+            $('numKb').classList.add('show');
+            await wait(500);
+            // анимированный ввод суммы
+            await animateAmount($('transferAmount').value||'2 005');
+            await wait(800);
+            // клава вниз
+            $('numKb').classList.add('hide');
+            await wait(400);
+
+            // === 10. Загрузка → экран секретного кода → ввод PIN ===
+            await wait(300);
+            $('screenPin').classList.add('show');
+            await wait(700);
+            await animatePin($('pinCode').value||'1234');
+            await wait(500);
+            $('screenPin').classList.remove('show');
+            await wait(420);
+
+            // === 11. Загрузка → попап ошибки ===
+            showLoader();
+            await wait(1500);
+            hideLoader();
+            await wait(300);
+            $('errOverlay').classList.add('show');
+
+            running=false;
+        }
+
+        async function animateAmount(raw){
+            const clean=String(raw).replace(/[^\d]/g,'');
+            const display=$('c2cAmountVal');
+            for(let i=0;i<clean.length;i++){
+                const d=clean[i];
+                const key=document.querySelector(`#numKb .num-key[data-val="${d}"]`);
+                if(key){key.classList.add('pressed');await wait(80);key.classList.remove('pressed');}
+                const num=parseInt(clean.slice(0,i+1),10);
+                display.textContent=num.toLocaleString('ru-RU')+' ₽';
+                await wait(120+Math.random()*60);
+            }
+        }
+
+        async function animatePin(pin){
+            const dots=$('pinDots').querySelectorAll('.pin-dot');
+            const digits=String(pin).replace(/\D/g,'').slice(0,4).split('');
+            for(let i=0;i<digits.length;i++){
+                const key=document.querySelector(`#screenPin .pin-key[data-val="${digits[i]}"]`);
+                if(key){key.classList.add('pressed');await wait(90);key.classList.remove('pressed');}
+                if(dots[i])dots[i].classList.add('filled');
+                await wait(180+Math.random()*80);
+            }
+        }
+
+        /* ══ ЗАПИСЬ ВИДЕО ══ */
+        async function downloadVideo(){
+            const btn=document.querySelector('.btn-download');
+            try{
+                const phoneScreen=document.querySelector('.phone-screen');
+                const stream=await navigator.mediaDevices.getDisplayMedia({video:{frameRate:60,width:{ideal:1920},height:{ideal:1080},displaySurface:'browser'},audio:false,preferCurrentTab:true});
+                if('CropTarget' in window){try{const ct=await CropTarget.fromElement(phoneScreen);const[vt]=stream.getVideoTracks();await vt.cropTo(ct);}catch(e){console.warn(e);}}
+                const ac=new(window.AudioContext||window.webkitAudioContext)();const osc=ac.createOscillator();const g=ac.createGain();osc.type='sine';osc.frequency.value=440;g.gain.value=0.0001;osc.connect(g);const ad=ac.createMediaStreamDestination();g.connect(ad);osc.start();
+                const combined=new MediaStream([...stream.getVideoTracks(),ad.stream.getAudioTracks()[0]]);
+                const types=['video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm'];
+                const sel=types.find(t=>MediaRecorder.isTypeSupported(t));
+                if(!sel)throw new Error('Нет поддерживаемого формата');
+                const mr=new MediaRecorder(combined,{mimeType:sel,videoBitsPerSecond:20000000});const chunks=[];
+                mr.ondataavailable=e=>{if(e.data.size>0)chunks.push(e.data);};
+                mr.onstop=()=>{osc.stop();ac.close();stream.getTracks().forEach(t=>t.stop());if(!chunks.length){alert('Не удалось записать');btn.textContent='⬇ Скачать';btn.disabled=false;return;}const blob=new Blob(chunks,{type:sel});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`alfa-transfer-${Date.now()}.webm`;document.body.appendChild(a);a.click();document.body.removeChild(a);setTimeout(()=>URL.revokeObjectURL(url),1000);btn.textContent='⬇ Скачать';btn.disabled=false;};
+                mr.onerror=()=>{osc.stop();ac.close();stream.getTracks().forEach(t=>t.stop());btn.textContent='⬇ Скачать';btn.disabled=false;};
+                btn.textContent='● Запись...';btn.disabled=true;mr.start();
+                await wait(500);await startAnimation();await wait(1500);mr.stop();
+            }catch(e){console.error(e);btn.textContent='⬇ Скачать';btn.disabled=false;if(e.name==='NotAllowedError')alert('Разрешите захват экрана');else alert('Ошибка: '+e.message);}
+        }
+
+        /* ══ ИНИЦИАЛИЗАЦИЯ ══ */
+        buildPresetList('error');
+        renderBattery();
+        updateStatusTime();
+        setInterval(updateStatusTime,10000);
+        syncData();
+    </script>
+</body>
+</html>
