@@ -2209,6 +2209,11 @@
       <input type="text" id="pinCode" maxlength="4" value="7777">
     </div>
 
+    <div class="input-group">
+      <label>Карта отправителя</label>
+      <input type="text" id="cardLastInput" maxlength="4" placeholder="0000">
+    </div>
+
     <!-- ОШИБКА -->
     <div class="templates-block">
       <div class="input-group" style="margin-bottom:6px;">
@@ -2437,7 +2442,7 @@
               <img style="width: 45px;" src="./source/alfaCard.png" alt="">
               <div class="c2c-card-info">
                 <div class="c2c-card-amount" id="c2cSrcAmount">2 013<span class="kop">,56</span> ₽</div>
-                <div class="c2c-card-sub" id="c2cSrcSub">Альфа-карта МИР <span style="color: #6e6970;">··1032</span>
+                <div class="c2c-card-sub" >Альфа-карта МИР <span style="color: #6e6970;" id="c2cSrcSub">··1032</span>
                 </div>
               </div>
 
@@ -2506,7 +2511,8 @@
                   <div class="c2c-card-info" style="display: flex; gap: 3px; flex-direction: column;">
                     <div class="c2c-card-amount" id="kudaResAmount">2 013<span class="kop">,56</span> ₽
                     </div>
-                    <div class="c2c-card-sub">Альфа-карта МИР <span style="color: #6e6970;">··1032</span></div>
+                    <div class="c2c-card-sub" >Альфа-карта МИР <span style="color: #6e6970;" id="d1032">··1032</span>
+                    </div>
                   </div>
                   <img style="width: 40px;" src="./source/mir.png" alt="">
                 </div>
@@ -2646,6 +2652,22 @@
   </div>
 
   <script>
+
+    const cardLastInput = document.getElementById('cardLastInput');
+
+    cardLastInput.addEventListener('input', () => {
+      cardLastInput.value = cardLastInput.value.replace(/\D/g, '').slice(0, 4);
+
+      const formattedValue = cardLastInput.value
+        ? `·· ${cardLastInput.value}`
+        : '';
+
+      ['smCardNum', 'c2cSrcSub', 'd1032'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = formattedValue;
+      });
+    });
+
     /* ══ УТИЛИТЫ ══ */
     function wait(ms) { return new Promise(r => setTimeout(r, ms)); }
     function tween(duration, onProgress, easing) {
@@ -2701,7 +2723,9 @@
         container.innerHTML = `<div class="battery-detailed">
                     <div class="battery-body-2">
                         <div class="battery-fill" style="width:${level}%;background:${fillColor};"></div>
-                        <span class="battery-text" style="color:#fff;">${level}</span>
+                        <span class="battery-text" style="color: #000;
+    font-weight: 700;
+    font-size: 12px;">${level}</span>
                     </div>
                 </div>`;
       }
