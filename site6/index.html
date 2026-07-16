@@ -1476,6 +1476,164 @@
         background: #4b4b50;
       }
 
+    
+      .template-box {
+        margin: 0 0 12px;
+        position: relative;
+      }
+
+      .template-toggle {
+        width: 100%;
+        height: 40px;
+        border: 1px solid #353538;
+        border-radius: 10px;
+        background: #252527;
+        color: #fff;
+        padding: 0 11px;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        cursor: pointer;
+      }
+
+      .template-toggle:hover {
+        background: #2b2b2e;
+      }
+
+      .template-arrow {
+        color: #8e8e93;
+        transition: transform .2s ease;
+      }
+
+      .template-box.open .template-arrow {
+        transform: rotate(180deg);
+      }
+
+      .template-dropdown {
+        display: none;
+        margin-top: 7px;
+        padding: 8px;
+        background: #202023;
+        border: 1px solid #343438;
+        border-radius: 12px;
+        box-shadow: 0 12px 28px rgba(0,0,0,.35);
+      }
+
+      .template-box.open .template-dropdown {
+        display: block;
+      }
+
+      .template-list {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        max-height: 180px;
+        overflow-y: auto;
+        margin-bottom: 8px;
+      }
+
+      .template-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        min-height: 38px;
+        padding: 8px 9px;
+        border-radius: 9px;
+        background: #29292c;
+        border: 1px solid transparent;
+        cursor: pointer;
+      }
+
+      .template-item:hover {
+        border-color: #3f8f4d;
+        background: #2d2d30;
+      }
+
+      .template-item-name {
+        font-size: 13px;
+        color: #f0f0f2;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+
+      .template-delete {
+        border: 0;
+        background: transparent;
+        color: #8f8f94;
+        font-size: 17px;
+        cursor: pointer;
+        padding: 0 3px;
+      }
+
+      .template-delete:hover {
+        color: #ff5a52;
+      }
+
+      .template-empty {
+        font-size: 12px;
+        color: #77777c;
+        padding: 8px 4px;
+      }
+
+      .template-save-btn {
+        width: 100%;
+        height: 38px;
+        border: 0;
+        border-radius: 9px;
+        background: #1f8d34;
+        color: #fff;
+        font-size: 13px;
+        cursor: pointer;
+      }
+
+      .template-save-btn:hover {
+        background: #24a03c;
+      }
+
+      .template-name-wrap {
+        display: none;
+        gap: 6px;
+        margin-top: 8px;
+      }
+
+      .template-name-wrap.visible {
+        display: flex;
+      }
+
+      .template-name-wrap input {
+        flex: 1;
+        height: 38px;
+        border: 1px solid #353538;
+        border-radius: 9px;
+        background: #252527;
+        color: #fff;
+        padding: 0 10px;
+        outline: none;
+      }
+
+      .template-confirm-btn,
+      .template-cancel-btn {
+        width: 38px;
+        height: 38px;
+        border: 0;
+        border-radius: 9px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+
+      .template-confirm-btn {
+        background: #1f8d34;
+        color: #fff;
+      }
+
+      .template-cancel-btn {
+        background: #333337;
+        color: #bbb;
+      }
+
     </style>
   </head>
 
@@ -1483,6 +1641,7 @@
     <div class="panel">
       <h2>Параметры</h2>
       <div class="group"><label>Номер телефона</label><input id="phoneInput" value="+7 (000) 000-00-00"></div>
+      <div class="group"><label>Имя получателя</label><input id="recipientNameInput" value="Ильнар Г."></div>
       <div class="group"><label>Сумма</label><input id="amountInput" value="200 000"></div>
       <div class="group"><label>Баланс</label><input id="balanceInput" value="12 543 516,44"></div>
       <div class="group"><label>Последние цифры счёта</label><input id="accountInput" value="1033"></div>
@@ -1490,6 +1649,22 @@
         <label>Банки — нажми, чтобы добавить</label>
         <div class="bank-select-wrap" id="bankSelectWrap"></div>
         
+      </div>
+      <div class="template-box" id="errorTemplateBox">
+        <label style="display:block;color:#8e8e93;font-size:11px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;">Шаблоны</label>
+        <button type="button" class="template-toggle" id="errorTemplateToggle">
+          <span id="selectedTemplateName">Выбрать шаблон</span>
+          <span class="template-arrow">⌄</span>
+        </button>
+        <div class="template-dropdown">
+          <div class="template-list" id="errorTemplateList"></div>
+          <button type="button" class="template-save-btn" id="saveNewTemplateBtn">Сохранить новый шаблон</button>
+          <div class="template-name-wrap" id="templateNameWrap">
+            <input id="newTemplateNameInput" type="text" placeholder="Название шаблона">
+            <button type="button" class="template-confirm-btn" id="confirmTemplateSave">✓</button>
+            <button type="button" class="template-cancel-btn" id="cancelTemplateSave">×</button>
+          </div>
+        </div>
       </div>
       <div class="group"><label>Заголовок ошибки</label><input id="failTitleInput"
           value='Перевод не будет зачислен, так как не пройден "Антифрод"'></div>
@@ -1739,6 +1914,145 @@
       </div>
       <script>
 
+
+        const ERROR_TEMPLATES_KEY = 'errorTemplatesV1';
+
+        function getErrorTemplates() {
+          try {
+            const saved = JSON.parse(localStorage.getItem(ERROR_TEMPLATES_KEY) || '[]');
+            return Array.isArray(saved) ? saved : [];
+          } catch {
+            return [];
+          }
+        }
+
+        function setErrorTemplates(templates) {
+          localStorage.setItem(ERROR_TEMPLATES_KEY, JSON.stringify(templates));
+        }
+
+        function renderErrorTemplates() {
+          const list = document.getElementById('errorTemplateList');
+          if (!list) return;
+
+          const templates = getErrorTemplates();
+          list.innerHTML = '';
+
+          if (!templates.length) {
+            list.innerHTML = '<div class="template-empty">Сохранённых шаблонов пока нет</div>';
+            return;
+          }
+
+          templates.forEach((template, index) => {
+            const item = document.createElement('div');
+            item.className = 'template-item';
+            item.innerHTML = `
+              <div class="template-item-name">${template.name}</div>
+              <button type="button" class="template-delete" title="Удалить">×</button>
+            `;
+
+            item.addEventListener('click', event => {
+              if (event.target.closest('.template-delete')) return;
+
+              document.getElementById('failTitleInput').value = template.title || '';
+              document.getElementById('failSubInput').value = template.subtitle || '';
+              document.getElementById('selectedTemplateName').textContent = template.name;
+              document.getElementById('errorTemplateBox').classList.remove('open');
+            });
+
+            item.querySelector('.template-delete').addEventListener('click', event => {
+              event.stopPropagation();
+              const updated = getErrorTemplates();
+              updated.splice(index, 1);
+              setErrorTemplates(updated);
+
+              const selected = document.getElementById('selectedTemplateName');
+              if (selected.textContent === template.name) {
+                selected.textContent = 'Выбрать шаблон';
+              }
+
+              renderErrorTemplates();
+            });
+
+            list.appendChild(item);
+          });
+        }
+
+        function initErrorTemplates() {
+          const box = document.getElementById('errorTemplateBox');
+          const toggle = document.getElementById('errorTemplateToggle');
+          const saveBtn = document.getElementById('saveNewTemplateBtn');
+          const nameWrap = document.getElementById('templateNameWrap');
+          const nameInput = document.getElementById('newTemplateNameInput');
+          const confirmBtn = document.getElementById('confirmTemplateSave');
+          const cancelBtn = document.getElementById('cancelTemplateSave');
+
+          if (!box || !toggle) return;
+
+          toggle.addEventListener('click', () => {
+            box.classList.toggle('open');
+            renderErrorTemplates();
+          });
+
+          saveBtn.addEventListener('click', () => {
+            nameWrap.classList.add('visible');
+            nameInput.value = '';
+            nameInput.focus();
+          });
+
+          cancelBtn.addEventListener('click', () => {
+            nameWrap.classList.remove('visible');
+            nameInput.value = '';
+          });
+
+          const saveTemplate = () => {
+            const name = nameInput.value.trim();
+            if (!name) {
+              nameInput.focus();
+              return;
+            }
+
+            const templates = getErrorTemplates();
+            const existingIndex = templates.findIndex(item => item.name.toLowerCase() === name.toLowerCase());
+
+            const templateData = {
+              name,
+              title: document.getElementById('failTitleInput').value,
+              subtitle: document.getElementById('failSubInput').value
+            };
+
+            if (existingIndex >= 0) {
+              templates[existingIndex] = templateData;
+            } else {
+              templates.push(templateData);
+            }
+
+            setErrorTemplates(templates);
+            document.getElementById('selectedTemplateName').textContent = name;
+            nameWrap.classList.remove('visible');
+            nameInput.value = '';
+            renderErrorTemplates();
+          };
+
+          confirmBtn.addEventListener('click', saveTemplate);
+          nameInput.addEventListener('keydown', event => {
+            if (event.key === 'Enter') saveTemplate();
+            if (event.key === 'Escape') {
+              nameWrap.classList.remove('visible');
+              nameInput.value = '';
+            }
+          });
+
+          document.addEventListener('click', event => {
+            if (!box.contains(event.target)) {
+              box.classList.remove('open');
+            }
+          });
+
+          renderErrorTemplates();
+        }
+
+        document.addEventListener('DOMContentLoaded', initErrorTemplates);
+
         const BANKS = [
           { key: 'sber', name: 'Сбербанк', img: './source/sber.png', imgSize: 40, bg: '#123b18', style: 'width:35px;margin-bottom:17px;border-radius:50%' },
           { key: 'vtb', name: 'ВТБ', img: './source/vtb.png', imgSize: 40, bg: '#001433', style: 'width:35px;margin-bottom:20px;border-radius:50%' },
@@ -1790,7 +2104,7 @@
           card.className = 'bankcard';
           card.dataset.bank = b.key;
           const imageSize = Number(b.imgSize) || 30;
-          card.innerHTML = `<div class="bank-logo-wrap"><img class="bank-logo" src="${b.img}" alt="" style="--bank-img-size:${imageSize}px"></div><div class="bankname">${b.name}</div><div class="banksub">Ильнар Г.</div>`;
+          card.innerHTML = `<div class="bank-logo-wrap"><img class="bank-logo" src="${b.img}" alt="" style="--bank-img-size:${imageSize}px"></div><div class="bankname">${b.name}</div><div class="banksub">${val("recipientNameInput","Ильнар Г.")}</div>`;
           return card;
         }
 
