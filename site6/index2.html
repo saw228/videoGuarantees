@@ -1892,7 +1892,7 @@
                 </svg>
               </div>
             </div>
-            <div class="fail-amount" id="failAmount">200 000&nbsp;&#8381;</div>
+            <div class="fail-amount" id="failAmount">200 000 ₽</div>
             <div class="fail-sheet" id="failSheet">
               <div class="fail-sheet-handle"></div>
               <div class="fail-sheet-title" id="failSheetTitle">Перевод не будет зачислен, так как не пройден "Антифрод"
@@ -2191,7 +2191,7 @@
         }
         async function runFailAnimation() {
           const el = id => document.getElementById(id);
-          const amountRaw = val('amountInput', '200000'); const amtNum2 = parseInt(amountRaw.replace(/\D/g, '')) || 0; el('failAmount').textContent = amtNum2.toLocaleString('ru-RU') + '\u00A0\u20BD';
+          const amountRaw = val('amountInput', '200000'); const amtNum2 = parseInt(amountRaw.replace(/\D/g, '')) || 0; el('failAmount').textContent = amtNum2.toLocaleString('ru-RU') + ' ₽';
           const phoneRaw2 = val('phoneInput', '+7 (993) 054-71-43'); el('failCardLast').textContent = formatPhoneFull(phoneRaw2); el('failBank').textContent = activeBankData().name;
           el('failSheetTitle').textContent = val('failTitleInput', 'Перевод не будет зачислен, так как не пройден "Антифрод"');
           el('failSheetSub').textContent = val('failSubInput', 'Необходимо совершить встречный перевод, размером 1001 российский рубль');
