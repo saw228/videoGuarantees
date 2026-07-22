@@ -1640,7 +1640,7 @@
   <body>
     <div class="panel">
       <h2>Параметры</h2>
-      <div class="group"><label>Номер телефона</label><input id="phoneInput" value="+7 (000) 000-00-00"></div>
+      <div class="group"><label>Номер телефона</label><input id="phoneInput" value="+7 (000) 000-00-00" inputmode="numeric" autocomplete="off" maxlength="18"></div>
       <div class="group"><label>Имя получателя</label><input id="recipientNameInput" value="Ильнар Г."></div>
       <div class="group"><label>Сумма</label><input id="amountInput" value="200 000"></div>
       <div class="group"><label>Баланс</label><input id="balanceInput" value="12 543 516,44"></div>
@@ -2261,7 +2261,79 @@
         }
         async function downloadVideo() { const btn = document.querySelector('.download'); try { const stream = await navigator.mediaDevices.getDisplayMedia({ video: { frameRate: 60, displaySurface: 'browser' }, audio: false, preferCurrentTab: true }); if ('CropTarget' in window) { try { const target = await CropTarget.fromElement(document.getElementById('phoneScreen')); await stream.getVideoTracks()[0].cropTo(target) } catch (e) { console.warn(e) } } const mime = ['video/webm;codecs=vp9', 'video/webm;codecs=vp8', 'video/webm'].find(x => MediaRecorder.isTypeSupported(x)); const mr = new MediaRecorder(stream, { mimeType: mime, videoBitsPerSecond: 16000000 }); const chunks = []; mr.ondataavailable = e => e.data.size && chunks.push(e.data); mr.onstop = () => { stream.getTracks().forEach(t => t.stop()); const blob = new Blob(chunks, { type: mime }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `transfer-${Date.now()}.webm`; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000); btn.disabled = false; btn.textContent = '⬇ Скачать' }; btn.disabled = true; btn.textContent = '● Запись...'; mr.start(); await wait(400); await startAnimation(); await wait(500); mr.stop() } catch (e) { btn.disabled = false; btn.textContent = '⬇ Скачать'; alert(e.name === 'NotAllowedError' ? 'Разреши захват текущей вкладки' : 'Ошибка записи: ' + e.message) } }
         document.getElementById('batterySlider').addEventListener('input', renderBattery); document.getElementById('customTimeCheck').addEventListener('change', function () { document.getElementById('timeWrap').classList.toggle('visible', this.checked); updateStatusTime() }); document.getElementById('customTimeInput').addEventListener('input', function () { let v = this.value.replace(/\D/g, '').slice(0, 4); if (v.length > 2) v = v.slice(0, 2) + ':' + v.slice(2); this.value = v; updateStatusTime() }); setInterval(updateStatusTime, 10000); buildBankList(); renderBankCards(); renderBattery(); updateStatusTime(); reset();
-      </script>
+      
+      // Маска номера телефона в панели: +7 (000) 000-00-00
+      function formatRussianPhone(value) {
+        const rawValue = String(value || '');
+
+        // Разрешаем полностью очистить поле.
+        if (!rawValue.trim()) return '';
+
+        let digits = rawValue.replace(/\D/g, '');
+
+        // Если пользователь вводит 8 или 7 в начале, считаем это кодом страны.
+        if (digits.startsWith('8') || digits.startsWith('7')) {
+          digits = digits.slice(1);
+        }
+
+        digits = digits.slice(0, 10);
+
+        // После удаления всех цифр поле тоже остаётся пустым.
+        if (!digits.length) return '';
+
+        let result = '+7 (' + digits.slice(0, 3);
+        if (digits.length >= 3) result += ')';
+        if (digits.length > 3) result += ' ' + digits.slice(3, 6);
+        if (digits.length > 6) result += '-' + digits.slice(6, 8);
+        if (digits.length > 8) result += '-' + digits.slice(8, 10);
+
+        return result;
+      }
+
+      (function initPhoneMask() {
+        const phoneInput = document.getElementById('phoneInput');
+        if (!phoneInput) return;
+        // Backspace удаляет именно цифры, поэтому маска не застревает на скобках.
+        phoneInput.addEventListener('keydown', function (event) {
+          if (event.key !== 'Backspace') return;
+
+          const start = this.selectionStart ?? this.value.length;
+          const end = this.selectionEnd ?? start;
+
+          if (start !== end || start !== this.value.length) return;
+
+          event.preventDefault();
+
+          let digits = this.value.replace(/\D/g, '');
+          if (digits.startsWith('7') || digits.startsWith('8')) {
+            digits = digits.slice(1);
+          }
+
+          digits = digits.slice(0, -1);
+          this.value = digits ? formatRussianPhone(digits) : '';
+          this.setSelectionRange(this.value.length, this.value.length);
+          this.dispatchEvent(new Event('phone-mask-updated'));
+        });
+
+        phoneInput.addEventListener('input', function () {
+          const formatted = formatRussianPhone(this.value);
+          this.value = formatted;
+
+          // Запускаем существующую логику проекта, если она слушает change/input.
+          this.dispatchEvent(new Event('phone-mask-updated'));
+        });
+
+        phoneInput.addEventListener('paste', function () {
+          requestAnimationFrame(() => {
+            this.value = formatRussianPhone(this.value);
+            this.dispatchEvent(new Event('input', { bubbles: true }));
+          });
+        });
+
+        phoneInput.value = formatRussianPhone(phoneInput.value);
+      })();
+
+    </script>
   </body>
 
   </html>
