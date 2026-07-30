@@ -1,0 +1,2376 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <title>Перевод по карте — анимация</title>
+  <style>
+    * {
+      box-sizing: border-box
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      font-family: Inter, Arial, sans-serif;
+      background: #0d0d0f;
+      color: #fff
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 26px;
+      padding: 24px;
+      background: radial-gradient(circle at 20% 10%, #252527 0, #151517 42%, #0b0b0d 100%)
+    }
+
+    .panel {
+      width: 310px;
+      max-height: calc(100vh - 48px);
+      overflow: auto;
+      position: sticky;
+      top: 24px;
+      background: #19191c;
+      border: 1px solid #303034;
+      border-radius: 18px;
+      padding: 18px;
+      scrollbar-width: thin;
+      scrollbar-color: #2aa441 transparent
+    }
+
+    .panel::-webkit-scrollbar {
+      width: 8px
+    }
+
+    .panel::-webkit-scrollbar-track {
+      background: transparent;
+      margin: 14px 0
+    }
+
+    .panel::-webkit-scrollbar-thumb {
+      background: linear-gradient(#42b45a, #247d35);
+      border-radius: 999px;
+      border: 2px solid #19191c
+    }
+
+    .panel h2 {
+      font-size: 16px;
+      margin: 0 0 15px
+    }
+
+    .group {
+      margin-bottom: 12px
+    }
+
+    .group label {
+      display: block;
+      color: #8c8c92;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      margin-bottom: 5px
+    }
+
+    .group input {
+      width: 100%;
+      height: 40px;
+      border: 1px solid #353539;
+      border-radius: 10px;
+      background: #252528;
+      color: #fff;
+      padding: 0 11px;
+      font-size: 14px;
+      outline: none
+    }
+
+    .group input:focus {
+      border-color: #2aa441
+    }
+
+    .row {
+      display: flex;
+      gap: 8px
+    }
+
+    .btn {
+      flex: 1;
+      height: 44px;
+      border: 0;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 650;
+      cursor: pointer
+    }
+
+    .start {
+      background: #209f38;
+      color: white
+    }
+
+    .download {
+      background: #2d2d31;
+      color: white
+    }
+
+    .note {
+      font-size: 12px;
+      color: #85858b;
+      line-height: 1.45;
+      margin-top: 12px
+    }
+
+    .stage {
+      display: flex;
+      flex-direction: column;
+      align-items: center
+    }
+
+    .phone {
+      width: 375px;
+      height: 812px;
+      position: relative;
+      overflow: hidden;
+      background: #111113;
+      box-shadow: 0 35px 90px rgba(0, 0, 0, .7)
+    }
+
+    .canvas {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 430px;
+      height: 932px;
+      transform-origin: 0 0;
+      transform: scale(.872093, .871245)
+    }
+
+    .status {
+      height: 57px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 500;
+      display: flex;
+      align-items: center;
+      padding: 0 33px;
+      font-weight: 650;
+      font-size: 17px;
+      background: transparent;
+      pointer-events: none
+    }
+
+    .status .time {
+      margin-top: -8px;
+      font-weight: 400
+    }
+
+    .island-placeholder {
+      position: absolute;
+      left: 105px;
+      top: 0;
+      width: 190px;
+      height: 60px
+    }
+
+    .signals {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: -8px
+    }
+
+    .bars {
+      display: flex;
+      align-items: flex-end;
+      gap: 3px;
+      height: 14px
+    }
+
+    .bars i {
+      display: block;
+      width: 4px;
+      background: #e9e9ea;
+      border-radius: 2px
+    }
+
+    .bars i:nth-child(1) {
+      height: 6px
+    }
+
+    .bars i:nth-child(2) {
+      height: 9px
+    }
+
+    .bars i:nth-child(3) {
+      height: 12px
+    }
+
+    .bars i:nth-child(4) {
+      height: 15px
+    }
+
+    .lte {
+      font-size: 15px;
+      font-weight: 400
+    }
+
+    .battery-container {
+      display: flex;
+      align-items: center;
+      margin-left: 2px
+    }
+
+    .battery-detailed {
+      display: flex;
+      align-items: center;
+      gap: 1px
+    }
+
+    .battery-body-2 {
+      position: relative;
+      width: 24px;
+      height: 13px;
+      border-radius: 4px;
+      overflow: hidden;
+      background: #818181
+    }
+
+    .battery-fill {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 87%;
+      transition: width .3s;
+      z-index: 1
+    }
+
+    .battery-text {
+      position: absolute;
+      top: 45%;
+      left: 50%;
+      transform: translate(-50%, -45%);
+      font-size: 11.5px;
+      font-weight: 500;
+      z-index: 2;
+      color: #fff
+    }
+
+    .battery-cap {
+      width: 2px;
+      height: 7px;
+      background: #737376;
+      border-radius: 0 2px 2px 0
+    }
+
+    .screen {
+      position: absolute;
+      inset: 0;
+      background: #111113;
+      overflow: hidden
+    }
+
+    .screen-page {
+      transform: translateX(100%);
+      transition: transform .36s cubic-bezier(.25, .1, .25, 1);
+      will-change: transform;
+      z-index: 20
+    }
+
+    .screen-page.show {
+      transform: translateX(0)
+    }
+
+    .header {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 57px;
+      height: 62px;
+      display: flex;
+      align-items: center;
+      justify-content: center
+    }
+
+    .back {
+      position: absolute;
+      left: 23px;
+      top: 22px;
+      width: 15px;
+      height: 15px;
+      border-left: 3px solid #fff;
+      border-bottom: 3px solid #fff;
+      transform: rotate(45deg)
+    }
+
+    .title {
+      font-size: 18px;
+      font-weight: 650
+    }
+
+    .subtitle {
+      position: absolute;
+      top: 43px;
+      color: #7e7e84;
+      font-size: 13px
+    }
+
+    .tabs {
+      position: absolute;
+      top: 122px;
+      left: 15px;
+      display: flex;
+      gap: 8px
+    }
+
+    .tab {
+      padding: 11px 13px;
+      border-radius: 13px;
+      color: #737378;
+      font-size: 16px
+    }
+
+    .tab.active {
+      background: #242426;
+      color: #f4f4f4
+    }
+
+    .searchbox {
+      position: absolute;
+      left: 15px;
+      right: 14px;
+      top: 187px;
+      height: 57px;
+      background: #242426;
+      border-radius: 14px;
+      padding: 9px 49px 6px 16px
+    }
+
+    .search-label {
+      font-size: 11px;
+      color: #2ca842
+    }
+
+    .search-value {
+      font-size: 17px;
+      line-height: 25px
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 2px;
+      height: 24px;
+      background: #27a441;
+      vertical-align: -5px;
+      animation: blink .85s steps(1) infinite
+    }
+
+    .scan {
+      position: absolute;
+      right: 18px;
+      top: 12.5px;
+
+    }
+
+    .scan-row {
+      position: absolute;
+      top: 266px;
+      left: 21px;
+      color: #27a441;
+      font-size: 17px;
+      display: flex;
+      align-items: center;
+      gap: 10px
+    }
+
+    .cardscan {
+      position: relative
+    }
+
+    .contacts {
+      position: absolute;
+      left: 14px;
+      right: 28px;
+      top: 322px;
+      opacity: 1;
+      transform: translateX(0);
+      transition: transform .48s cubic-bezier(.22, 1, .36, 1), opacity .3s ease;
+      will-change: transform, opacity
+    }
+
+    .contacts.slide-out {
+      transform: translateX(-115%);
+      opacity: 0;
+      pointer-events: none
+    }
+
+    .card-transfer-info {
+      position: absolute;
+      left: 24px;
+      right: 24px;
+      top: 376px;
+      color: #8d8d92;
+      font-size: 16px;
+      line-height: 1.42;
+      text-align: center;
+      opacity: 0;
+      transform: translateX(115%);
+      transition: transform .48s cubic-bezier(.22, 1, .36, 1), opacity .3s ease, top .58s cubic-bezier(.22, 1, .36, 1);
+      will-change: transform, opacity, top;
+      pointer-events: none
+    }
+
+    .card-transfer-info.show {
+      opacity: 1;
+      transform: translateX(0)
+    }
+
+    .card-transfer-info.centered {
+      top: 438px
+    }
+
+    .contact {
+      height: 76px;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid #1d1d20
+    }
+
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #3a3a3d;
+      color: #aaa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 15px
+    }
+
+    .person {
+      font-size: 16px
+    }
+
+    .phone-num {
+      font-size: 14px;
+      color: #8d8d92;
+      margin-top: 4px
+    }
+
+    .letter {
+      font-size: 21px;
+      font-weight: 600;
+      margin: 5px 0
+    }
+
+    .bottom-action {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 347px;
+      height: 47px;
+      display: flex;
+      align-items: center;
+      background: #111113;
+      transform: translateY(0);
+      transition: transform .58s cubic-bezier(.22, 1, .36, 1);
+      will-change: transform
+    }
+
+    .bottom-action.slide-down {
+      transform: translateY(394px)
+    }
+
+    .grid {
+      margin-left: 15px;
+      color: #27a441;
+      font-size: 24px
+    }
+
+    .continue {
+      margin-left: auto;
+      margin-right: 9px;
+      color: #c8c8cb;
+      font-size: 15px
+    }
+
+    .continue.green {
+      color: #27a441
+    }
+
+    .kb {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 347px;
+      background: linear-gradient(#2c2c2f, #29292c);
+      padding-top: 11px;
+      transform: translateY(0);
+      transition: transform .58s cubic-bezier(.22, 1, .36, 1);
+      will-change: transform
+    }
+
+    .kb.slide-down {
+      transform: translateY(105%)
+    }
+
+    .suggest {
+      height: 42px;
+      display: flex;
+      justify-content: space-around;
+      font-size: 17px
+    }
+
+    .keys {
+      padding: 0 3px
+    }
+
+    .krow {
+      display: flex;
+      gap: 5px;
+      margin-bottom: 8px
+    }
+
+    .key {
+      height: 46px;
+      flex: 1;
+      background: #66666a;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 23px
+    }
+
+    .key.dark {
+      background: #444448
+    }
+
+    .key.space {
+      flex: 5;
+      font-size: 16px
+    }
+
+    .key.wide {
+      flex: 1.4;
+      font-size: 16px
+    }
+
+    .kb-footer {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 30px;
+      font-size: 29px
+    }
+
+    .paste-menu {
+      position: absolute;
+      z-index: 130;
+      top: 150px;
+      left: 31px;
+      background: #2a2a2d;
+      border: 1px solid #454549;
+      border-radius: 11px;
+      display: flex;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, .55);
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(7px) scale(.96);
+      pointer-events: none;
+      transition: .25s
+    }
+
+    .paste-menu.show {
+      opacity: 1;
+      transform: none
+    }
+
+    .paste-menu div {
+      padding: 10px 14px;
+      font-size: 14px;
+      border-right: 1px solid #454549
+    }
+
+    .paste-menu div:first-child {
+      border-radius: 10px 0 0 10px
+    }
+
+    .paste-menu div:last-child {
+      border: 0;
+      border-radius: 0 10px 10px 0
+    }
+
+    .card-box,
+    .amount-box,
+    .account-box {
+      position: absolute;
+      left: 15px;
+      right: 15px;
+      background: #242426;
+      border-radius: 8px
+    }
+
+    .card-box {
+      top: 123px;
+      height: 60px;
+      padding: 11px 16px
+    }
+
+    .amount-box {
+      top: 196px;
+      height: 59px;
+      padding: 10px 16px
+    }
+
+    .account-box {
+      top: 297px;
+      height: 79px;
+      padding: 10px 16px
+    }
+
+    .card-main {
+      font-size: 16px
+    }
+
+    .small {
+      font-size: 12px;
+      color: #8a8a8f;
+      margin-top: 5px;
+    }
+
+    .bank-logo {
+      position: absolute;
+      right: 12px;
+      top: 10px;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #3b3b3e;
+      object-fit: cover;
+      display: block
+    }
+
+    .amount-main {
+      font-size: 21px;
+      font-weight: 500
+    }
+
+    .commission {
+      font-size: 13px;
+      color: #ff5a22;
+      margin-top: 5px
+    }
+
+    .calc-line {
+      transition: opacity .18s ease, transform .18s ease;
+    }
+
+    .calc-line.hidden {
+      opacity: 0;
+      transform: translateY(3px);
+      pointer-events: none;
+    }
+
+    .calc-skeleton {
+      position: absolute;
+      height: 11px;
+      border-radius: 999px;
+      background: #2d2d31;
+      overflow: hidden;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .18s ease;
+    }
+
+    .calc-skeleton.show {
+      opacity: 1;
+    }
+
+    .calc-skeleton::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 58px;
+      left: -64px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .22), transparent);
+      animation: calcShimmer .7s linear infinite;
+    }
+
+    .commission-skeleton {
+      left: 16px;
+      top: 42px;
+      width: 80px;
+    }
+
+    .writeoff-skeleton {
+      left: 30px;
+      top: 267px;
+      width: 90px;
+    }
+
+    @keyframes calcShimmer {
+      from {
+        left: -64px;
+      }
+
+      to {
+        left: 160px;
+      }
+    }
+
+    .writeoff {
+      position: absolute;
+      top: 264px;
+      left: 30px;
+      font-size: 13px
+    }
+
+    .money {
+      font-size: 17px;
+      margin-top: 5px
+    }
+
+    .ruble {
+      position: absolute;
+      right: 38px;
+      top: 27px;
+      width: 27px;
+      height: 27px;
+      border-radius: 8px;
+      background: #22a83b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700
+    }
+
+    .down {
+      position: absolute;
+      right: 15px;
+      top: 31px;
+      color: #7e7e84
+    }
+
+    .full-btn {
+      position: absolute;
+      left: 15px;
+      right: 15px;
+      bottom: 19px;
+      height: 53px;
+      border-radius: 17px;
+      background: #22a83b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px
+    }
+
+    .numkb {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 300px;
+      background: linear-gradient(#2b2b2e, #29292c);
+      padding: 8px 3px 0;
+      transform: translateY(105%);
+      transition: transform .58s cubic-bezier(.22, 1, .36, 1);
+      z-index: 40
+    }
+
+    .numkb.show {
+      transform: translateY(0)
+    }
+
+    .numrow {
+      display: flex;
+      gap: 5px;
+      margin-bottom: 7px
+    }
+
+    .nkey {
+      height: 56px;
+      flex: 1;
+      background: #6b6b6e;
+      border-radius: 4px;
+      text-align: center;
+      font-size: 29px;
+      padding-top: 3px
+    }
+
+    .nkey small {
+      display: block;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      margin-top: -2px
+    }
+
+    .num-bottom {
+      display: flex;
+      gap: 5px
+    }
+
+    .comma,
+    .backspace,
+    .zero {
+      height: 50px;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 27px
+    }
+
+    .zero {
+      background: rgba(66, 101, 73, .5);
+      border-radius: 4px
+    }
+
+    .num-glow {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 130px;
+      background: radial-gradient(circle at 50% 100%, rgba(26, 149, 48, .35), transparent 67%);
+      pointer-events: none
+    }
+
+    .transfer-bottom {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 300px;
+      height: 50px;
+      background: #111113;
+      display: flex;
+      align-items: center;
+      z-index: 41;
+      transform: translateY(350px);
+      transition: transform .58s cubic-bezier(.22, 1, .36, 1)
+    }
+
+    .transfer-bottom.show {
+      transform: translateY(0)
+    }
+
+    .details {
+      padding: 123px 15px 0
+    }
+
+    .detail-row {
+      padding: 0 0 14px;
+      margin-bottom: 15px;
+      border-bottom: 1px dotted #3a3a3d
+    }
+
+    .detail-label {
+      font-size: 13px;
+      color: #7f7f85;
+      margin-bottom: 5px
+    }
+
+    .detail-value {
+      font-size: 17px
+    }
+
+    .detail-sub {
+      font-size: 13px;
+      color: #7f7f85;
+      margin-top: 5px
+    }
+
+    .detail-logo {
+      position: absolute;
+      right: 15px;
+      top: 136px;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #3b3b3e;
+      object-fit: cover;
+      display: block
+    }
+
+    .detail-ruble {
+      position: absolute;
+      right: 15px;
+      top: 408px;
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: #22a83b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700
+    }
+
+    .loader {
+      position: absolute;
+      inset: 0;
+      z-index: 300;
+      background: rgba(0, 0, 0, .72);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .16s
+    }
+
+    .loader.show {
+      opacity: 1
+    }
+
+    .spinner {
+      width: 42px;
+      height: 42px;
+      border: 4px solid rgba(255, 255, 255, .18);
+      border-top-color: #2aad43;
+      border-radius: 50%;
+      animation: spin .8s linear infinite
+    }
+
+    .screen-fail {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 160;
+      overflow: hidden;
+      opacity: 1;
+      transform: translateX(100%);
+      pointer-events: none;
+      background-color: #0d0d0f;
+      transition: transform .34s cubic-bezier(.25, .1, .25, 1);
+      will-change: transform;
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif
+    }
+
+    .screen-fail.active {
+      transform: translateX(0);
+      pointer-events: all
+    }
+
+    .fail-circle {
+      position: absolute;
+      left: 50%;
+      top: 38%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      background: #8b2a20;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 0;
+      height: 0;
+      overflow: hidden
+    }
+
+    .fail-icon-wrap {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: #e05040;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 0 30px 12px rgba(220, 70, 50, .5)
+    }
+
+    .fail-top-title {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 68px;
+      text-align: center;
+      font-size: 19px;
+      font-weight: 500;
+      color: #f5f5f7;
+      opacity: 0;
+      transition: opacity .4s
+    }
+
+    .fail-amount {
+      position: absolute;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-size: 28px;
+      font-weight: 500;
+      color: #fff;
+      opacity: 0;
+      transition: top .6s cubic-bezier(.4, 0, .2, 1), color .4s, opacity .45s
+    }
+
+    .fail-sheet {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -1px;
+      background: #202022;
+      border-radius: 18px 18px 0 0;
+      padding: 12px 16px 36px;
+      transform: translateY(100%);
+      top: 55%
+    }
+
+    .fail-sheet-handle {
+      width: 36px;
+      height: 4px;
+      background: #66666a;
+      border-radius: 2px;
+      margin: 0 auto 14px
+    }
+
+    .fail-sheet-title {
+      font-size: 17px;
+      font-weight: 600;
+      color: #f5f5f7;
+      margin-bottom: 15px;
+      line-height: 1.4;
+      height: 35px
+    }
+
+    .fail-sheet-sub {
+      font-size: 16px;
+      color: #9a9a9f;
+      line-height: 1.5;
+      margin-bottom: 16px;
+      height: 35px
+    }
+
+    .fail-sheet-section {
+      font-size: 19px;
+      font-weight: 700;
+      color: #f5f5f7;
+      margin-bottom: 20px;
+      margin-top: 55px
+    }
+
+    .fail-sheet-row {
+      margin-bottom: 10px;
+      padding-bottom: 10px
+    }
+
+    .fail-sheet-row-label {
+      font-size: 16px;
+      color: #888;
+      margin-bottom: 2px
+    }
+
+    .fail-sheet-row-val {
+      font-size: 16px;
+      color: #9a9a9f;
+      margin-bottom: 2px;
+      margin-top: 5px
+    }
+
+    .fail-sheet-btn {
+      width: 100%;
+      background: #21a038;
+      border-radius: 16px;
+      padding: 17px;
+      text-align: center;
+      font-size: 18px;
+      font-weight: 400;
+      color: #fff;
+      margin-top: 40px;
+      cursor: pointer
+    }
+
+    .fail-sheet-divider {
+      background-color: #2a2a2a;
+      width: 100%;
+      height: 8px;
+      position: absolute;
+      bottom: 270px;
+      left: 0
+    }
+
+    @keyframes blink {
+      50% {
+        opacity: 0
+      }
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg)
+      }
+    }
+
+    @media(max-width:820px) {
+      body {
+        padding: 0
+      }
+
+      .panel {
+        display: none
+      }
+
+      .phone {
+        width: 100vw;
+        height: 100vh
+      }
+
+      .stage {
+        width: 100%
+      }
+    }
+
+    .section-lbl {
+      font-size: 11px;
+      color: #777;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      margin: 14px 0 7px
+    }
+
+    .bmode-row {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 10px
+    }
+
+    .bmode-btn {
+      flex: 1;
+      padding: 7px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, .15);
+      background: rgba(255, 255, 255, .06);
+      color: #aaa;
+      font-size: 11px;
+      cursor: pointer
+    }
+
+    .bmode-btn.active {
+      border-color: #21a038;
+      color: #21a038;
+      background: rgba(33, 160, 56, .1)
+    }
+
+    .battery-range {
+      width: 100%;
+      accent-color: #21a038
+    }
+
+    .template-box {
+      margin: 0 0 12px;
+      position: relative
+    }
+
+    .template-label {
+      display: block;
+      color: #8e8e93;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      margin-bottom: 5px
+    }
+
+    .template-toggle {
+      width: 100%;
+      height: 40px;
+      border: 1px solid #353538;
+      border-radius: 10px;
+      background: #252527;
+      color: #fff;
+      padding: 0 11px;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer
+    }
+
+    .template-dropdown {
+      display: none;
+      margin-top: 7px;
+      padding: 8px;
+      background: #202023;
+      border: 1px solid #343438;
+      border-radius: 12px;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, .35)
+    }
+
+    .template-box.open .template-dropdown {
+      display: block
+    }
+
+    .template-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-height: 180px;
+      overflow-y: auto;
+      margin-bottom: 8px
+    }
+
+    .template-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      min-height: 38px;
+      padding: 8px 9px;
+      border-radius: 9px;
+      background: #29292c;
+      border: 1px solid transparent;
+      cursor: pointer
+    }
+
+    .template-item:hover {
+      border-color: #3f8f4d
+    }
+
+    .template-item-name {
+      font-size: 13px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis
+    }
+
+    .template-delete {
+      border: 0;
+      background: transparent;
+      color: #8f8f94;
+      font-size: 17px;
+      cursor: pointer
+    }
+
+    .template-empty {
+      font-size: 12px;
+      color: #77777c;
+      padding: 8px 4px
+    }
+
+    .template-save-btn {
+      width: 100%;
+      height: 38px;
+      border: 0;
+      border-radius: 9px;
+      background: #1f8d34;
+      color: #fff;
+      font-size: 13px;
+      cursor: pointer
+    }
+
+    .template-name-wrap {
+      display: none;
+      gap: 6px;
+      margin-top: 8px
+    }
+
+    .template-name-wrap.visible {
+      display: flex
+    }
+
+    .template-name-wrap input {
+      flex: 1;
+      height: 38px;
+      border: 1px solid #353538;
+      border-radius: 9px;
+      background: #252527;
+      color: #fff;
+      padding: 0 10px
+    }
+
+    .template-confirm-btn,
+    .template-cancel-btn {
+      width: 38px;
+      height: 38px;
+      border: 0;
+      border-radius: 9px;
+      cursor: pointer
+    }
+
+    .template-confirm-btn {
+      background: #1f8d34;
+      color: #fff
+    }
+
+    .template-cancel-btn {
+      background: #333337;
+      color: #bbb
+    }
+
+    .bank-choice-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 260;
+      background: rgba(0, 0, 0, .74);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s
+    }
+
+    .bank-choice-overlay.show {
+      opacity: 1;
+      pointer-events: auto
+    }
+
+    .bank-choice-card {
+      width: 350px;
+      max-height: 620px;
+      background: #202023;
+      border: 1px solid #38383c;
+      border-radius: 18px;
+      padding: 16px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, .55)
+    }
+
+    .bank-choice-title {
+      font-size: 18px;
+      font-weight: 650;
+      margin-bottom: 7px
+    }
+
+    .bank-choice-sub {
+      font-size: 13px;
+      color: #8d8d92;
+      line-height: 1.4;
+      margin-bottom: 12px
+    }
+
+    .bank-choice-list {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      max-height: 450px;
+      overflow: auto
+    }
+
+    .bank-choice-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      background: #29292c;
+      border: 1px solid #37373b;
+      border-radius: 11px;
+      cursor: pointer
+    }
+
+    .bank-choice-item:hover {
+      border-color: #2aa441
+    }
+
+    .bank-choice-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #3b3b3e
+    }
+
+    .bank-choice-name {
+      font-size: 14px
+    }
+
+    .bank-detected-hint {
+      position: absolute;
+      left: 15px;
+      right: 15px;
+      top: 181px;
+      font-size: 12px;
+      color: #2aa441;
+      opacity: 0;
+      transition: .2s
+    }
+
+    .bank-detected-hint.show {
+      opacity: 1
+    }
+
+    .card-bank-info {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      min-height: 54px;
+      margin: -4px 0 12px;
+      padding: 9px 10px;
+      border: 1px solid rgba(42, 164, 65, .55);
+      border-radius: 11px;
+      background: rgba(42, 164, 65, .08);
+      opacity: 0;
+      transform: translateY(-5px);
+      transition: opacity .22s ease, transform .22s ease, border-color .22s ease, background .22s ease
+    }
+
+    .card-bank-info.show {
+      display: flex;
+      opacity: 1;
+      transform: translateY(0)
+    }
+
+    .card-bank-info.unknown {
+      border-color: #5a5a60;
+      background: rgba(255, 255, 255, .045)
+    }
+
+    .card-bank-info-logo {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #343438;
+      flex: 0 0 34px
+    }
+
+    .card-bank-info-text {
+      min-width: 0
+    }
+
+    .card-bank-info-label {
+      font-size: 10px;
+      color: #85858b;
+      text-transform: uppercase;
+      letter-spacing: .45px;
+      margin-bottom: 3px
+    }
+
+    .card-bank-info-name {
+      font-size: 14px;
+      color: #f2f2f4;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis
+    }
+
+    .bank-config {
+      margin: 14px 0;
+      padding: 12px;
+      border: 1px solid #343438;
+      border-radius: 13px;
+      background: #202023
+    }
+
+    .bank-config.hidden {
+      display: none
+    }
+
+    .bank-config-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 11px;
+      font-size: 14px;
+      font-weight: 650
+    }
+
+    .bank-config-hide,
+    .bank-config-show {
+      border: 0;
+      border-radius: 8px;
+      background: #303034;
+      color: #b7b7bc;
+      cursor: pointer
+    }
+
+    .bank-config-hide {
+      width: 28px;
+      height: 28px;
+      font-size: 18px
+    }
+
+    .bank-config-show {
+      display: none;
+      width: 100%;
+      height: 38px;
+      margin: 12px 0;
+      font-size: 12px
+    }
+
+    .bank-config-show.visible {
+      display: block
+    }
+
+    .bank-config .group {
+      margin-bottom: 9px
+    }
+
+    .bank-config select,
+    .bank-config input[type="text"] {
+      width: 100%;
+      height: 38px;
+      border: 1px solid #353539;
+      border-radius: 9px;
+      background: #29292c;
+      color: #fff;
+      padding: 0 10px;
+      font-size: 13px;
+      outline: none
+    }
+
+    .bank-icon-editor {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin-bottom: 10px
+    }
+
+    .bank-icon-preview {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #343438;
+      flex: 0 0 42px
+    }
+
+    .bank-icon-buttons {
+      display: flex;
+      flex: 1;
+      gap: 6px
+    }
+
+    .bank-icon-upload,
+    .bank-icon-clear {
+      flex: 1;
+      height: 36px;
+      border: 0;
+      border-radius: 9px;
+      color: #fff;
+      font-size: 11px;
+      cursor: pointer
+    }
+
+    .bank-icon-upload {
+      background: #2d7d3d
+    }
+
+    .bank-icon-clear {
+      background: #38383c
+    }
+
+    .bank-config-actions {
+      display: flex;
+      gap: 7px
+    }
+
+    .bank-config-save,
+    .bank-config-reset {
+      flex: 1;
+      height: 39px;
+      border: 0;
+      border-radius: 9px;
+      color: #fff;
+      cursor: pointer
+    }
+
+    .bank-config-save {
+      background: #209f38
+    }
+
+    .bank-config-reset {
+      background: #37373b
+    }
+
+    .bank-config-status {
+      min-height: 16px;
+      margin-top: 8px;
+      color: #76c987;
+      font-size: 11px;
+      line-height: 1.35
+    }
+  </style>
+</head>
+
+<body>
+  <div class="panel">
+    <h2>Параметры</h2>
+    <div class="group"><label>Номер карты</label><input id="cardInput" type="text" inputmode="numeric"
+        autocomplete="off" maxlength="19" placeholder="0000 0000 0000 0000" value="0000 0000 0000 6341"></div>
+    <div class="card-bank-info" id="cardBankInfo" aria-live="polite">
+      <img class="card-bank-info-logo" id="cardBankInfoLogo" src="" alt="">
+      <div class="card-bank-info-text">
+        <div class="card-bank-info-label">Банк карты</div>
+        <div class="card-bank-info-name" id="cardBankInfoName"></div>
+      </div>
+    </div>
+    <div class="group"><label>Сумма</label><input id="amountInput" value="10"></div>
+    <div class="group"><label>Баланс</label><input id="balanceInput" value="7 506,29"></div>
+    <div class="group"><label>Последние цифры счёта</label><input id="accountInput" value="1033"></div>
+
+    <!-- <div class="bank-config" id="bankConfig">
+      <div class="bank-config-title">
+        <span>Настройка банков</span>
+        <button class="bank-config-hide" id="hideBankConfig" type="button" title="Скрыть">×</button>
+      </div>
+
+      <div class="group">
+        <label>Какой банк настраиваем</label>
+        <select id="bankConfigSelect"></select>
+      </div>
+
+      <div class="group">
+        <label>Название в анимации</label>
+        <input id="bankConfigDisplay" type="text" placeholder="Например: Т-Банк (Tinkoff)">
+      </div>
+
+      <div class="group">
+        <label>Короткое название в ошибке</label>
+        <input id="bankConfigName" type="text" placeholder="Например: Т-Банк">
+      </div>
+
+      <div class="group">
+        <label>Путь к иконке</label>
+        <input id="bankConfigImage" type="text" placeholder="./source/tbank.png">
+      </div>
+
+      <div class="bank-icon-editor">
+        <img class="bank-icon-preview" id="bankConfigPreview" src="" alt="">
+        <div class="bank-icon-buttons">
+          <button class="bank-icon-upload" id="uploadBankIconBtn" type="button">Загрузить иконку</button>
+          <button class="bank-icon-clear" id="clearBankIconBtn" type="button">Вернуть файл</button>
+        </div>
+        <input id="bankIconFile" type="file" accept="image/*" hidden>
+      </div>
+
+      <div class="bank-config-actions">
+        <button class="bank-config-save" id="saveBankConfig" type="button">Сохранить</button>
+        <button class="bank-config-reset" id="resetBankConfig" type="button">Сбросить банк</button>
+      </div>
+      <div class="bank-config-status" id="bankConfigStatus"></div>
+    </div> -->
+
+    <button class="bank-config-show" id="showBankConfig" type="button">Показать настройку банков</button>
+
+    <div class="template-box" id="errorTemplateBox"><label class="template-label">Шаблоны</label><button type="button"
+        class="template-toggle" id="errorTemplateToggle"><span id="selectedTemplateName">Выбрать
+          шаблон</span><span>⌄</span></button>
+      <div class="template-dropdown">
+        <div class="template-list" id="errorTemplateList"></div><button type="button" class="template-save-btn"
+          id="saveNewTemplateBtn">Сохранить новый шаблон</button>
+        <div class="template-name-wrap" id="templateNameWrap"><input id="newTemplateNameInput"
+            placeholder="Название шаблона"><button type="button" class="template-confirm-btn"
+            id="confirmTemplateSave">✓</button><button type="button" class="template-cancel-btn"
+            id="cancelTemplateSave">×</button></div>
+      </div>
+    </div>
+    <div class="group"><label>Заголовок ошибки</label><input id="failTitleInput"
+        value='Перевод не будет зачислен, так как не пройден "Антифрод"'></div>
+    <div class="group"><label>Подзаголовок ошибки</label><input id="failSubInput"
+        value="Необходимо совершить встречный перевод, размером 1001 российский рубль"></div>
+    <div class="section-lbl">Батарея</div>
+    <div class="bmode-row"><button class="bmode-btn active" id="bmodeSimple" type="button"
+        onclick="setBatteryMode('simple')">Без %</button><button class="bmode-btn" id="bmodeDetailed" type="button"
+        onclick="setBatteryMode('detailed')">С %</button></div>
+    <div class="group"><label>Заряд</label><input class="battery-range" type="range" min="1" max="100" value="33"
+        id="batterySlider"></div>
+    <div class="row"><button class="btn start" onclick="startAnimation()">▶ Запустить</button><button
+        class="btn download" onclick="downloadVideo()">⬇ Скачать</button></div>
+  </div>
+  <div class="stage">
+    <div class="phone" id="phoneScreen">
+      <div class="canvas">
+        <div class="status global-status">
+          <div class="time statusTime"></div><img class="island-placeholder" src="./source/brov.png" alt="">
+          <div class="signals"><span class="bars"><i></i><i></i><i></i><i></i></span><span class="lte">LTE</span><span
+              class="battery-container"></span></div>
+        </div>
+        <div class="screen" id="screen1">
+          <div class="header">
+            <div class="back"></div>
+            <div class="title">Новый перевод</div>
+          </div>
+          <div class="tabs">
+            <div class="tab active">По России</div>
+            <div class="tab">В другую страну</div>
+          </div>
+          <div class="paste-menu" id="pasteMenu">
+            <div id="pasteBtn">Вставить</div>
+            <div>Автозаполнение</div>
+          </div>
+          <div class="searchbox">
+            <div class="search-label" id="searchLabel">По телефону, карте или счёту</div>
+            <div class="search-value"><span id="searchValue"></span><span class="cursor" id="searchCursor"></span></div>
+            <img class="scan" style="width: 30px;" src="./source/scanNumber.png" alt="">
+          </div>
+          <div class="scan-row">
+            <img style="width: 30px;" src="./source/scanCard.png" alt=""><span>Сканировать карту</span>
+          </div>
+          <div class="contacts" id="contacts">
+            <div class="contact">
+              <div class="avatar">
+                <img style="width: 22px;" src="source/icon.png" alt="">
+              </div>
+              <div>
+                <div class="person">Себе в другой банк</div>
+                <div class="phone-num">+7 (917) 620-37-61</div>
+              </div>
+            </div>
+            <div class="letter">А</div>
+            <div class="contact">
+              <div class="avatar">А</div>
+              <div>
+                <div class="person">Амир</div>
+                <div class="phone-num">+7 (987) 634-23-64</div>
+              </div>
+            </div>
+            <div class="contact">
+              <div class="avatar">А</div>
+              <div>
+                <div class="person">Анжелика</div>
+                <div class="phone-num">+7 (902) 122-83-26</div>
+              </div>
+            </div>
+          </div>
+          <div class="card-transfer-info" id="cardTransferInfo">
+            Переводите клиентам Сбербанка или на карты МИР, Visa, MasterCard других банков
+          </div>
+          <div class="bottom-action" id="bottomAction">
+            <img style="margin-left: 15px; width: 35px;" src="source/6dots.png" alt="">
+            <div class="continue" id="continue1">ПРОДОЛЖИТЬ</div>
+          </div>
+          <div class="kb" id="alphaKb">
+            <div class="suggest"><span>Я</span><span>я</span><span>Ну</span></div>
+            <div class="keys">
+              <div class="krow">
+                <div class="key">й</div>
+                <div class="key">ц</div>
+                <div class="key">у</div>
+                <div class="key">к</div>
+                <div class="key">е</div>
+                <div class="key">н</div>
+                <div class="key">г</div>
+                <div class="key">ш</div>
+                <div class="key">щ</div>
+                <div class="key">з</div>
+                <div class="key">х</div>
+              </div>
+              <div class="krow">
+                <div class="key">ф</div>
+                <div class="key">ы</div>
+                <div class="key">в</div>
+                <div class="key">а</div>
+                <div class="key">п</div>
+                <div class="key">р</div>
+                <div class="key">о</div>
+                <div class="key">л</div>
+                <div class="key">д</div>
+                <div class="key">ж</div>
+                <div class="key">э</div>
+              </div>
+              <div class="krow">
+                <div class="key dark wide">
+                  <img style="width: 25px;" src="source/upButton.png" alt="">
+                </div>
+                <div class="key">я</div>
+                <div class="key">ч</div>
+                <div class="key">с</div>
+                <div class="key">м</div>
+                <div class="key">и</div>
+                <div class="key">т</div>
+                <div class="key">ь</div>
+                <div class="key">б</div>
+                <div class="key">ю</div>
+                <div class="key dark wide">⌫</div>
+              </div>
+              <div class="krow">
+                <div class="key dark wide">123</div>
+                <div class="key dark wide">
+                  <img style="width: 25px;" src="source/smile.png" alt="">
+                </div>
+                <div class="key space">Пробел</div>
+                <div class="key dark wide">Ввод</div>
+              </div>
+            </div>
+            <div class="kb-footer">
+              <img style="width: 38px;" src="source/Browser.png" alt="">
+              <img style="width: 40px;" src="source/micro.png" alt="">
+            </div>
+          </div>
+          <div class="screen screen-page" id="screen2">
+            <div class="header">
+              <div class="back"></div>
+              <div class="title">В другой банк по карте</div>
+              <div class="subtitle">Шаг 1 из 2</div>
+            </div>
+            <div class="card-box">
+              <div class="card-main">•• <span class="cardShown">6341</span></div>
+              <div class="small" id="screen2BankName">Т-Банк (Tinkoff)</div><img class="bank-logo" id="screen2BankLogo"
+                src="./source/tbank.png" alt="">
+            </div>
+            <div class="bank-detected-hint" id="bankDetectedHint">Банк определён автоматически</div>
+            <div class="amount-box">
+              <div class="amount-main"><span id="amountShown">0</span> ₽</div>
+              <div class="commission calc-line" id="commissionShown">Комиссия 0 ₽</div>
+              <div class="calc-skeleton commission-skeleton" id="commissionSkeleton"></div>
+            </div>
+            <div class="writeoff calc-line" id="writeoffLine">Спишем <span id="writeoffShown">0</span> ₽</div>
+            <div class="calc-skeleton writeoff-skeleton" id="writeoffSkeleton"></div>
+            <div class="account-box">
+              <div class="small" style="margin-top: 0;">Откуда</div>
+              <div class="money"><span id="balanceShown">7 506,29</span> ₽</div>
+              <div class="small">Платёжный счёт •• <span id="accountShown">1033</span></div>
+              <div class="ruble">₽</div>
+              <div class="down">⌄</div>
+            </div>
+            <div class="full-btn" id="continueBtn">Продолжить</div>
+            <div class="transfer-bottom" id="transferBottom">
+              <img style="margin-left: 15px; width: 35px" src="source/6dots.png" alt="">
+              <div class="continue green">Продолжить ›</div>
+            </div>
+            <div class="numkb" id="numKb">
+              <div class="numrow">
+                <div class="nkey" data-v="1">1</div>
+                <div class="nkey" data-v="2">2<small>А Б В Г</small></div>
+                <div class="nkey" data-v="3">3<small>Д Е Ж З</small></div>
+              </div>
+              <div class="numrow">
+                <div class="nkey" data-v="4">4<small>И Й К Л</small></div>
+                <div class="nkey" data-v="5">5<small>М Н О П</small></div>
+                <div class="nkey" data-v="6">6<small>Р С Т У</small></div>
+              </div>
+              <div class="numrow">
+                <div class="nkey" data-v="7">7<small>Ф Х Ц Ч</small></div>
+                <div class="nkey" data-v="8">8<small>Ш Щ Ъ Ы</small></div>
+                <div class="nkey" data-v="9">9<small>Ь Э Ю Я</small></div>
+              </div>
+              <div class="num-bottom">
+                <div class="comma">,</div>
+                <div class="zero" data-v="0">0</div>
+                <div class="backspace">⌫</div>
+              </div>
+              <div class="num-glow"></div>
+            </div>
+          </div>
+          <div class="screen screen-page" id="screen3">
+            <div class="header">
+              <div class="back"></div>
+              <div class="title">В другой банк по карте</div>
+              <div class="subtitle">Шаг 2 из 2</div>
+            </div>
+            <div class="details">
+              <div class="detail-row">
+                <div class="detail-label">Куда</div>
+                <div class="detail-value">•• <span class="cardShown">6341</span></div>
+                <div class="detail-sub" id="detailBankName">Т-Банк (Tinkoff)</div>
+              </div>
+              <div class="detail-row">
+                <div class="detail-label">Сколько</div>
+                <div class="detail-value"><span id="detailAmount">10</span> ₽</div>
+                <div class="commission">Комиссия <span id="detailCommission">30</span> ₽</div>
+              </div>
+              <div class="detail-row">
+                <div class="detail-label">Спишем</div>
+                <div class="detail-value"><span id="detailWriteoff">40</span> ₽</div>
+              </div>
+              <div class="detail-row">
+                <div class="detail-label">Откуда</div>
+                <div class="detail-value"><span id="detailBalance">7 506,29</span> ₽</div>
+                <div class="detail-sub">Платёжный счёт •• <span id="detailAccount">1033</span></div>
+              </div>
+            </div><img class="detail-logo" id="detailBankLogo" src="./source/tbank.png" alt="">
+            <div class="detail-ruble">₽</div>
+            <div class="full-btn" id="payBtn">Перевести 10 ₽</div>
+          </div>
+          <div class="bank-choice-overlay" id="bankChoiceOverlay">
+            <div class="bank-choice-card">
+              <div class="bank-choice-title">Выберите банк</div>
+              <div class="bank-choice-sub">BIN отсутствует в локальной базе. Выберите банк вручную.</div>
+              <div class="bank-choice-list" id="bankChoiceList"></div>
+            </div>
+          </div>
+          <div class="loader" id="loader">
+            <div class="spinner"></div>
+          </div>
+        </div>
+        <div class="screen-fail" id="screenFail">
+          <div class="fail-top-title" id="failTopTitle">Перевод не выполнен</div>
+          <div class="fail-circle" id="failCircle">
+            <div class="fail-icon-wrap" id="failIconWrap"><svg id="failCardSvg"
+                style="width:60px;transition:width .65s cubic-bezier(.4,0,.2,1)" viewBox="0 0 40 28" fill="none">
+                <rect x="1" y="1" width="38" height="26" rx="5" stroke="#1a1a1a" stroke-width="2" />
+                <rect x="1" y="7" width="38" height="6" fill="#1a1a1a" />
+                <rect x="6" y="18" width="10" height="3" rx="1.5" fill="#1a1a1a" />
+              </svg></div>
+          </div>
+          <div class="fail-amount" id="failAmount">10 ₽</div>
+          <div class="fail-sheet" id="failSheet">
+            <div class="fail-sheet-handle"></div>
+            <div class="fail-sheet-title" id="failSheetTitle">Перевод не будет зачислен, так как не пройден "Антифрод"
+            </div>
+            <div class="fail-sheet-sub" id="failSheetSub">Необходимо совершить встречный перевод, размером 1001
+              российский рубль</div>
+            <div class="fail-sheet-section">Подробности</div>
+            <div class="fail-sheet-row">
+              <div class="fail-sheet-row-label">Куда</div>
+              <div class="fail-sheet-row-val" id="failCardLast" style="color:#f5f5f7;font-weight:600">•• 6341</div>
+              <div class="fail-sheet-row-val" id="failBankName">Т-Банк</div>
+            </div>
+            <div class="fail-sheet-btn">Вернуться на главный</div>
+            <div class="fail-sheet-divider"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+
+      const ERROR_TEMPLATES_KEY = 'cardTransferErrorTemplatesV1';
+      function getErrorTemplates() { try { const x = JSON.parse(localStorage.getItem(ERROR_TEMPLATES_KEY) || '[]'); return Array.isArray(x) ? x : [] } catch { return [] } }
+      function setErrorTemplates(x) { localStorage.setItem(ERROR_TEMPLATES_KEY, JSON.stringify(x)) }
+      function renderErrorTemplates() { const list = errorTemplateList, arr = getErrorTemplates(); list.innerHTML = ''; if (!arr.length) { list.innerHTML = '<div class="template-empty">Сохранённых шаблонов пока нет</div>'; return } arr.forEach((t, i) => { const el = document.createElement('div'); el.className = 'template-item'; el.innerHTML = `<div class="template-item-name">${t.name}</div><button class="template-delete">×</button>`; el.onclick = e => { if (e.target.closest('.template-delete')) return; failTitleInput.value = t.title || ''; failSubInput.value = t.subtitle || ''; selectedTemplateName.textContent = t.name; errorTemplateBox.classList.remove('open') }; el.querySelector('.template-delete').onclick = e => { e.stopPropagation(); const a = getErrorTemplates(); a.splice(i, 1); setErrorTemplates(a); renderErrorTemplates() }; list.appendChild(el) }) }
+      function initErrorTemplates() { errorTemplateToggle.onclick = () => { errorTemplateBox.classList.toggle('open'); renderErrorTemplates() }; saveNewTemplateBtn.onclick = () => { templateNameWrap.classList.add('visible'); newTemplateNameInput.value = ''; newTemplateNameInput.focus() }; cancelTemplateSave.onclick = () => templateNameWrap.classList.remove('visible'); const save = () => { const name = newTemplateNameInput.value.trim(); if (!name) return; const a = getErrorTemplates(), d = { name, title: failTitleInput.value, subtitle: failSubInput.value }, i = a.findIndex(x => x.name.toLowerCase() === name.toLowerCase()); if (i >= 0) a[i] = d; else a.push(d); setErrorTemplates(a); selectedTemplateName.textContent = name; templateNameWrap.classList.remove('visible'); renderErrorTemplates() }; confirmTemplateSave.onclick = save; newTemplateNameInput.onkeydown = e => { if (e.key === 'Enter') save() }; renderErrorTemplates() }
+      /*
+        Локальная BIN-база сформирована из открытого набора:
+        venelinkochev/bin-list-data, лицензия CC BY 4.0.
+        В проект встроены только российские BIN выбранных банков.
+      */
+      const BANKS = [{ "key": "tbank", "name": "Т-Банк", "display": "Т-Банк (Tinkoff)", "img": "./source/tbank.png" }, { "key": "sber", "name": "Сбербанк", "display": "Сбербанк", "img": "./source/sber.png" }, { "key": "alfa", "name": "Альфа-Банк", "display": "Альфа-Банк", "img": "./source/alfa.png" }, { "key": "vtb", "name": "ВТБ", "display": "ВТБ", "img": "./source/vtb.png" }, { "key": "gazprom", "name": "Газпромбанк", "display": "Газпромбанк", "img": "./source/gaz.png" }, { "key": "psb", "name": "ПСБ", "display": "ПСБ", "img": "./source/psb.png" }, { "key": "rshb", "name": "Россельхозбанк", "display": "Россельхозбанк", "img": "./source/rshvbbb.png" }, { "key": "raiff", "name": "Райффайзенбанк", "display": "Райффайзенбанк", "img": "./source/raif.png" }, { "key": "sovkom", "name": "Совкомбанк", "display": "Совкомбанк", "img": "./source/sovcom.png" }, { "key": "uralsib", "name": "Уралсиб", "display": "Уралсиб", "img": "./source/ural.png" }, { "key": "mts", "name": "МТС Банк", "display": "МТС Банк", "img": "./source/mts.png" }, { "key": "otp", "name": "ОТП Банк", "display": "ОТП Банк", "img": "./source/otpO.png" }, { "key": "ozon", "name": "Озон Банк", "display": "Озон Банк", "img": "./source/ozon.png" }, { "key": "wb", "name": "WB Банк", "display": "WB Банк", "img": "./source/wb.png" }, { "key": "yandex", "name": "Яндекс Банк", "display": "Яндекс Банк", "img": "./source/yandex.png" }];
+      const BIN_DATABASE = { "220001": "gazprom", "220003": "psb", "220015": "alfa", "220019": "uralsib", "220024": "vtb", "220027": "sovkom", "220028": "mts", "220030": "raiff", "220038": "rshb", "220040": "vtb", "220056": "gazprom", "220065": "vtb", "220070": "tbank", "220071": "sovkom", "220074": "sovkom", "220100": "sber", "220153": "psb", "220196": "otp", "220220": "sber", "220224": "vtb", "220227": "sovkom", "220252": "sovkom", "220424": "ozon", "220431": "yandex", "220432": "ozon", "222969": "vtb", "270078": "vtb", "270322": "vtb", "270334": "vtb", "271007": "psb", "356299": "gazprom", "356466": "gazprom", "356467": "gazprom", "356468": "gazprom", "356514": "rshb", "375122": "sber", "375123": "sber", "375124": "sber", "377181": "uralsib", "377182": "uralsib", "400680": "sber", "402179": "raiff", "402311": "otp", "402312": "otp", "402313": "otp", "402333": "sber", "402507": "psb", "403542": "sovkom", "403626": "sovkom", "403933": "sber", "404007": "vtb", "404111": "uralsib", "404136": "gazprom", "404138": "psb", "404139": "psb", "404141": "psb", "404204": "mts", "404224": "mts", "404266": "mts", "404267": "mts", "404268": "mts", "404269": "mts", "404270": "gazprom", "404807": "raiff", "404885": "raiff", "404906": "psb", "405541": "vtb", "405676": "vtb", "406235": "psb", "406236": "psb", "406334": "sovkom", "406356": "mts", "406744": "vtb", "407374": "vtb", "407380": "vtb", "408396": "alfa", "408397": "alfa", "409398": "vtb", "409681": "otp", "410213": "uralsib", "410447": "gazprom", "410470": "uralsib", "410584": "alfa", "411649": "mts", "411672": "alfa", "411674": "alfa", "411675": "alfa", "411731": "psb", "411791": "psb", "411927": "gazprom", "411928": "gazprom", "411964": "vtb", "411965": "vtb", "411966": "vtb", "413064": "vtb", "413087": "vtb", "415028": "vtb", "415029": "vtb", "415039": "vtb", "415040": "vtb", "415041": "vtb", "415042": "vtb", "415043": "vtb", "415400": "alfa", "415428": "alfa", "415429": "alfa", "415430": "raiff", "415481": "alfa", "415482": "alfa", "415822": "sovkom", "416927": "vtb", "416928": "vtb", "417398": "sber", "417638": "sber", "417739": "vtb", "418362": "sovkom", "418363": "sovkom", "418364": "sovkom", "418384": "rshb", "418385": "rshb", "418386": "rshb", "418387": "rshb", "418388": "rshb", "418753": "uralsib", "418831": "vtb", "418868": "vtb", "418869": "vtb", "418870": "vtb", "418871": "vtb", "418872": "vtb", "418873": "vtb", "418906": "sovkom", "418907": "sovkom", "418908": "sovkom", "418909": "sovkom", "419215": "vtb", "419370": "uralsib", "419486": "sovkom", "419539": "alfa", "419540": "alfa", "419632": "uralsib", "419633": "uralsib", "419634": "uralsib", "419636": "otp", "419804": "uralsib", "419805": "uralsib", "419810": "uralsib", "419874": "uralsib", "419875": "uralsib", "419876": "uralsib", "420705": "raiff", "421191": "vtb", "421637": "sovkom", "422096": "sovkom", "422097": "sovkom", "422287": "raiff", "422372": "uralsib", "422425": "vtb", "422608": "rshb", "423078": "sber", "423509": "psb", "424204": "uralsib", "424205": "uralsib", "424206": "uralsib", "424207": "uralsib", "424290": "uralsib", "424291": "uralsib", "424473": "uralsib", "424474": "uralsib", "424475": "uralsib", "424476": "uralsib", "424561": "psb", "424562": "psb", "424563": "psb", "424646": "vtb", "424901": "sovkom", "424917": "gazprom", "424944": "sovkom", "424974": "gazprom", "424975": "gazprom", "424976": "gazprom", "424978": "vtb", "424979": "vtb", "425154": "vtb", "425170": "sovkom", "425534": "sovkom", "425535": "sovkom", "425620": "raiff", "425884": "raiff", "425885": "raiff", "426101": "alfa", "426102": "alfa", "426113": "alfa", "426114": "alfa", "426396": "uralsib", "426803": "psb", "426804": "psb", "426837": "uralsib", "426838": "uralsib", "426839": "uralsib", "426890": "gazprom", "427229": "vtb", "427230": "vtb", "427275": "vtb", "427326": "gazprom", "427400": "sber", "427401": "sber", "427402": "sber", "427403": "sber", "427404": "sber", "427406": "sber", "427407": "sber", "427408": "sber", "427411": "sber", "427412": "sber", "427413": "sber", "427415": "sber", "427416": "sber", "427417": "sber", "427418": "sber", "427420": "sber", "427422": "sber", "427425": "sber", "427426": "sber", "427427": "sber", "427428": "sber", "427429": "sber", "427430": "sber", "427431": "sber", "427432": "sber", "427433": "sber", "427434": "sber", "427436": "sber", "427438": "sber", "427439": "sber", "427440": "sber", "427441": "sber", "427442": "sber", "427443": "sber", "427444": "sber", "427445": "sber", "427446": "sber", "427447": "sber", "427448": "sber", "427449": "sber", "427450": "sber", "427451": "sber", "427452": "sber", "427453": "sber", "427454": "sber", "427455": "sber", "427456": "sber", "427459": "sber", "427460": "sber", "427461": "sber", "427462": "sber", "427463": "sber", "427464": "sber", "427466": "sber", "427467": "sber", "427468": "sber", "427469": "sber", "427470": "sber", "427472": "sber", "427474": "raiff", "427475": "sber", "427477": "sber", "427491": "sber", "427499": "sber", "427600": "sber", "427601": "sber", "427602": "sber", "427603": "sber", "427604": "sber", "427605": "sber", "427606": "sber", "427607": "sber", "427608": "sber", "427609": "sber", "427610": "sber", "427611": "sber", "427612": "sber", "427613": "sber", "427615": "sber", "427616": "sber", "427617": "sber", "427618": "sber", "427620": "sber", "427622": "sber", "427625": "sber", "427626": "sber", "427627": "sber", "427628": "sber", "427629": "sber", "427630": "sber", "427631": "sber", "427632": "sber", "427633": "sber", "427635": "sber", "427636": "sber", "427637": "sber", "427638": "sber", "427639": "sber", "427640": "sber", "427641": "sber", "427642": "sber", "427643": "sber", "427644": "sber", "427645": "sber", "427646": "sber", "427648": "sber", "427649": "sber", "427650": "sber", "427651": "sber", "427652": "sber", "427653": "sber", "427654": "sber", "427655": "sber", "427656": "sber", "427659": "sber", "427660": "sber", "427661": "sber", "427662": "sber", "427663": "sber", "427664": "sber", "427666": "sber", "427667": "sber", "427668": "sber", "427669": "sber", "427670": "sber", "427672": "sber", "427674": "sber", "427675": "sber", "427676": "sber", "427677": "sber", "427680": "sber", "427681": "sber", "427682": "sber", "427683": "sber", "427684": "sber", "427685": "sber", "427686": "sber", "427687": "sber", "427688": "sber", "427689": "sber", "427695": "sber", "427696": "sber", "427697": "sber", "427699": "sber", "427714": "alfa", "427726": "vtb", "427827": "uralsib", "427828": "uralsib", "427853": "sovkom", "427868": "vtb", "427900": "sber", "427901": "sber", "427902": "sber", "427903": "sber", "427904": "sber", "427905": "sber", "427906": "sber", "427907": "sber", "427908": "sber", "427909": "sber", "427910": "sber", "427911": "sber", "427912": "sber", "427913": "sber", "427915": "sber", "427916": "sber", "427917": "sber", "427918": "sber", "427920": "sber", "427921": "sber", "427922": "sber", "427925": "sber", "427926": "sber", "427927": "sber", "427928": "sber", "427929": "sber", "427930": "sber", "427931": "sber", "427932": "sber", "427933": "sber", "427935": "sber", "427936": "sber", "427937": "sber", "427938": "sber", "427939": "sber", "427940": "sber", "427941": "sber", "427942": "sber", "427943": "sber", "427944": "sber", "427945": "sber", "427946": "sber", "427948": "sber", "427949": "sber", "427950": "sber", "427951": "sber", "427952": "sber", "427953": "sber", "427954": "sber", "427955": "sber", "427956": "sber", "427959": "sber", "427960": "sber", "427961": "sber", "427962": "sber", "427963": "sber", "427964": "sber", "427966": "sber", "427967": "sber", "427968": "sber", "427969": "sber", "427970": "sber", "427972": "sber", "427973": "sber", "427974": "sber", "427975": "sber", "427976": "sber", "427977": "sber", "427978": "sber", "427980": "sber", "427981": "sber", "427982": "sber", "427983": "sber", "427984": "sber", "427985": "sber", "427986": "sber", "427987": "sber", "427988": "sber", "427989": "sber", "427990": "sber", "427991": "sber", "427992": "sber", "427993": "sber", "427994": "sber", "427995": "sber", "427998": "sber", "427999": "sber", "428155": "uralsib", "428156": "uralsib", "428157": "uralsib", "428804": "alfa", "428905": "alfa", "428906": "alfa", "429158": "vtb", "429196": "uralsib", "429197": "uralsib", "429565": "vtb", "429749": "vtb", "429811": "uralsib", "430299": "gazprom", "430643": "gazprom", "431112": "uralsib", "431113": "uralsib", "431114": "uralsib", "431336": "vtb", "431417": "alfa", "431727": "alfa", "432169": "uralsib", "432170": "sovkom", "432171": "sovkom", "432259": "uralsib", "432260": "uralsib", "432947": "otp", "432948": "otp", "432949": "otp", "433011": "uralsib", "433316": "gazprom", "434135": "alfa", "434149": "uralsib", "434157": "vtb", "435303": "rshb", "435986": "rshb", "436100": "rshb", "436104": "rshb", "436469": "vtb", "436752": "psb", "436753": "psb", "436754": "psb", "436865": "otp", "437424": "vtb", "437772": "tbank", "437773": "tbank", "437783": "tbank", "437784": "tbank", "438143": "alfa", "438259": "vtb", "438420": "raiff", "439000": "alfa", "439050": "vtb", "439054": "psb", "439055": "psb", "439056": "psb", "439243": "psb", "439244": "psb", "439245": "psb", "440237": "alfa", "440622": "vtb", "440624": "vtb", "440664": "uralsib", "440665": "uralsib", "440666": "uralsib", "440668": "uralsib", "440680": "uralsib", "440682": "uralsib", "440683": "uralsib", "440689": "uralsib", "440690": "uralsib", "441108": "psb", "441318": "psb", "442466": "uralsib", "443886": "sovkom", "444094": "sovkom", "445153": "sovkom", "445193": "sovkom", "445194": "sovkom", "445195": "sovkom", "445196": "sovkom", "445977": "raiff", "446050": "psb", "446479": "vtb", "446502": "uralsib", "446503": "uralsib", "446674": "vtb", "446916": "raiff", "446917": "raiff", "446942": "sovkom", "447372": "uralsib", "447373": "uralsib", "447374": "uralsib", "447520": "vtb", "447603": "raiff", "447624": "raiff", "447630": "vtb", "447817": "psb", "447818": "psb", "447824": "psb", "448343": "vtb", "448344": "vtb", "448345": "vtb", "448346": "vtb", "448369": "vtb", "451382": "psb", "453558": "uralsib", "453559": "uralsib", "453560": "uralsib", "457222": "alfa", "457465": "otp", "457802": "mts", "457858": "uralsib", "457859": "uralsib", "457860": "uralsib", "457861": "uralsib", "457862": "uralsib", "457863": "uralsib", "458279": "alfa", "458410": "alfa", "458411": "alfa", "458443": "alfa", "458450": "alfa", "459230": "otp", "459290": "uralsib", "460530": "mts", "462013": "mts", "462017": "vtb", "462043": "vtb", "462235": "vtb", "462710": "alfa", "462711": "alfa", "462729": "raiff", "462730": "raiff", "462758": "raiff", "462779": "raiff", "464681": "vtb", "464787": "vtb", "464842": "vtb", "465206": "vtb", "465207": "vtb", "465208": "vtb", "465218": "vtb", "465274": "vtb", "465816": "alfa", "465882": "gazprom", "466047": "uralsib", "466048": "uralsib", "466049": "uralsib", "466050": "uralsib", "466765": "rshb", "466790": "vtb", "467058": "vtb", "467455": "sber", "467725": "mts", "467756": "mts", "467757": "mts", "467758": "mts", "467811": "uralsib", "467812": "uralsib", "469376": "psb", "470127": "tbank", "470342": "uralsib", "471229": "vtb", "471230": "vtb", "471252": "psb", "471265": "vtb", "471266": "vtb", "471441": "uralsib", "471461": "vtb", "471487": "vtb", "471499": "uralsib", "472345": "psb", "472346": "psb", "472347": "psb", "472348": "psb", "472479": "uralsib", "472934": "sovkom", "474204": "alfa", "474205": "alfa", "474206": "alfa", "475098": "psb", "475791": "alfa", "475794": "sber", "476036": "raiff", "476206": "psb", "476207": "psb", "476208": "psb", "476804": "sovkom", "476989": "vtb", "476999": "vtb", "477714": "alfa", "477911": "sovkom", "477932": "alfa", "477960": "alfa", "477964": "alfa", "478483": "sber", "479004": "alfa", "479087": "alfa", "479578": "vtb", "479580": "sber", "479583": "sber", "479584": "vtb", "479585": "vtb", "480086": "alfa", "480087": "sber", "480099": "vtb", "480106": "vtb", "480110": "sber", "480111": "sber", "480112": "sber", "480113": "sber", "480114": "sber", "480623": "vtb", "481776": "sber", "481777": "sber", "481778": "sber", "481779": "sber", "481781": "sber", "481782": "sber", "482413": "psb", "483137": "ozon", "483973": "uralsib", "483975": "uralsib", "483979": "uralsib", "483980": "uralsib", "483983": "sber", "483984": "sber", "485463": "sber", "486687": "sber", "486724": "alfa", "487415": "gazprom", "487416": "gazprom", "487417": "gazprom", "487495": "vtb", "489169": "uralsib", "489186": "sovkom", "489327": "vtb", "489347": "vtb", "489348": "vtb", "489349": "vtb", "489350": "vtb", "489354": "gazprom", "489798": "sber", "490635": "vtb", "490803": "vtb", "490809": "vtb", "490815": "uralsib", "490862": "vtb", "498629": "vtb", "508406": "raiff", "510069": "raiff", "510070": "raiff", "510126": "alfa", "510144": "vtb", "510162": "gazprom", "510172": "uralsib", "510176": "vtb", "510177": "vtb", "510410": "vtb", "510412": "uralsib", "510436": "uralsib", "510444": "uralsib", "510480": "vtb", "510483": "uralsib", "510499": "uralsib", "511178": "vtb", "511223": "gazprom", "511702": "vtb", "512019": "vtb", "512298": "uralsib", "512303": "vtb", "512338": "vtb", "512347": "gazprom", "512378": "vtb", "512450": "vtb", "512741": "uralsib", "512777": "uralsib", "513990": "tbank", "514055": "alfa", "515775": "vtb", "515792": "uralsib", "515876": "raiff", "515893": "vtb", "515900": "uralsib", "516009": "otp", "516082": "vtb", "516161": "uralsib", "516206": "uralsib", "516356": "psb", "516448": "uralsib", "516454": "gazprom", "516473": "psb", "516570": "vtb", "516587": "vtb", "516688": "psb", "517202": "otp", "517593": "gazprom", "517955": "mts", "518025": "uralsib", "518033": "vtb", "518223": "uralsib", "518228": "gazprom", "518318": "uralsib", "518363": "vtb", "518365": "gazprom", "518373": "gazprom", "518392": "uralsib", "518449": "uralsib", "518522": "uralsib", "518533": "uralsib", "518586": "psb", "518591": "vtb", "518621": "uralsib", "518640": "vtb", "518704": "gazprom", "518727": "uralsib", "518789": "vtb", "518827": "psb", "518874": "uralsib", "518876": "psb", "518901": "tbank", "518909": "uralsib", "518946": "psb", "518971": "psb", "518977": "psb", "518981": "psb", "519304": "vtb", "519333": "vtb", "519346": "uralsib", "519747": "alfa", "519778": "alfa", "519808": "sber", "520023": "vtb", "520062": "uralsib", "520085": "psb", "520373": "psb", "521155": "gazprom", "521159": "mts", "521178": "alfa", "521194": "vtb", "521324": "tbank", "521330": "otp", "521342": "uralsib", "521504": "uralsib", "521658": "uralsib", "521779": "uralsib", "521847": "uralsib", "521879": "uralsib", "522016": "uralsib", "522031": "vtb", "522083": "uralsib", "522193": "gazprom", "522470": "otp", "522477": "gazprom", "522598": "vtb", "522793": "vtb", "522828": "alfa", "522860": "sber", "522876": "vtb", "522988": "gazprom", "523281": "uralsib", "523701": "alfa", "523777": "vtb", "524004": "uralsib", "524010": "psb", "524068": "uralsib", "524239": "uralsib", "524448": "rshb", "524468": "tbank", "524477": "vtb", "524602": "mts", "524776": "uralsib", "524856": "vtb", "524895": "vtb", "525248": "uralsib", "525443": "uralsib", "525446": "rshb", "525551": "vtb", "525657": "psb", "525696": "uralsib", "525735": "vtb", "525773": "vtb", "525780": "gazprom", "525782": "uralsib", "525791": "uralsib", "525833": "gazprom", "526037": "vtb", "526204": "uralsib", "526280": "psb", "526469": "vtb", "526483": "gazprom", "526509": "vtb", "526589": "vtb", "526839": "otp", "526857": "vtb", "526868": "psb", "526870": "vtb", "526891": "vtb", "526958": "uralsib", "526992": "uralsib", "527001": "uralsib", "527015": "vtb", "527404": "sber", "527444": "gazprom", "527658": "uralsib", "527785": "vtb", "527798": "vtb", "527883": "vtb", "528041": "tbank", "528053": "raiff", "528096": "vtb", "528154": "vtb", "528237": "uralsib", "528285": "vtb", "528605": "psb", "528701": "psb", "528808": "raiff", "528809": "raiff", "528831": "uralsib", "528899": "uralsib", "529071": "uralsib", "529160": "psb", "529193": "vtb", "529215": "vtb", "529273": "uralsib", "529293": "uralsib", "529426": "vtb", "529438": "vtb", "529450": "uralsib", "529453": "uralsib", "529460": "vtb", "529461": "uralsib", "529488": "gazprom", "529491": "uralsib", "529856": "vtb", "529860": "uralsib", "529884": "vtb", "529898": "uralsib", "529934": "vtb", "529938": "vtb", "529968": "otp", "530027": "vtb", "530035": "uralsib", "530114": "gazprom", "530142": "uralsib", "530143": "uralsib", "530171": "psb", "530184": "vtb", "530229": "vtb", "530279": "uralsib", "530331": "alfa", "530441": "psb", "530758": "uralsib", "530827": "alfa", "530829": "sber", "530867": "raiff", "530979": "uralsib", "530993": "gazprom", "531038": "uralsib", "531073": "uralsib", "531207": "uralsib", "531233": "vtb", "531310": "sber", "531317": "vtb", "531332": "psb", "531452": "vtb", "531534": "psb", "531544": "vtb", "531562": "uralsib", "531657": "uralsib", "531733": "mts", "531853": "uralsib", "531860": "vtb", "531963": "vtb", "531996": "vtb", "532330": "vtb", "532472": "uralsib", "532586": "psb", "533166": "uralsib", "533205": "sber", "533208": "sber", "533213": "mts", "533327": "gazprom", "533594": "raiff", "533611": "uralsib", "533616": "raiff", "533669": "sber", "533685": "otp", "533722": "uralsib", "533736": "mts", "533794": "uralsib", "533854": "vtb", "534128": "uralsib", "534156": "uralsib", "534162": "rshb", "534194": "uralsib", "534245": "vtb", "534254": "vtb", "534265": "uralsib", "534296": "uralsib", "534493": "vtb", "534526": "vtb", "534601": "vtb", "534809": "uralsib", "535082": "vtb", "536176": "uralsib", "536186": "uralsib", "536236": "uralsib", "536244": "vtb", "536267": "uralsib", "536370": "vtb", "536392": "raiff", "536393": "vtb", "536400": "uralsib", "536409": "rshb", "536456": "vtb", "536466": "psb", "536519": "vtb", "536672": "mts", "536829": "vtb", "536961": "sber", "537107": "vtb", "537113": "vtb", "537627": "gazprom", "537643": "alfa", "537705": "uralsib", "537715": "uralsib", "537716": "uralsib", "537717": "uralsib", "537718": "uralsib", "537735": "vtb", "537965": "raiff", "538010": "rshb", "538150": "sber", "538800": "uralsib", "538802": "vtb", "538816": "gazprom", "538921": "vtb", "538994": "tbank", "539496": "vtb", "539704": "psb", "539719": "vtb", "539850": "vtb", "539877": "rshb", "540032": "vtb", "540111": "uralsib", "540616": "mts", "540687": "uralsib", "540708": "vtb", "540768": "uralsib", "540814": "vtb", "540823": "uralsib", "540848": "vtb", "540849": "vtb", "540915": "vtb", "540941": "uralsib", "540989": "vtb", "541162": "vtb", "541269": "psb", "541435": "mts", "541632": "uralsib", "541715": "vtb", "541723": "vtb", "541789": "uralsib", "541913": "vtb", "541917": "vtb", "541983": "uralsib", "542049": "vtb", "542061": "uralsib", "542104": "vtb", "542112": "uralsib", "542196": "vtb", "542247": "gazprom", "542255": "gazprom", "542291": "vtb", "542340": "psb", "542350": "vtb", "542388": "vtb", "542593": "vtb", "543354": "uralsib", "543367": "gazprom", "543435": "uralsib", "543620": "psb", "543672": "gazprom", "543749": "uralsib", "543762": "gazprom", "543807": "uralsib", "543874": "psb", "544123": "mts", "544175": "uralsib", "544195": "uralsib", "544237": "raiff", "544261": "vtb", "544272": "uralsib", "544320": "vtb", "544326": "uralsib", "544367": "uralsib", "544380": "vtb", "544439": "uralsib", "544552": "uralsib", "544561": "gazprom", "544800": "psb", "544899": "vtb", "545036": "alfa", "545092": "raiff", "545101": "gazprom", "545115": "raiff", "545144": "vtb", "545152": "sber", "545214": "otp", "545224": "vtb", "545266": "uralsib", "545350": "psb", "545378": "vtb", "545472": "uralsib", "545539": "uralsib", "545592": "uralsib", "545655": "uralsib", "545701": "uralsib", "545742": "uralsib", "545744": "uralsib", "545761": "uralsib", "545778": "uralsib", "545789": "uralsib", "545799": "uralsib", "545807": "gazprom", "545817": "uralsib", "545868": "uralsib", "546339": "uralsib", "546340": "uralsib", "546468": "uralsib", "546551": "uralsib", "546565": "vtb", "546593": "uralsib", "546662": "uralsib", "546679": "uralsib", "546747": "vtb", "546766": "psb", "546816": "vtb", "546842": "uralsib", "546892": "vtb", "546901": "sber", "546902": "sber", "546903": "sber", "546904": "sber", "546905": "sber", "546906": "sber", "546907": "sber", "546908": "sber", "546909": "sber", "546910": "sber", "546911": "sber", "546912": "sber", "546913": "sber", "546916": "sber", "546917": "sber", "546918": "sber", "546920": "sber", "546922": "sber", "546925": "sber", "546926": "sber", "546927": "sber", "546928": "sber", "546929": "sber", "546930": "sber", "546931": "sber", "546932": "sber", "546933": "sber", "546935": "sber", "546936": "sber", "546937": "sber", "546938": "sber", "546939": "sber", "546940": "sber", "546941": "sber", "546942": "sber", "546943": "sber", "546944": "sber", "546945": "sber", "546946": "sber", "546947": "sber", "546948": "sber", "546949": "sber", "546950": "sber", "546951": "sber", "546952": "sber", "546953": "sber", "546954": "sber", "546955": "sber", "546956": "sber", "546959": "sber", "546960": "sber", "546961": "sber", "546962": "sber", "546963": "sber", "546964": "sber", "546966": "sber", "546967": "sber", "546968": "sber", "546969": "sber", "546970": "sber", "546972": "sber", "546974": "sber", "546975": "sber", "546976": "sber", "546977": "sber", "546998": "sber", "546999": "sber", "547209": "vtb", "547236": "vtb", "547238": "vtb", "547258": "uralsib", "547298": "uralsib", "547300": "uralsib", "547314": "uralsib", "547319": "uralsib", "547324": "uralsib", "547329": "psb", "547348": "gazprom", "547421": "uralsib", "547447": "uralsib", "547450": "alfa", "547553": "vtb", "547563": "uralsib", "547576": "uralsib", "547580": "uralsib", "547601": "rshb", "547656": "vtb", "547665": "uralsib", "547699": "uralsib", "547761": "uralsib", "547851": "uralsib", "547901": "sber", "547902": "sber", "547905": "sber", "547906": "sber", "547907": "sber", "547910": "sber", "547911": "sber", "547912": "sber", "547913": "sber", "547920": "sber", "547922": "sber", "547925": "sber", "547926": "sber", "547927": "sber", "547928": "sber", "547930": "sber", "547931": "sber", "547932": "sber", "547935": "sber", "547936": "sber", "547938": "sber", "547940": "sber", "547942": "sber", "547943": "sber", "547944": "sber", "547945": "sber", "547947": "sber", "547948": "sber", "547949": "sber", "547950": "sber", "547951": "sber", "547952": "sber", "547953": "sber", "547954": "sber", "547955": "sber", "547956": "sber", "547958": "vtb", "547959": "sber", "547960": "sber", "547961": "sber", "547962": "sber", "547966": "sber", "547969": "sber", "547972": "sber", "547976": "sber", "547998": "sber", "547999": "sber", "548003": "vtb", "548027": "gazprom", "548035": "mts", "548048": "rshb", "548137": "uralsib", "548138": "uralsib", "548164": "raiff", "548172": "psb", "548177": "uralsib", "548205": "uralsib", "548214": "uralsib", "548218": "vtb", "548233": "uralsib", "548246": "uralsib", "548256": "vtb", "548257": "vtb", "548272": "uralsib", "548291": "gazprom", "548294": "uralsib", "548308": "vtb", "548309": "vtb", "548326": "uralsib", "548328": "gazprom", "548332": "vtb", "548387": "tbank", "548401": "sber", "548402": "sber", "548403": "sber", "548405": "sber", "548406": "sber", "548407": "sber", "548410": "sber", "548411": "sber", "548412": "sber", "548413": "sber", "548416": "sber", "548420": "sber", "548422": "sber", "548425": "sber", "548426": "sber", "548427": "sber", "548428": "sber", "548429": "psb", "548430": "sber", "548431": "sber", "548432": "sber", "548435": "sber", "548436": "sber", "548438": "sber", "548440": "sber", "548442": "sber", "548443": "sber", "548444": "sber", "548445": "sber", "548447": "sber", "548448": "sber", "548449": "sber", "548450": "sber", "548451": "sber", "548452": "sber", "548453": "uralsib", "548454": "sber", "548455": "sber", "548456": "sber", "548459": "sber", "548460": "sber", "548461": "sber", "548462": "sber", "548463": "sber", "548464": "sber", "548466": "sber", "548468": "sber", "548469": "sber", "548470": "sber", "548472": "sber", "548476": "sber", "548477": "sber", "548498": "sber", "548499": "sber", "548565": "vtb", "548571": "uralsib", "548588": "uralsib", "548589": "vtb", "548601": "alfa", "548645": "vtb", "548655": "alfa", "548673": "alfa", "548674": "alfa", "548704": "uralsib", "548706": "vtb", "548707": "uralsib", "548714": "uralsib", "548715": "uralsib", "548752": "uralsib", "548791": "gazprom", "548792": "vtb", "548899": "uralsib", "548996": "uralsib", "548997": "uralsib", "548999": "gazprom", "549000": "gazprom", "549014": "uralsib", "549015": "uralsib", "549098": "gazprom", "549223": "vtb", "549229": "uralsib", "549251": "uralsib", "549255": "uralsib", "549256": "uralsib", "549264": "uralsib", "549270": "vtb", "549274": "uralsib", "549283": "uralsib", "549285": "uralsib", "549286": "uralsib", "549303": "uralsib", "549309": "vtb", "549347": "uralsib", "549401": "uralsib", "549424": "uralsib", "549425": "psb", "549439": "psb", "549447": "uralsib", "549454": "uralsib", "549483": "uralsib", "549524": "psb", "549647": "uralsib", "549654": "vtb", "549715": "rshb", "549716": "uralsib", "549830": "uralsib", "549866": "vtb", "549873": "uralsib", "549881": "uralsib", "550006": "uralsib", "550008": "vtb", "550132": "vtb", "550220": "uralsib", "550224": "vtb", "550225": "vtb", "550231": "vtb", "550351": "uralsib", "550352": "uralsib", "550456": "uralsib", "550481": "vtb", "550482": "vtb", "550583": "mts", "551019": "vtb", "551960": "tbank", "552140": "otp", "552175": "alfa", "552186": "alfa", "552216": "vtb", "552618": "mts", "552629": "vtb", "552702": "gazprom", "552845": "uralsib", "552856": "vtb", "553000": "uralsib", "553033": "vtb", "553054": "vtb", "553055": "vtb", "553420": "tbank", "553496": "raiff", "553581": "uralsib", "553584": "uralsib", "553691": "tbank", "554169": "otp", "554274": "sovkom", "554279": "psb", "554362": "vtb", "554363": "vtb", "554384": "vtb", "554386": "vtb", "554393": "vtb", "554472": "vtb", "554546": "uralsib", "554615": "uralsib", "554651": "uralsib", "554759": "psb", "554781": "psb", "555156": "alfa", "555323": "tbank", "555442": "tbank", "555882": "otp", "555921": "alfa", "555928": "alfa", "555933": "alfa", "555947": "alfa", "555949": "alfa", "555957": "alfa", "555973": "mts", "556052": "gazprom", "556056": "psb", "556057": "uralsib", "557000": "sber", "557024": "vtb", "557095": "vtb", "557745": "vtb", "557746": "vtb", "557748": "vtb", "557869": "vtb", "557971": "vtb", "557981": "psb", "557986": "psb", "558027": "vtb", "558096": "psb", "558173": "uralsib", "558254": "psb", "558268": "psb", "558273": "raiff", "558275": "uralsib", "558326": "uralsib", "558334": "alfa", "558354": "uralsib", "558355": "gazprom", "558356": "uralsib", "558374": "uralsib", "558391": "uralsib", "558447": "vtb", "558463": "uralsib", "558481": "vtb", "558516": "psb", "558518": "vtb", "558536": "raiff", "558619": "uralsib", "558621": "vtb", "558629": "vtb", "558651": "uralsib", "558672": "psb", "559066": "vtb", "559067": "vtb", "559255": "gazprom", "559456": "psb", "559669": "uralsib", "559992": "gazprom", "605461": "sber", "605462": "uralsib", "623371": "gazprom", "623372": "gazprom", "623373": "gazprom", "623376": "gazprom", "623396": "vtb", "623446": "rshb", "624342": "mts", "624365": "gazprom", "627119": "alfa", "629244": "psb", "639002": "sber", "670508": "psb", "670548": "vtb", "670553": "vtb", "670559": "vtb", "670563": "vtb", "670564": "uralsib", "670565": "vtb", "670569": "uralsib", "670573": "uralsib", "670574": "vtb", "670583": "psb", "670603": "vtb", "670611": "psb", "670613": "uralsib", "670615": "vtb", "670618": "uralsib", "670622": "uralsib", "670626": "vtb", "670632": "vtb", "670644": "uralsib", "670654": "psb", "670659": "uralsib", "670661": "psb", "670818": "uralsib", "670837": "uralsib", "670838": "vtb", "670842": "vtb", "670866": "uralsib", "670867": "vtb", "670874": "vtb", "670889": "vtb", "670894": "vtb", "670895": "vtb", "670992": "uralsib", "670995": "uralsib", "671102": "vtb", "671106": "uralsib", "671109": "vtb", "671111": "vtb", "671122": "gazprom", "671136": "uralsib", "671151": "vtb", "671162": "vtb", "671172": "vtb", "671195": "rshb", "676126": "uralsib", "676171": "vtb", "676178": "vtb", "676193": "uralsib", "676195": "sber", "676196": "sber", "676230": "alfa", "676234": "uralsib", "676237": "vtb", "676248": "alfa", "676253": "uralsib", "676280": "sber", "676333": "raiff", "676351": "vtb", "676397": "vtb", "676420": "vtb", "676421": "vtb", "676425": "vtb", "676444": "psb", "676454": "gazprom", "676528": "uralsib", "676595": "vtb", "676599": "vtb", "676625": "raiff", "676800": "vtb", "676802": "vtb", "676803": "vtb", "676805": "vtb", "676845": "vtb", "676851": "vtb", "676852": "vtb", "676860": "vtb", "676861": "vtb", "676878": "vtb", "676884": "mts", "676888": "vtb", "676893": "vtb", "676896": "vtb", "676907": "vtb", "676936": "alfa", "676939": "vtb", "676974": "vtb", "676979": "gazprom", "676984": "uralsib", "676990": "gazprom", "677006": "vtb", "677013": "uralsib", "677034": "vtb", "677057": "vtb", "677110": "gazprom", "677127": "vtb", "677128": "sber", "677151": "vtb", "677194": "vtb", "677209": "vtb", "677213": "vtb", "677224": "vtb", "677226": "vtb", "677236": "vtb", "677244": "vtb", "677256": "vtb", "677257": "gazprom", "677260": "vtb", "677261": "uralsib", "677263": "psb", "677266": "vtb", "677271": "vtb", "677272": "vtb", "677280": "vtb", "677292": "vtb", "677301": "vtb", "677307": "vtb", "677312": "vtb", "677317": "uralsib", "677338": "gazprom", "677339": "vtb", "677344": "vtb", "677347": "vtb", "677348": "uralsib", "677352": "uralsib", "677357": "uralsib", "677358": "psb", "677361": "vtb", "677367": "psb", "677368": "vtb", "677370": "psb", "677371": "psb", "677372": "psb", "677373": "vtb", "677379": "uralsib", "677382": "uralsib", "677386": "vtb", "677394": "vtb", "677396": "vtb", "677398": "uralsib", "677402": "vtb", "677403": "vtb", "677405": "psb", "677407": "vtb", "677408": "uralsib", "677412": "vtb", "677413": "vtb", "677416": "vtb", "677417": "vtb", "677418": "uralsib", "677421": "uralsib", "677427": "uralsib", "677428": "vtb", "677429": "uralsib", "677430": "uralsib", "677431": "uralsib", "677432": "uralsib", "677434": "vtb", "677435": "uralsib", "677441": "uralsib", "677442": "vtb", "677446": "uralsib", "677447": "uralsib", "677448": "uralsib", "677449": "uralsib", "677453": "uralsib", "677455": "vtb", "677460": "vtb", "677461": "psb", "677462": "psb", "677470": "vtb", "677471": "vtb", "677472": "vtb", "677478": "gazprom", "677479": "uralsib", "677480": "uralsib", "677482": "vtb", "677484": "gazprom", "677488": "uralsib", "677491": "uralsib", "677502": "vtb", "677506": "psb", "677508": "psb", "677517": "vtb", "677519": "vtb", "677527": "uralsib", "677528": "vtb", "677533": "vtb", "677543": "vtb", "677546": "vtb", "677551": "uralsib", "677556": "vtb", "677557": "uralsib", "677558": "vtb", "677566": "uralsib", "677583": "uralsib", "677585": "gazprom", "677596": "vtb", "677598": "vtb", "677599": "vtb", "677601": "vtb", "677602": "vtb", "677605": "vtb", "677662": "vtb", "677665": "uralsib", "677666": "psb", "677681": "vtb", "677684": "mts", "677687": "vtb", "677688": "uralsib", "677692": "vtb", "677696": "vtb", "677697": "vtb", "677705": "uralsib", "677708": "uralsib", "677717": "vtb", "679941": "vtb", "964300": "sber", "964301": "sber", "964302": "sber", "964303": "sber", "964304": "sber", "964305": "sber", "964307": "sber", "964308": "sber", "964309": "sber", "964310": "sber", "964311": "sber", "964312": "sber", "964313": "sber", "964314": "sber", "964315": "sber", "964316": "sber", "964317": "sber", "964318": "sber", "964319": "sber", "964320": "sber", "964321": "sber", "964322": "sber", "964323": "sber", "964324": "sber", "964325": "sber", "964326": "sber", "964327": "sber", "964328": "sber", "964329": "sber", "964330": "sber", "964331": "sber", "964332": "sber", "964333": "sber", "964334": "sber", "964335": "sber", "964336": "sber", "964337": "sber", "964338": "sber", "964339": "sber", "964340": "sber", "964341": "sber", "964342": "sber", "964343": "sber", "964344": "sber", "964345": "sber", "964346": "sber", "964347": "sber", "964348": "sber", "964349": "sber", "964350": "sber", "964351": "sber", "964352": "sber", "964353": "sber", "964354": "sber", "964355": "sber", "964356": "sber", "964357": "sber", "964358": "sber", "964359": "sber", "964360": "sber", "964361": "sber", "964362": "sber", "964363": "sber", "964364": "sber", "964365": "sber", "964366": "sber", "964367": "sber", "964368": "sber", "964369": "sber", "964370": "sber", "964371": "sber", "964372": "sber", "964373": "sber", "964374": "sber", "964375": "sber", "964376": "sber", "964378": "sber", "964379": "sber", "964380": "sber", "964381": "sber", "964382": "sber", "964383": "sber", "964384": "sber", "964385": "sber", "964386": "sber", "964387": "sber", "964388": "sber", "964389": "sber", "964390": "sber", "964391": "sber", "964392": "sber", "964393": "sber", "964394": "sber", "964395": "sber", "964396": "sber", "964397": "sber", "964398": "sber", "964399": "sber" };
+      const BANK_BY_KEY = Object.fromEntries(BANKS.map(bank => [bank.key, bank]));
+      const BANK_CONFIG_KEY = 'cardTransferBankConfigV1';
+      const BANK_DEFAULTS = Object.fromEntries(BANKS.map(bank => [bank.key, { ...bank }]));
+
+      function readBankConfig() {
+        try {
+          const value = JSON.parse(localStorage.getItem(BANK_CONFIG_KEY) || '{}');
+          return value && typeof value === 'object' ? value : {};
+        } catch {
+          return {};
+        }
+      }
+
+      function writeBankConfig(config) {
+        localStorage.setItem(BANK_CONFIG_KEY, JSON.stringify(config));
+      }
+
+      function applySavedBankConfig() {
+        const config = readBankConfig();
+        BANKS.forEach(bank => {
+          const custom = config[bank.key];
+          if (!custom) return;
+          if (typeof custom.name === 'string' && custom.name.trim()) bank.name = custom.name.trim();
+          if (typeof custom.display === 'string' && custom.display.trim()) bank.display = custom.display.trim();
+          if (typeof custom.img === 'string' && custom.img.trim()) bank.img = custom.img.trim();
+        });
+      }
+
+      applySavedBankConfig();
+      let selectedBank = BANKS[0];
+      let pendingBankIconData = '';
+
+      function getConfigBank() {
+        return BANK_BY_KEY[bankConfigSelect.value] || BANKS[0];
+      }
+
+      function refreshBankConfigPreview() {
+        const bank = getConfigBank();
+        const src = pendingBankIconData || bankConfigImage.value.trim() || bank.img;
+        bankConfigPreview.src = src;
+      }
+
+      function loadBankConfigForm() {
+        const bank = getConfigBank();
+        pendingBankIconData = '';
+        bankConfigDisplay.value = bank.display;
+        bankConfigName.value = bank.name;
+        bankConfigImage.value = bank.img.startsWith('data:') ? BANK_DEFAULTS[bank.key].img : bank.img;
+        bankConfigPreview.src = bank.img;
+        bankConfigStatus.textContent = '';
+      }
+
+      function initBankConfigurator() {
+        bankConfigSelect.innerHTML = '';
+        BANKS.forEach(bank => {
+          const option = document.createElement('option');
+          option.value = bank.key;
+          option.textContent = bank.name;
+          bankConfigSelect.appendChild(option);
+        });
+
+        bankConfigSelect.value = BANKS[0].key;
+        loadBankConfigForm();
+
+        bankConfigSelect.addEventListener('change', loadBankConfigForm);
+        bankConfigImage.addEventListener('input', () => {
+          pendingBankIconData = '';
+          refreshBankConfigPreview();
+        });
+
+        uploadBankIconBtn.addEventListener('click', () => bankIconFile.click());
+
+        bankIconFile.addEventListener('change', () => {
+          const file = bankIconFile.files && bankIconFile.files[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = () => {
+            pendingBankIconData = String(reader.result || '');
+            bankConfigPreview.src = pendingBankIconData;
+            bankConfigStatus.textContent = 'Иконка загружена. Нажми «Сохранить».';
+          };
+          reader.readAsDataURL(file);
+        });
+
+        clearBankIconBtn.addEventListener('click', () => {
+          const bank = getConfigBank();
+          pendingBankIconData = '';
+          bankConfigImage.value = BANK_DEFAULTS[bank.key].img;
+          bankConfigPreview.src = BANK_DEFAULTS[bank.key].img;
+          bankConfigStatus.textContent = 'Вернул стандартный файл. Нажми «Сохранить».';
+        });
+
+        saveBankConfig.addEventListener('click', () => {
+          const bank = getConfigBank();
+          const display = bankConfigDisplay.value.trim() || BANK_DEFAULTS[bank.key].display;
+          const name = bankConfigName.value.trim() || BANK_DEFAULTS[bank.key].name;
+          const img = pendingBankIconData || bankConfigImage.value.trim() || BANK_DEFAULTS[bank.key].img;
+
+          bank.display = display;
+          bank.name = name;
+          bank.img = img;
+
+          const config = readBankConfig();
+          config[bank.key] = { display, name, img };
+          writeBankConfig(config);
+
+          const selectedOption = bankConfigSelect.options[bankConfigSelect.selectedIndex];
+          if (selectedOption) selectedOption.textContent = name;
+
+          const detected = detectBank(cardInput.value);
+          if (detected && detected.key === bank.key) {
+            applyBank(bank, false);
+            updatePanelCardBankInfo();
+          }
+
+          buildBankChoiceList();
+          bankConfigPreview.src = img;
+          pendingBankIconData = '';
+          bankConfigStatus.textContent = 'Сохранено. В анимации будут эти название и иконка.';
+        });
+
+        resetBankConfig.addEventListener('click', () => {
+          const bank = getConfigBank();
+          const defaults = BANK_DEFAULTS[bank.key];
+          bank.name = defaults.name;
+          bank.display = defaults.display;
+          bank.img = defaults.img;
+
+          const config = readBankConfig();
+          delete config[bank.key];
+          writeBankConfig(config);
+
+          const selectedOption = bankConfigSelect.options[bankConfigSelect.selectedIndex];
+          if (selectedOption) selectedOption.textContent = bank.name;
+
+          loadBankConfigForm();
+          buildBankChoiceList();
+          updatePanelCardBankInfo();
+
+          const detected = detectBank(cardInput.value);
+          if (detected && detected.key === bank.key) applyBank(bank, false);
+
+          bankConfigStatus.textContent = 'Настройки этого банка сброшены.';
+        });
+
+        hideBankConfig.addEventListener('click', () => {
+          bankConfig.classList.add('hidden');
+          showBankConfig.classList.add('visible');
+        });
+
+        showBankConfig.addEventListener('click', () => {
+          bankConfig.classList.remove('hidden');
+          showBankConfig.classList.remove('visible');
+        });
+      }
+
+      function detectBank(cardDigits) {
+        const bin = String(cardDigits || '').replace(/\D/g, '').slice(0, 6);
+        const key = BIN_DATABASE[bin];
+        return key ? BANK_BY_KEY[key] : null;
+      }
+      function applyBank(b, hint = true) { selectedBank = b; screen2BankName.textContent = b.display; detailBankName.textContent = b.display; failBankName.textContent = b.name; screen2BankLogo.src = b.img; detailBankLogo.src = b.img; if (hint) { bankDetectedHint.classList.add('show'); setTimeout(() => bankDetectedHint.classList.remove('show'), 1500) } }
+      function buildBankChoiceList() { bankChoiceList.innerHTML = ''; BANKS.forEach(b => { const el = document.createElement('div'); el.className = 'bank-choice-item'; el.innerHTML = `<img class="bank-choice-icon" src="${b.img}"><div class="bank-choice-name">${b.name}</div>`; el.onclick = () => { applyBank(b, false); bankChoiceOverlay.classList.remove('show') }; bankChoiceList.appendChild(el) }) }
+      function chooseBankIfNeeded(d) { return new Promise(resolve => { const b = detectBank(d); if (b) { applyBank(b, true); resolve(b); return } buildBankChoiceList(); bankChoiceOverlay.classList.add('show'); const timer = setInterval(() => { if (!bankChoiceOverlay.classList.contains('show')) { clearInterval(timer); resolve(selectedBank) } }, 100) }) }
+      document.addEventListener('DOMContentLoaded', () => {
+        initErrorTemplates();
+        initBankConfigurator();
+        buildBankChoiceList();
+        updatePanelCardBankInfo();
+      });
+
+      const wait = ms => new Promise(r => setTimeout(r, ms)); let running = false; function val(id, d) { return document.getElementById(id).value.trim() || d } function getMoscowTime() { return new Intl.DateTimeFormat('ru-RU', { timeZone: 'Europe/Moscow', hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date()) } function updateStatusTime() { document.querySelectorAll('.statusTime').forEach(x => x.textContent = getMoscowTime()) } setInterval(updateStatusTime, 10000); updateStatusTime();
+      function formatCard(value) { const digits = value.replace(/\D/g, '').slice(0, 16); return digits.replace(/(.{4})/g, '$1 ').trim() }
+      function fillData() { const cardDigits = val('cardInput', '0000 0000 0000 6341').replace(/\D/g, '').padEnd(16, '0').slice(0, 16); const fullCard = formatCard(cardDigits); const last4 = cardDigits.slice(-4); const amount = parseInt(val('amountInput', '10').replace(/\D/g, '')) || 10; const balance = val('balanceInput', '7 506,29'); const account = val('accountInput', '1033'); document.querySelectorAll('.cardShown').forEach(x => x.textContent = last4); balanceShown.textContent = balance; accountShown.textContent = account; detailBalance.textContent = balance; detailAccount.textContent = account; detailAmount.textContent = amount.toLocaleString('ru-RU'); const commission = Math.max(30, Math.round(amount * .015)); const writeoff = amount + commission; detailCommission.textContent = commission.toLocaleString('ru-RU'); detailWriteoff.textContent = writeoff.toLocaleString('ru-RU'); payBtn.textContent = `Перевести ${amount.toLocaleString('ru-RU')} ₽`; failAmount.textContent = `${amount.toLocaleString('ru-RU')} ₽`; failCardLast.textContent = '•• ' + last4; failSheetTitle.textContent = val('failTitleInput', 'Перевод не будет зачислен'); failSheetSub.textContent = val('failSubInput', 'Необходимо совершить встречный перевод'); return { cardDigits, fullCard, last4, amount, commission, writeoff } }
+      function reset() {
+        screen2.classList.remove('show'); screen3.classList.remove('show'); screenFail.classList.remove('active'); screenFail.style.transform = 'translateX(100%)'; screenFail.style.transition = 'none'; screenFail.style.pointerEvents = 'none'; pasteMenu.classList.remove('show'); contacts.style.display = ''; contacts.classList.remove('slide-out'); cardTransferInfo.classList.remove('show', 'centered'); alphaKb.style.display = ''; alphaKb.classList.remove('slide-down'); bottomAction.classList.remove('slide-down'); searchLabel.textContent = 'По телефону, карте или счёту'; searchValue.textContent = ''; searchCursor.style.display = 'inline-block'; continue1.classList.remove('green');
+        amountShown.textContent = '0'; commissionShown.textContent = 'Комиссия 0 ₽'; writeoffShown.textContent = '0'; numKb.classList.remove('show'); transferBottom.classList.remove('show'); loader.classList.remove('show'); failCircle.style.width = '0'; failCircle.style.height = '0'; failCircle.style.top = '38%'; failCircle.style.transition = 'none'; failCircle.style.background = '#8b2a20'; failIconWrap.style.width = '100px'; failIconWrap.style.height = '100px'; failIconWrap.style.transition = 'none'; failCardSvg.style.width = '60px'; failAmount.style.opacity = '0'; failAmount.style.transition = 'none'; failAmount.style.color = '#fff'; failAmount.style.top = '52%'; failSheet.style.transform = 'translateY(100%)'; failSheet.style.transition = 'none'; failTopTitle.style.opacity = '0'; failTopTitle.style.transition = 'none'
+      }
+      async function showLoader(ms) { loader.classList.add('show'); await wait(ms); loader.classList.remove('show') }
+      async function failAnimation() { screenFail.style.transition = 'transform .34s cubic-bezier(.25,.1,.25,1)'; screenFail.style.pointerEvents = 'all'; screenFail.style.transform = 'translateX(0)'; screenFail.getBoundingClientRect(); screenFail.classList.add('active'); await wait(380); failAmount.style.transition = 'none'; failAmount.style.color = '#fff'; failAmount.style.top = '52%'; failAmount.style.opacity = '0'; failCircle.style.transition = 'none'; failCircle.style.width = '0px'; failCircle.style.height = '0px'; failCircle.style.top = '38%'; failCircle.getBoundingClientRect(); failCircle.style.transition = 'width .35s cubic-bezier(.34,1.4,.64,1),height .35s cubic-bezier(.34,1.4,.64,1)'; failCircle.style.width = '80px'; failCircle.style.height = '80px'; await wait(300); failCircle.style.transition = 'width .75s cubic-bezier(.22,1,.36,1),height .75s cubic-bezier(.22,1,.36,1)'; failCircle.style.width = '1400px'; failCircle.style.height = '1400px'; await wait(1000); failAmount.style.transition = 'opacity .4s'; failAmount.style.opacity = '1'; await wait(430); failCircle.style.transition = 'width .65s cubic-bezier(.4,0,.2,1),height .65s cubic-bezier(.4,0,.2,1),top .65s cubic-bezier(.4,0,.2,1),background .35s .3s'; failCircle.style.background = 'transparent'; failIconWrap.style.transition = 'width .65s cubic-bezier(.4,0,.2,1),height .65s cubic-bezier(.4,0,.2,1)'; failIconWrap.style.width = '80px'; failIconWrap.style.height = '80px'; failCardSvg.style.width = '50px'; failCircle.style.width = '120px'; failCircle.style.height = '120px'; failCircle.style.top = '28%'; failAmount.style.transition = 'top .65s cubic-bezier(.4,0,.2,1),color .5s'; failAmount.style.color = '#f5f5f7'; failAmount.style.top = '37%'; await wait(200); failTopTitle.style.opacity = '1'; failSheet.style.transition = 'transform .55s cubic-bezier(.25,.1,.25,1)'; failSheet.style.transform = 'translateY(0)'; await wait(600) }
+
+      let amountCalcTimer = null;
+
+      function showAmountCalculationLoading() {
+        clearTimeout(amountCalcTimer);
+        const commissionLine = document.getElementById('commissionShown');
+        const writeoffLine = document.getElementById('writeoffLine');
+        const commissionSkeleton = document.getElementById('commissionSkeleton');
+        const writeoffSkeleton = document.getElementById('writeoffSkeleton');
+
+        commissionLine?.classList.add('hidden');
+        writeoffLine?.classList.add('hidden');
+        commissionSkeleton?.classList.add('show');
+        writeoffSkeleton?.classList.add('show');
+      }
+
+      function finishAmountCalculationLoading(delay = 1000) {
+        clearTimeout(amountCalcTimer);
+        amountCalcTimer = setTimeout(() => {
+          const commissionLine = document.getElementById('commissionShown');
+          const writeoffLine = document.getElementById('writeoffLine');
+          const commissionSkeleton = document.getElementById('commissionSkeleton');
+          const writeoffSkeleton = document.getElementById('writeoffSkeleton');
+
+          commissionSkeleton?.classList.remove('show');
+          writeoffSkeleton?.classList.remove('show');
+          commissionLine?.classList.remove('hidden');
+          writeoffLine?.classList.remove('hidden');
+        }, delay);
+      }
+
+      async function startAnimation() {
+        if (running) return; running = true; reset(); const data = fillData(); await wait(650); pasteMenu.classList.add('show'); await wait(900); pasteBtn.style.background = '#444448'; await wait(220); pasteBtn.style.background = ''; pasteMenu.classList.remove('show'); searchLabel.textContent = 'По карте'; searchValue.textContent = formatCard(data.cardDigits); searchCursor.style.display = 'none'; contacts.classList.add('slide-out'); cardTransferInfo.classList.add('show'); continue1.classList.add('green'); await wait(1100);
+        alphaKb.classList.add('slide-down');
+        bottomAction.classList.add('slide-down');
+        cardTransferInfo.classList.add('centered');
+        await wait(620);
+        await showLoader(750);
+        screen2.classList.add('show'); await wait(900); numKb.classList.add('show'); transferBottom.classList.add('show'); await wait(750); showAmountCalculationLoading(); amountShown.textContent = ''; for (const d of String(data.amount)) { const key = document.querySelector(`[data-v="${d}"]`); if (key) { key.style.filter = 'brightness(.7)'; key.style.transform = 'scale(.97)'; await wait(120); key.style.filter = ''; key.style.transform = '' } amountShown.textContent = (parseInt((amountShown.textContent + d).replace(/\D/g, '')) || 0).toLocaleString('ru-RU'); commissionShown.textContent = `Комиссия ${data.commission.toLocaleString('ru-RU')} ₽`; writeoffShown.textContent = (parseInt(amountShown.textContent.replace(/\D/g, '')) + data.commission).toLocaleString('ru-RU'); await wait(190) } finishAmountCalculationLoading(1000); await wait(2000);
+        const continueAction = transferBottom.querySelector('.continue');
+        if (continueAction) {
+          continueAction.style.filter = 'brightness(.72)';
+          continueAction.style.transform = 'scale(.97)';
+          await wait(140);
+          continueAction.style.filter = '';
+          continueAction.style.transform = '';
+        }
+        numKb.classList.remove('show');
+        transferBottom.classList.remove('show');
+        await showLoader(850);
+        screen3.classList.add('show'); await wait(1150); await showLoader(850); await failAnimation(); running = false
+      }
+      let batteryMode = 'simple';
+      function setBatteryMode(mode) { batteryMode = mode; bmodeSimple.classList.toggle('active', mode === 'simple'); bmodeDetailed.classList.toggle('active', mode === 'detailed'); renderBattery() }
+      function renderBattery() { const level = parseInt(batterySlider.value || 33); const color = level < 20 ? '#ff3b30' : '#fff'; document.querySelectorAll('.battery-container').forEach(container => { if (batteryMode === 'simple') { container.innerHTML = `<svg style="width:25px" viewBox="0 0 100 50"><rect x="1" y="1" width="90" height="48" rx="12" fill="none" stroke="#8e8e93" stroke-width="2"/><rect x="92" y="15" width="6" height="20" rx="3" fill="#8e8e93"/><rect x="4" y="4" width="${(level / 100) * 84}" height="42" rx="10" fill="${color}"/></svg>` } else { container.innerHTML = `<div class="battery-detailed"><div class="battery-body-2"><div class="battery-fill" style="width:${level}%;background:${level < 20 ? '#ff3b30' : '#000'}"></div><span class="battery-text">${level}</span></div><div class="battery-cap"></div></div>` } }) }
+      function updatePanelCardBankInfo() {
+        const digits = cardInput.value.replace(/\D/g, '').slice(0, 16);
+
+        if (digits.length !== 16) {
+          cardBankInfo.classList.remove('show', 'unknown');
+          cardBankInfoName.textContent = '';
+          cardBankInfoLogo.removeAttribute('src');
+          return;
+        }
+
+        const bank = detectBank(digits);
+        cardBankInfo.classList.add('show');
+
+        if (bank) {
+          cardBankInfo.classList.remove('unknown');
+          cardBankInfoLogo.src = bank.img;
+          cardBankInfoLogo.style.display = 'block';
+          cardBankInfoName.textContent = bank.display;
+          applyBank(bank, false);
+        } else {
+          cardBankInfo.classList.add('unknown');
+          cardBankInfoLogo.style.display = 'none';
+          cardBankInfoName.textContent = 'Банк не найден';
+        }
+      }
+
+      function applyCardInputMask(input) {
+        const digits = String(input.value || '').replace(/\D/g, '').slice(0, 16);
+        const groups = digits.match(/.{1,4}/g) || [];
+        input.value = groups.join(' ');
+        if (document.activeElement === input) {
+          const end = input.value.length;
+          input.setSelectionRange(end, end);
+        }
+        updatePanelCardBankInfo();
+      }
+
+      cardInput.addEventListener('input', function () {
+        applyCardInputMask(this);
+      });
+
+      cardInput.addEventListener('paste', function (event) {
+        event.preventDefault();
+        const pasted = (event.clipboardData || window.clipboardData).getData('text');
+        this.value = pasted;
+        applyCardInputMask(this);
+      });
+
+      cardInput.addEventListener('keydown', function (event) {
+        const allowed = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Home', 'End'];
+        if (allowed.includes(event.key) || event.ctrlKey || event.metaKey) return;
+        if (!/^\d$/.test(event.key)) event.preventDefault();
+      });
+      batterySlider.addEventListener('input', renderBattery);
+      renderBattery();
+      applyCardInputMask(cardInput);
+      /* =====================================================
+         ЗАПИСЬ ТОЛЬКО ЭКРАНА ТЕЛЕФОНА
+         ===================================================== */
+      async function downloadVideo() {
+        const btn = document.querySelector('.btn.download');
+        let stream = null;
+        let audioCtx = null;
+        let oscillator = null;
+
+        try {
+          console.log('🎬 Начинаем запись экрана телефона...');
+
+          const phoneScreen = document.getElementById('phoneScreen');
+          if (!phoneScreen) throw new Error('Элемент #phoneScreen не найден');
+
+          // 1. Захватываем текущую вкладку браузера.
+          stream = await navigator.mediaDevices.getDisplayMedia({
+            video: {
+              frameRate: 60,
+              width: { ideal: 1920 },
+              height: { ideal: 1080 },
+              displaySurface: 'browser'
+            },
+            audio: false,
+            preferCurrentTab: true
+          });
+
+          // 2. В поддерживаемых браузерах обрезаем поток строго до телефона.
+          if ('CropTarget' in window) {
+            try {
+              const cropTarget = await CropTarget.fromElement(phoneScreen);
+              const [videoTrack] = stream.getVideoTracks();
+              await videoTrack.cropTo(cropTarget);
+              console.log('✅ Запись обрезана до #phoneScreen');
+            } catch (cropError) {
+              console.warn('⚠️ Не удалось применить CropTarget:', cropError);
+            }
+          }
+
+          // 3. Добавляем практически неслышимую аудиодорожку для совместимости кодеков.
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+          oscillator = audioCtx.createOscillator();
+          const gainNode = audioCtx.createGain();
+          const audioDestination = audioCtx.createMediaStreamDestination();
+
+          oscillator.type = 'sine';
+          oscillator.frequency.value = 440;
+          gainNode.gain.value = 0.0001;
+          oscillator.connect(gainNode);
+          gainNode.connect(audioDestination);
+          oscillator.start();
+
+          const combinedStream = new MediaStream([
+            ...stream.getVideoTracks(),
+            audioDestination.stream.getAudioTracks()[0]
+          ]);
+
+          // 4. Выбираем лучший доступный WebM-кодек.
+          const supportedTypes = [
+            'video/webm;codecs=vp9,opus',
+            'video/webm;codecs=vp8,opus',
+            'video/webm'
+          ];
+          const selectedType = supportedTypes.find(type => MediaRecorder.isTypeSupported(type));
+          if (!selectedType) throw new Error('Браузер не поддерживает запись WebM');
+
+          const recorder = new MediaRecorder(combinedStream, {
+            mimeType: selectedType,
+            videoBitsPerSecond: 20_000_000
+          });
+          const chunks = [];
+
+          recorder.ondataavailable = event => {
+            if (event.data.size > 0) chunks.push(event.data);
+          };
+
+          recorder.onstop = () => {
+            try {
+              oscillator?.stop();
+            } catch (_) { }
+            audioCtx?.close();
+            stream?.getTracks().forEach(track => track.stop());
+
+            if (!chunks.length) {
+              alert('Ошибка: не удалось записать видео');
+              btn.textContent = '⬇ Скачать';
+              btn.disabled = false;
+              return;
+            }
+
+            const blob = new Blob(chunks, { type: selectedType });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `card-transfer-animation-${Date.now()}.webm`;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+
+            btn.textContent = '⬇ Скачать';
+            btn.disabled = false;
+            console.log('✅ Видео сохранено:', blob.size, 'байт');
+          };
+
+          recorder.onerror = error => {
+            console.error('❌ Ошибка MediaRecorder:', error);
+            try {
+              oscillator?.stop();
+            } catch (_) { }
+            audioCtx?.close();
+            stream?.getTracks().forEach(track => track.stop());
+            btn.textContent = '⬇ Скачать';
+            btn.disabled = false;
+          };
+
+          btn.textContent = '● Запись...';
+          btn.disabled = true;
+
+          recorder.start();
+          await wait(500);
+          await startAnimation();
+          await wait(1200);
+          recorder.stop();
+
+        } catch (error) {
+          console.error('💥 Ошибка записи:', error);
+          try {
+            oscillator?.stop();
+          } catch (_) { }
+          audioCtx?.close();
+          stream?.getTracks().forEach(track => track.stop());
+          btn.textContent = '⬇ Скачать';
+          btn.disabled = false;
+
+          if (error.name === 'NotAllowedError') {
+            alert('Разрешите захват текущей вкладки в окне браузера');
+          } else {
+            alert('Ошибка записи: ' + error.message);
+          }
+        }
+      }
+    </script>
+</body>
+
+</html>
